@@ -245,6 +245,147 @@
                 "control",
                 "que es"
             ]
+        },
+        {
+            "id": "aula-ocultar-app",
+            "title": "Aula: Ocultar la app actual de los alumnos",
+            "category": "Aula",
+            "officialDocUrl": "https://support.apple.com/es-es/guide/classroom/clasm0e3f3f7/ipados",
+            "content": "Puedes ocultar la app que están usando los alumnos para que presten atención.\n\nCÓMO OCULTAR LA APP ACTUAL:\n1. Abre la app Aula\n2. Selecciona la clase\n3. Selecciona los alumnos (uno, varios o todos)\n4. Toca 'Ocultar' en la barra de acciones\n5. La app se minimiza en los iPads de los alumnos\n6. Los alumnos ven la pantalla de inicio\n\nDIFERENCIA CON BLOQUEAR:\n- Ocultar: Minimiza la app, el alumno puede abrir otra cosa\n- Bloquear: La pantalla queda negra, no pueden hacer nada\n\nCUÁNDO USARLO:\n- Cuando quieres que cambien de actividad\n- Para que cierren un juego y abran una app de trabajo\n- Para captar su atención sin bloquear completamente el iPad",
+            "keywords": [
+                "ocultar",
+                "hide",
+                "minimizar",
+                "cerrar app",
+                "aula",
+                "classroom"
+            ]
+        },
+        {
+            "id": "aula-clases-remotas",
+            "title": "Aula: Clases remotas e híbridas",
+            "category": "Aula",
+            "officialDocUrl": "https://support.apple.com/es-es/guide/classroom/clasm3c71bf9/ipados",
+            "content": "La app Aula permite gestionar clases de forma presencial, remota o híbrida.\n\nCLASES PRESENCIALES (modo normal):\n- Todos en la misma aula física\n- Conexión por Bluetooth + WiFi\n- Distancia máxima: unos 10-15 metros\n\nCLASES REMOTAS:\n- Alumnos en casa, profesor en el centro (o viceversa)\n- Requiere que los iPads estén configurados con ASM + Jamf\n- Los alumnos deben aceptar unirse a la clase cuando se les invite\n- Funciona a través de Internet (no necesita Bluetooth)\n\nCLASES HÍBRIDAS:\n- Algunos alumnos presenciales, otros remotos\n- Combina ambos modos automáticamente\n- Los presenciales se conectan por Bluetooth\n- Los remotos se conectan por Internet\n\nREQUISITOS PARA CLASES REMOTAS:\n- iPads supervisados y gestionados por Jamf\n- Clases creadas en Apple School Manager\n- Alumnos con Apple IDs gestionados\n- Conexión a Internet estable\n\nNOTA: En modo remoto, algunas funciones pueden tener más latencia (ej: ver pantallas).",
+            "keywords": [
+                "remoto",
+                "online",
+                "hibrido",
+                "casa",
+                "distancia",
+                "virtual",
+                "aula"
+            ]
+        },
+        {
+            "id": "aula-airdrop",
+            "title": "Aula: Compartir archivos con AirDrop",
+            "category": "Aula",
+            "officialDocUrl": "https://support.apple.com/es-es/guide/classroom/clasm5441aa2/ipados",
+            "content": "Desde la app Aula puedes enviar archivos a los iPads de tus alumnos usando AirDrop.\n\nCÓMO COMPARTIR CON AIRDROP DESDE AULA:\n1. Abre la app Aula\n2. Selecciona la clase\n3. Selecciona los alumnos que recibirán el archivo\n4. Toca el botón 'Compartir' (icono de compartir)\n5. Selecciona 'AirDrop'\n6. Elige el archivo desde tu iPad (Fotos, Archivos, etc.)\n7. El archivo se enviará a todos los alumnos seleccionados\n\nTIPOS DE ARCHIVOS QUE PUEDES ENVIAR:\n- Documentos (PDF, Pages, Word)\n- Imágenes y fotos\n- Vídeos (pueden tardar más)\n- Archivos de otras apps (Keynote, Numbers, etc.)\n\nVENTAJAS:\n- Envío masivo a toda la clase a la vez\n- No necesita correo electrónico ni apps de terceros\n- Rápido y directo\n\nREQUISITOS:\n- AirDrop debe estar habilitado en los iPads de alumnos\n- Bluetooth y WiFi activados\n- Misma red WiFi (para velocidad óptima)\n\nNOTA: Si AirDrop está restringido en los iPads de alumnos, pide a IT que lo habilite o use la opción 'Solo contactos'.",
+            "keywords": [
+                "airdrop",
+                "compartir",
+                "enviar",
+                "archivo",
+                "documento",
+                "foto",
+                "aula"
+            ]
+        },
+        {
+            "id": "aula-airplay",
+            "title": "Aula: Transmitir a Apple TV con AirPlay",
+            "category": "Aula",
+            "officialDocUrl": "https://support.apple.com/es-es/guide/classroom/clasm7adc11a/ipados",
+            "content": "Puedes usar AirPlay desde la app Aula para proyectar en un Apple TV del aula.\n\nTRANSMITIR TU PANTALLA (profesor):\n1. Desliza desde la esquina superior derecha para abrir Centro de Control\n2. Toca 'Duplicar pantalla'\n3. Selecciona el Apple TV del aula\n4. Tu iPad se proyectará en la pantalla grande\n\nTRANSMITIR LA PANTALLA DE UN ALUMNO:\n1. En la app Aula, selecciona al alumno\n2. Toca 'Ver pantalla' para ver lo que hace\n3. Desde tu iPad proyectado al Apple TV, toda la clase lo verá\n4. Útil para mostrar el trabajo de un alumno a los demás\n\nINICIAR AIRPLAY EN DISPOSITIVOS DE ALUMNOS:\n1. Selecciona uno o varios alumnos en Aula\n2. Toca 'AirPlay' en las acciones\n3. Elige el Apple TV de destino\n4. El iPad del alumno empezará a transmitir\n5. Puedes detenerlo desde Aula cuando quieras\n\nREQUISITOS:\n- Apple TV configurado en la misma red\n- AirPlay habilitado en el Apple TV\n- Los iPads deben poder ver el Apple TV en la red\n\nCONSEJO: Pide a IT que configure el Apple TV con un código fijo o sin código para facilitar la conexión.",
+            "keywords": [
+                "airplay",
+                "apple tv",
+                "proyectar",
+                "transmitir",
+                "pantalla",
+                "proyector",
+                "aula"
+            ]
+        },
+        {
+            "id": "aula-restablecer-contrasena",
+            "title": "Aula: Restablecer contraseña de Apple ID gestionado",
+            "category": "Aula",
+            "officialDocUrl": "https://support.apple.com/es-es/guide/classroom/clasm93f77f7/ipados",
+            "content": "Los profesores pueden restablecer la contraseña del Apple ID gestionado de un alumno directamente desde la app Aula.\n\nCUÁNDO USAR ESTA FUNCIÓN:\n- El alumno olvidó su contraseña\n- El alumno no puede iniciar sesión en su iPad\n- Necesitas acceso urgente al iPad de un alumno\n\nCÓMO RESTABLECER LA CONTRASEÑA:\n1. Abre la app Aula\n2. Selecciona la clase del alumno\n3. Toca en el alumno específico\n4. Toca 'Restablecer contraseña' o 'Reset Password'\n5. Se generará una nueva contraseña temporal\n6. Comunica la nueva contraseña al alumno verbalmente\n7. El alumno deberá cambiarla en su primer inicio de sesión\n\nIMPORTANTE:\n- Solo funciona con Apple IDs GESTIONADOS (creados en ASM)\n- NO funciona con Apple IDs personales de los alumnos\n- El profesor debe estar asignado a la clase en ASM\n- El alumno debe pertenecer a esa clase\n\nQUÉ PASA DESPUÉS:\n- El alumno puede iniciar sesión con la contraseña temporal\n- Se le pedirá que cree una nueva contraseña\n- No pierde ningún dato de iCloud\n\nNOTA: Si esta opción no aparece, verifica con IT que los Apple IDs son gestionados y que estás configurado como profesor de esa clase en ASM.",
+            "keywords": [
+                "contraseña",
+                "password",
+                "restablecer",
+                "reset",
+                "apple id",
+                "olvido",
+                "aula"
+            ]
+        },
+        {
+            "id": "aula-resumen-actividad",
+            "title": "Aula: Ver resumen de actividad de la clase",
+            "category": "Aula",
+            "officialDocUrl": "https://support.apple.com/es-es/guide/classroom/clasm8c8bd7/ipados",
+            "content": "Al finalizar una sesión de clase, la app Aula te muestra un resumen de la actividad.\n\nQUÉ MUESTRA EL RESUMEN:\n- Apps más utilizadas durante la clase\n- Tiempo aproximado en cada app por alumno\n- Webs visitadas (si se usó Safari)\n- Número de veces que se bloquearon los dispositivos\n- Alertas o incidencias (si las hubo)\n\nCÓMO VER EL RESUMEN:\n1. Al finalizar la clase en la app Aula\n2. Toca 'Finalizar clase' o simplemente sal de la clase\n3. Aparecerá automáticamente el resumen de la sesión\n4. También puedes acceder desde el historial de clases\n\nUSOS PEDAGÓGICOS:\n- Identificar alumnos que no estuvieron en la tarea\n- Ver si algún alumno tuvo problemas técnicos\n- Datos para seguimiento del uso de tecnología\n- Identificar apps que consumen mucho tiempo\n\nPRIVACIDAD:\n- Los datos son solo visibles para el profesor de esa clase\n- No se comparten automáticamente con otros profesores ni con IT\n- El alumno no ve el resumen de otros compañeros\n\nNOTA: Esta función puede no estar disponible en todas las configuraciones. Consulta con IT si no ves el resumen.",
+            "keywords": [
+                "resumen",
+                "actividad",
+                "historial",
+                "uso",
+                "tiempo",
+                "apps",
+                "aula"
+            ]
+        },
+        {
+            "id": "aula-limite-estudiantes",
+            "title": "Aula: Límite de estudiantes por clase",
+            "category": "Aula",
+            "officialDocUrl": "https://support.apple.com/es-es/guide/classroom/welcome/ipados",
+            "content": "Apple recomienda un límite de estudiantes por clase en la app Aula para un rendimiento óptimo.\n\nLÍMITE RECOMENDADO: 60 ESTUDIANTES\n\nEste límite garantiza:\n- Rendimiento fluido de la app\n- Visualización clara de todas las miniaturas\n- Acciones rápidas sin demoras\n- Conexión Bluetooth estable\n\nQUÉ PASA SI SUPERAS EL LÍMITE:\n- La app puede volverse lenta\n- Las miniaturas pueden no cargar bien\n- Las acciones masivas (bloquear todos, abrir app) pueden fallar\n- Mayor consumo de batería en tu iPad\n\nSOLUCIONES PARA CLASES GRANDES:\n1. Dividir la clase en grupos más pequeños en ASM\n2. Crear subclases: '3º ESO A - Grupo 1', '3º ESO A - Grupo 2'\n3. Gestionar solo los alumnos presentes (selección parcial)\n\nCONSEJO PRÁCTICO:\n- Si tienes 25-30 alumnos, no tendrás problemas\n- Clases de más de 40 alumnos pueden notar lentitud\n- Con más de 60, considera dividir la clase\n\nNOTA: El límite es una recomendación, no un bloqueo técnico. Puedes tener más alumnos, pero la experiencia puede degradarse.",
+            "keywords": [
+                "limite",
+                "estudiantes",
+                "alumnos",
+                "maximo",
+                "60",
+                "rendimiento",
+                "aula"
+            ]
+        },
+        {
+            "id": "aula-shared-ipad",
+            "title": "Aula con Shared iPad (iPad compartido)",
+            "category": "Aula",
+            "officialDocUrl": "https://support.apple.com/es-es/guide/deployment/dep9a34c2ba2/web",
+            "content": "Shared iPad permite que varios alumnos usen el mismo iPad con sus propias cuentas. La app Aula funciona perfectamente con este modo.\n\nQUÉ ES SHARED iPAD:\n- Un iPad físico, múltiples usuarios\n- Cada alumno inicia sesión con su Apple ID gestionado\n- Sus datos, apps y configuración se guardan por separado\n- Ideal para centros donde los iPads se comparten entre clases\n\nCÓMO FUNCIONA AULA CON SHARED iPAD:\n1. El alumno inicia sesión en el iPad compartido\n2. La app Aula detecta QUÉ alumno está usando el iPad\n3. El profesor ve el nombre del alumno, no el nombre del iPad\n4. Todas las funciones de Aula funcionan normalmente\n\nVENTAJAS:\n- El profesor ve quién está en cada iPad\n- Las restricciones se aplican al usuario, no al dispositivo\n- Los datos del alumno le siguen a cualquier iPad\n\nCONFIGURACIÓN (para IT):\n1. En ASM: Los iPads deben estar en un grupo de Shared iPad\n2. En Jamf: Configurar PreStage con Shared iPad habilitado\n3. Definir cuántos usuarios caben en cada iPad (depende del almacenamiento)\n4. Los alumnos deben tener Apple IDs gestionados en ASM\n\nNOTA: Shared iPad requiere iPads con suficiente almacenamiento (32GB mínimo recomendado, 64GB+ ideal).",
+            "keywords": [
+                "shared",
+                "compartido",
+                "ipad compartido",
+                "multiples usuarios",
+                "sesion",
+                "aula"
+            ]
+        },
+        {
+            "id": "aula-grupos-dentro-clase",
+            "title": "Aula: Crear grupos dentro de una clase",
+            "category": "Aula",
+            "officialDocUrl": "https://support.apple.com/es-es/guide/classroom/clasm1fbee0f/ipados",
+            "content": "Puedes crear grupos dentro de una clase para gestionar subconjuntos de alumnos.\n\nPARA QUÉ SIRVEN LOS GRUPOS:\n- Actividades diferenciadas por nivel\n- Trabajos en equipo\n- Atención a la diversidad (refuerzo, ampliación)\n- Gestionar solo una parte de la clase\n\nCÓMO CREAR UN GRUPO:\n1. Abre la app Aula\n2. Selecciona tu clase\n3. Mantén pulsado en un alumno y arrastra para seleccionar varios\n4. Toca 'Crear grupo' o el icono de grupo\n5. Pon un nombre al grupo (ej: 'Mesa 1', 'Nivel avanzado')\n6. El grupo se guarda para futuras sesiones\n\nUSAR UN GRUPO:\n1. Toca el nombre del grupo en la lista de la clase\n2. Se seleccionan automáticamente todos los alumnos del grupo\n3. Aplica acciones (bloquear, abrir app, etc.) solo a ese grupo\n\nEJEMPLOS DE USO:\n- 'Grupo A': hace ejercicios en Pages\n- 'Grupo B': ve un vídeo en Safari\n- 'Refuerzo': recibe atención individual mientras otros trabajan solos\n\nNOTA: Los grupos se guardan en tu iPad. Si usas otro iPad para dar clase, tendrás que recrearlos.",
+            "keywords": [
+                "grupo",
+                "subgrupo",
+                "equipo",
+                "seleccionar",
+                "parcial",
+                "aula"
+            ]
         }
     ]
 }

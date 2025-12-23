@@ -593,6 +593,280 @@ const Diagnostics = {
         }
     },
 
+    'aula-funciones-avanzadas': {
+        title: 'Funciones avanzadas de Aula no funcionan',
+        icon: '<i class="ri-rocket-line"></i>',
+        steps: [
+            {
+                question: '¿Qué función específica no funciona?',
+                options: [
+                    { text: 'Restablecer contraseña de alumno', solution: 'reset-password' },
+                    { text: 'Compartir con AirDrop', solution: 'airdrop-issue' },
+                    { text: 'Proyectar a Apple TV (AirPlay)', solution: 'airplay-issue' },
+                    { text: 'Ver resumen de actividad', solution: 'activity-summary' }
+                ]
+            }
+        ],
+        solutions: {
+            'reset-password': {
+                title: '<i class="ri-lock-password-line"></i> Restablecer contraseña no funciona',
+                content: `
+                    <p>La función de restablecer contraseña solo funciona con Apple IDs gestionados.</p>
+
+                    <h4>Verificaciones:</h4>
+                    <ol>
+                        <li><strong>¿El alumno tiene Apple ID gestionado?</strong>
+                            <ul>
+                                <li>Los Apple IDs gestionados se crean en ASM</li>
+                                <li>Formato típico: alumno@tucentro.edu</li>
+                                <li>Si el alumno usa su Apple ID personal, NO funcionará</li>
+                            </ul>
+                        </li>
+                        <li><strong>¿Eres profesor de esa clase en ASM?</strong>
+                            <ul>
+                                <li>Solo el profesor asignado puede resetear contraseñas</li>
+                                <li>Verifica tu asignación en Apple School Manager</li>
+                            </ul>
+                        </li>
+                        <li><strong>¿El alumno pertenece a tu clase?</strong>
+                            <ul>
+                                <li>Solo puedes resetear contraseñas de alumnos de TU clase</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <h4>Alternativa (para IT):</h4>
+                    <p>Si la función no aparece en Aula, el IT puede resetear la contraseña desde Apple School Manager → Personas → [Alumno] → Restablecer contraseña.</p>
+                `
+            },
+            'airdrop-issue': {
+                title: '<i class="ri-share-line"></i> AirDrop no funciona',
+                content: `
+                    <p>AirDrop necesita estar habilitado en los iPads de los alumnos.</p>
+
+                    <h4>Para profesores:</h4>
+                    <ol>
+                        <li>Verifica que tu Bluetooth y WiFi están activados</li>
+                        <li>Verifica que los alumnos tienen AirDrop activado</li>
+                        <li>Intenta enviar a un alumno primero (no a todos a la vez)</li>
+                    </ol>
+
+                    <h4>Para IT (si está bloqueado):</h4>
+                    <ol>
+                        <li>Revisa el perfil de restricciones en Jamf</li>
+                        <li>Busca "AirDrop" en las restricciones</li>
+                        <li>Opciones:
+                            <ul>
+                                <li><strong>Deshabilitado:</strong> Los alumnos no pueden recibir nada por AirDrop</li>
+                                <li><strong>Solo contactos:</strong> Solo reciben de profesores de su clase</li>
+                                <li><strong>Todos:</strong> Pueden recibir de cualquiera (menos seguro)</li>
+                            </ul>
+                        </li>
+                        <li>Recomendación: Usar "Solo contactos" para equilibrar seguridad y funcionalidad</li>
+                    </ol>
+                `
+            },
+            'airplay-issue': {
+                title: '<i class="ri-airplay-line"></i> AirPlay a Apple TV no funciona',
+                content: `
+                    <p>AirPlay necesita que el Apple TV esté en la misma red y configurado correctamente.</p>
+
+                    <h4>Verificaciones:</h4>
+                    <ol>
+                        <li><strong>¿El Apple TV está encendido?</strong>
+                            <ul>
+                                <li>Verifica que está conectado a corriente</li>
+                                <li>La luz debe estar encendida</li>
+                            </ul>
+                        </li>
+                        <li><strong>¿Está en la misma red WiFi?</strong>
+                            <ul>
+                                <li>El Apple TV y los iPads deben estar en la MISMA red</li>
+                                <li>Verifica en Apple TV: Ajustes → Red</li>
+                            </ul>
+                        </li>
+                        <li><strong>¿AirPlay está habilitado en el Apple TV?</strong>
+                            <ul>
+                                <li>En Apple TV: Ajustes → AirPlay y HomeKit → AirPlay: Activado</li>
+                                <li>Verificar "Permitir acceso": Cualquiera en la misma red</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <h4>Solución común:</h4>
+                    <p>Si pide un código cada vez, pide a IT que configure el Apple TV con:</p>
+                    <ul>
+                        <li>Código fijo conocido por los profesores</li>
+                        <li>O sin requerir código (menos seguro pero más práctico)</li>
+                    </ul>
+                `
+            },
+            'activity-summary': {
+                title: '<i class="ri-file-chart-line"></i> Resumen de actividad no aparece',
+                content: `
+                    <p>El resumen de actividad puede no estar habilitado en tu configuración.</p>
+
+                    <h4>Cuándo aparece el resumen:</h4>
+                    <ul>
+                        <li>Al finalizar una sesión de clase</li>
+                        <li>Cuando tocas "Finalizar clase"</li>
+                        <li>En el historial de clases anteriores</li>
+                    </ul>
+
+                    <h4>Si no aparece:</h4>
+                    <ol>
+                        <li><strong>Verifica la versión de iPadOS:</strong> Necesitas iPadOS 14.5 o posterior</li>
+                        <li><strong>Verifica la configuración:</strong> IT puede haber deshabilitado esta función</li>
+                        <li><strong>Espera después de la clase:</strong> El resumen puede tardar unos segundos en generarse</li>
+                    </ol>
+
+                    <h4>Para IT:</h4>
+                    <p>El resumen de actividad se puede habilitar/deshabilitar en:</p>
+                    <ul>
+                        <li>Perfil de Education en Jamf</li>
+                        <li>Configuración de Classroom</li>
+                    </ul>
+                `
+            }
+        }
+    },
+
+    'aula-remoto': {
+        title: 'Problemas con clases remotas en Aula',
+        icon: '<i class="ri-global-line"></i>',
+        steps: [
+            {
+                question: '¿Los alumnos pueden ver la invitación para unirse a la clase?',
+                options: [
+                    { text: 'Sí, pero no pueden unirse', next: 1 },
+                    { text: 'No ven ninguna invitación', solution: 'no-invitation' }
+                ]
+            },
+            {
+                question: '¿Los alumnos tienen conexión a Internet estable?',
+                options: [
+                    { text: 'Sí, tienen buena conexión', next: 2 },
+                    { text: 'No o no estoy seguro', solution: 'connection-issue' }
+                ]
+            },
+            {
+                question: '¿Los iPads de los alumnos están supervisados por Jamf?',
+                options: [
+                    { text: 'Sí', solution: 'verify-asm-sync' },
+                    { text: 'No o no sé', solution: 'supervised-required' }
+                ]
+            }
+        ],
+        solutions: {
+            'no-invitation': {
+                title: '<i class="ri-mail-close-line"></i> Alumnos no reciben invitación',
+                content: `
+                    <p>Las invitaciones remotas requieren que todo esté correctamente configurado en ASM.</p>
+
+                    <h4>Verificar flujo completo (IT/Admin):</h4>
+
+                    <h5>1. Apple School Manager:</h5>
+                    <ol>
+                        <li>Verifica que la clase existe en ASM</li>
+                        <li>Confirma que tú eres el profesor asignado</li>
+                        <li>Confirma que los alumnos están matriculados</li>
+                        <li>Los alumnos deben tener Apple IDs gestionados</li>
+                    </ol>
+
+                    <h5>2. Jamf School:</h5>
+                    <ol>
+                        <li>Verifica que la clase está sincronizada desde ASM</li>
+                        <li>Los dispositivos deben estar supervisados</li>
+                        <li>El perfil de Education/Classroom debe estar instalado</li>
+                    </ol>
+
+                    <h5>3. Dispositivos de alumnos:</h5>
+                    <ol>
+                        <li>Deben tener conexión a Internet</li>
+                        <li>Las notificaciones de Classroom deben estar permitidas</li>
+                        <li>Deben tener iPadOS actualizado</li>
+                    </ol>
+                `
+            },
+            'connection-issue': {
+                title: '<i class="ri-wifi-off-line"></i> Problemas de conexión',
+                content: `
+                    <p>Las clases remotas necesitan conexión a Internet estable.</p>
+
+                    <h4>Requisitos de conexión:</h4>
+                    <ul>
+                        <li>WiFi estable o datos móviles</li>
+                        <li>Velocidad mínima recomendada: 5 Mbps</li>
+                        <li>Evitar redes públicas o con mucha congestión</li>
+                    </ul>
+
+                    <h4>Pasos para el alumno:</h4>
+                    <ol>
+                        <li>Verifica que tiene WiFi o datos activados</li>
+                        <li>Prueba a abrir Safari y cargar una web</li>
+                        <li>Si no funciona, que reinicie el router o cambie a datos móviles</li>
+                        <li>Cierra y vuelve a abrir la app Aula</li>
+                    </ol>
+
+                    <h4>Si la conexión es inestable:</h4>
+                    <ul>
+                        <li>Las funciones como "ver pantalla" tendrán más latencia</li>
+                        <li>Usa acciones simples (abrir app, bloquear) en lugar de ver pantallas continuamente</li>
+                    </ul>
+                `
+            },
+            'verify-asm-sync': {
+                title: '<i class="ri-refresh-line"></i> Verificar sincronización con ASM',
+                content: `
+                    <p>Aunque todo parece correcto, puede haber un problema de sincronización.</p>
+
+                    <h4>Pasos para IT:</h4>
+                    <ol>
+                        <li>En Jamf School: Settings → Apple School Manager → Sync now</li>
+                        <li>Espera 10-15 minutos</li>
+                        <li>Verifica que la clase aparece con todos los datos correctos</li>
+                        <li>Envía un "Blank Push" a los dispositivos afectados</li>
+                        <li>Pide al profesor que cierre y abra la app Aula</li>
+                        <li>Pide a los alumnos que reinicien sus iPads</li>
+                    </ol>
+
+                    <h4>Si el problema persiste:</h4>
+                    <ul>
+                        <li>Verifica que no hay errores en la sincronización con ASM</li>
+                        <li>Revisa los logs de Jamf</li>
+                        <li>Contacta con soporte de Apple Education si es necesario</li>
+                    </ul>
+                `
+            },
+            'supervised-required': {
+                title: '<i class="ri-shield-check-line"></i> Se requieren iPads supervisados',
+                content: `
+                    <p>Las clases remotas SOLO funcionan con iPads supervisados y gestionados.</p>
+
+                    <h4>¿Qué significa "supervisado"?</h4>
+                    <ul>
+                        <li>El iPad fue configurado desde Apple School Manager + Jamf</li>
+                        <li>El centro tiene control total del dispositivo</li>
+                        <li>En el iPad: Ajustes → General → Información → debe decir "Este iPad está supervisado por..."</li>
+                    </ul>
+
+                    <h4>Si los iPads NO están supervisados:</h4>
+                    <ul>
+                        <li>Las clases remotas NO funcionarán</li>
+                        <li>Solo funcionarán las clases presenciales (Bluetooth)</li>
+                    </ul>
+
+                    <h4>Solución (para IT):</h4>
+                    <ol>
+                        <li>Verificar que los iPads están dados de alta en ASM</li>
+                        <li>Configurar PreStage Enrollment en Jamf</li>
+                        <li>Los iPads deben borrarse y volver a inscribirse para quedar supervisados</li>
+                    </ol>
+                `
+            }
+        }
+    },
+
     'activation-lock': {
         title: 'Bloqueo de activación',
         icon: '<i class="ri-lock-line"></i>',

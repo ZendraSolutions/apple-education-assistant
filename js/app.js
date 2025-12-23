@@ -86,14 +86,18 @@ class JamfAssistant {
             case 'dashboard':
                 wrapper.innerHTML = this.renderDashboard();
                 break;
+            case 'ecosistema':
+                wrapper.innerHTML = this.renderEcosistema();
+                break;
             case 'ipads':
                 wrapper.innerHTML = this.renderIpads();
                 break;
             case 'macs':
                 wrapper.innerHTML = this.renderMacs();
                 break;
+            case 'aula':
             case 'classroom':
-                wrapper.innerHTML = this.renderClassroom();
+                wrapper.innerHTML = this.renderAula();
                 break;
             case 'teacher':
                 wrapper.innerHTML = this.renderTeacher();
@@ -118,6 +122,13 @@ class JamfAssistant {
                 </div>
 
                 <div class="quick-stats">
+                    <div class="stat-card" data-section="aula">
+                        <div class="stat-icon classroom"><i class="ri-group-line"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">App Aula</span>
+                            <span class="stat-value">Herramienta principal</span>
+                        </div>
+                    </div>
                     <div class="stat-card" data-section="ipads">
                         <div class="stat-icon ipads"><i class="ri-tablet-line"></i></div>
                         <div class="stat-info">
@@ -132,17 +143,15 @@ class JamfAssistant {
                             <span class="stat-value">Configuración y soporte</span>
                         </div>
                     </div>
-                    <div class="stat-card" data-section="classroom">
-                        <div class="stat-icon classroom"><i class="ri-group-line"></i></div>
-                        <div class="stat-info">
-                            <span class="stat-label">Apple Classroom</span>
-                            <span class="stat-value">Control de aula</span>
-                        </div>
-                    </div>
                 </div>
 
                 <h2 class="content-title"><i class="ri-rocket-line"></i> Acciones Frecuentes</h2>
                 <div class="action-cards">
+                    <div class="action-card" data-guide="classroom-setup">
+                        <div class="action-icon"><i class="ri-building-line"></i></div>
+                        <h3>Configurar App Aula</h3>
+                        <p>Crear clases y asignar profesores</p>
+                    </div>
                     <div class="action-card" data-guide="teacher-setup">
                         <div class="action-icon"><i class="ri-install-line"></i></div>
                         <h3>Instalar Apps desde Profesor</h3>
@@ -153,11 +162,6 @@ class JamfAssistant {
                         <h3>Distribuir Apps a iPads</h3>
                         <p>Guía paso a paso para instalar aplicaciones</p>
                     </div>
-                    <div class="action-card" data-guide="classroom-setup">
-                        <div class="action-icon"><i class="ri-building-line"></i></div>
-                        <h3>Configurar Classroom</h3>
-                        <p>Crear clases y asignar profesores</p>
-                    </div>
                     <div class="action-card" data-guide="ipad-enrollment">
                         <div class="action-icon"><i class="ri-add-circle-line"></i></div>
                         <h3>Inscribir Dispositivos</h3>
@@ -167,15 +171,15 @@ class JamfAssistant {
 
                 <h2 class="content-title"><i class="ri-error-warning-line"></i> Problemas Comunes</h2>
                 <div class="action-cards">
+                    <div class="action-card" data-diagnostic="device-not-visible">
+                        <div class="action-icon"><i class="ri-eye-off-line"></i></div>
+                        <h3>No veo dispositivos en App Aula</h3>
+                        <p>Solucionar problemas de visibilidad</p>
+                    </div>
                     <div class="action-card" data-diagnostic="apps-not-installing">
                         <div class="action-icon"><i class="ri-download-cloud-2-line"></i></div>
                         <h3>Las apps no se instalan</h3>
                         <p>Diagnóstico guiado paso a paso</p>
-                    </div>
-                    <div class="action-card" data-diagnostic="device-not-visible">
-                        <div class="action-icon"><i class="ri-eye-off-line"></i></div>
-                        <h3>No veo dispositivos en Classroom</h3>
-                        <p>Solucionar problemas de visibilidad</p>
                     </div>
                     <div class="action-card" data-diagnostic="activation-lock">
                         <div class="action-icon"><i class="ri-lock-line"></i></div>
@@ -220,19 +224,116 @@ class JamfAssistant {
         `;
     }
 
-    renderClassroom() {
+    renderEcosistema() {
         return `
             <section class="content-section active">
                 <div class="section-header">
-                    <h1>Apple Classroom</h1>
-                    <p class="section-subtitle">Control de aula para profesores</p>
+                    <h1>Ecosistema Apple Education</h1>
+                    <p class="section-subtitle">Cómo funciona todo el sistema integrado</p>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-icon"><i class="ri-information-line"></i></div>
+                    <div class="info-content">
+                        <h4>El ecosistema educativo de Apple</h4>
+                        <p>Tres piezas trabajando juntas para gestionar los dispositivos del centro educativo.</p>
+                    </div>
+                </div>
+
+                <div class="guide-cards">
+                    <div class="guide-card">
+                        <div class="guide-header">
+                            <span class="guide-icon"><i class="ri-cloud-line"></i></span>
+                            <span class="guide-tag">Paso 1</span>
+                        </div>
+                        <h3>Apple School Manager (ASM)</h3>
+                        <p>Portal de Apple donde se registran todos los dispositivos del centro. Aquí se crean las cuentas de profesores y alumnos (Apple IDs gestionados).</p>
+                        <div class="guide-meta">
+                            <span><i class="ri-key-line"></i> Gestión de identidades</span>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-header">
+                            <span class="guide-icon"><i class="ri-settings-3-line"></i></span>
+                            <span class="guide-tag">Paso 2</span>
+                        </div>
+                        <h3>Jamf School (MDM)</h3>
+                        <p>Sistema de gestión de dispositivos móviles. Conectado con ASM, permite configurar restricciones, instalar apps, crear perfiles y organizar los dispositivos por grupos.</p>
+                        <div class="guide-meta">
+                            <span><i class="ri-smartphone-line"></i> Configuración remota</span>
+                        </div>
+                    </div>
+
+                    <div class="guide-card">
+                        <div class="guide-header">
+                            <span class="guide-icon"><i class="ri-group-line"></i></span>
+                            <span class="guide-tag">Paso 3</span>
+                        </div>
+                        <h3>App Aula (Classroom)</h3>
+                        <p>Aplicación que usan los profesores en sus Macs para controlar los iPads del alumnado durante la clase: ver pantallas, abrir apps, bloquear dispositivos y guiar actividades.</p>
+                        <div class="guide-meta">
+                            <span><i class="ri-eye-line"></i> Control en tiempo real</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="content-title"><i class="ri-arrow-right-line"></i> Flujo de trabajo completo</h2>
+                <div class="info-box" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <div class="info-content">
+                        <h4 style="color: white; margin-top: 0;">ASM → Jamf School → Dispositivos → App Aula</h4>
+                        <ol style="margin: 15px 0 0 20px; line-height: 1.8;">
+                            <li><strong>En ASM:</strong> Se registran los dispositivos y se crean las cuentas</li>
+                            <li><strong>En Jamf School:</strong> Se configuran restricciones, apps y clases</li>
+                            <li><strong>Los dispositivos:</strong> Reciben automáticamente la configuración</li>
+                            <li><strong>En App Aula:</strong> Los profesores controlan la clase en tiempo real</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <h2 class="content-title"><i class="ri-question-line"></i> ¿Por qué esta estructura?</h2>
+                <div class="action-cards">
+                    <div class="action-card">
+                        <div class="action-icon"><i class="ri-shield-check-line"></i></div>
+                        <h3>Seguridad y privacidad</h3>
+                        <p>Los dispositivos son propiedad del centro, con Apple IDs gestionados que protegen a los menores</p>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-icon"><i class="ri-refresh-line"></i></div>
+                        <h3>Gestión automatizada</h3>
+                        <p>Los cambios en Jamf se aplican automáticamente sin tocar los dispositivos físicamente</p>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-icon"><i class="ri-team-line"></i></div>
+                        <h3>Control pedagógico</h3>
+                        <p>Los profesores tienen autonomía para gestionar su aula sin depender de IT</p>
+                    </div>
+                </div>
+            </section>
+        `;
+    }
+
+    renderAula() {
+        return `
+            <section class="content-section active">
+                <div class="section-header">
+                    <h1>App Aula (Apple Classroom)</h1>
+                    <p class="section-subtitle">Control de aula para profesores - Herramienta de uso diario</p>
                 </div>
 
                 <div class="info-box">
                     <div class="info-icon"><i class="ri-lightbulb-line"></i></div>
                     <div class="info-content">
-                        <h4>¿Qué es Apple Classroom?</h4>
-                        <p>Permite a los profesores ver pantallas de iPads, abrir apps, bloquear dispositivos y guiar la clase.</p>
+                        <h4>¿Qué es la App Aula?</h4>
+                        <p>Es la herramienta principal que los profesores usan todos los días en sus Macs para controlar los iPads del alumnado. Permite ver pantallas, abrir apps, bloquear dispositivos y guiar la clase de forma interactiva.</p>
+                    </div>
+                </div>
+
+                <div class="info-box" style="background: #fef3c7; border-color: #fbbf24;">
+                    <div class="info-icon" style="color: #f59e0b;"><i class="ri-star-line"></i></div>
+                    <div class="info-content">
+                        <h4 style="color: #92400e;">Herramienta fundamental para profesores</h4>
+                        <p style="color: #78350f;">Esta app se utiliza a diario en cada clase. Es importante que todos los profesores sepan usarla y que funcione correctamente para aprovechar al máximo los iPads en el aula.</p>
                     </div>
                 </div>
 
@@ -592,7 +693,7 @@ class JamfAssistant {
 
         searchInGuides(KnowledgeBase.ipads, 'ipad', 'iPads');
         searchInGuides(KnowledgeBase.macs, 'mac', 'Macs');
-        searchInGuides(KnowledgeBase.classroom, 'classroom', 'Classroom');
+        searchInGuides(KnowledgeBase.classroom, 'classroom', 'App Aula');
 
         // Search diagnostics
         Object.entries(Diagnostics).forEach(([key, diag]) => {

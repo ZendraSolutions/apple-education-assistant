@@ -1,6 +1,7 @@
 /**
- * JAMF ASSISTANT - Chatbot Module v3
- * Con sistema RAG, carga externa de docs y mejor manejo de errores
+ * ASISTENTE ECOSISTEMA APPLE EDUCACIÓN - Chatbot Module v4
+ * Sistema RAG centrado en ASM + Jamf School + App Aula
+ * Flujo: Apple School Manager → Jamf School → Dispositivos
  */
 
 class JamfChatbot {
@@ -70,134 +71,248 @@ class JamfChatbot {
         // Fallback completo si no se puede cargar el JSON (ej: CORS en file://)
         return [
             {
-                id: 'enrollment-abm',
-                title: 'Enrollment Automático con Apple Business Manager',
-                category: 'Enrollment',
-                content: `Para inscribir dispositivos automáticamente en Jamf usando ABM:
-1. Los dispositivos deben estar comprados a través de Apple o reseller autorizado
-2. Accede a business.apple.com y verifica que el dispositivo aparece
-3. Asigna el dispositivo a tu servidor MDM (Jamf)
-4. En Jamf, configura el PreStage Enrollment
-5. Cuando el dispositivo se encienda y conecte a internet, se inscribirá automáticamente`,
-                keywords: ['enrollment', 'inscribir', 'abm', 'apple business manager', 'automatico', 'prestage']
+                id: 'ecosistema-apple',
+                title: 'El Ecosistema Apple en Educación',
+                category: 'Ecosistema',
+                content: `El ecosistema educativo de Apple tiene 3 componentes principales:
+
+1. APPLE SCHOOL MANAGER (ASM) - school.apple.com - ES EL CENTRO
+   - Aquí se crean los usuarios (profesores y alumnos)
+   - Aquí se crean las clases
+   - Aquí se asignan los dispositivos al servidor MDM
+   - Aquí se compran y asignan las apps (VPP integrado)
+
+2. JAMF SCHOOL - Herramienta MDM
+   - Se conecta a ASM y RECIBE los datos (sincronización)
+   - Aplica configuraciones y restricciones a dispositivos
+   - Distribuye apps a los iPads y Macs
+
+3. DISPOSITIVOS + APP AULA
+   - iPads supervisados para alumnado
+   - Macs para profesorado
+   - App Aula usa las clases de ASM
+
+IMPORTANTE: Las cosas se CREAN en ASM, no en Jamf. Jamf solo las recibe.`,
+                keywords: ['ecosistema', 'asm', 'apple school manager', 'jamf school', 'flujo', 'como funciona']
             },
             {
-                id: 'enrollment-manual',
-                title: 'Enrollment Manual vía URL',
+                id: 'enrollment-asm',
+                title: 'Inscripción de Dispositivos desde ASM',
                 category: 'Enrollment',
-                content: `Para inscribir manualmente un Mac que no está en ABM:
-1. Abre Safari en el Mac
-2. Ve a: tudominio.jamfcloud.com/enroll
-3. Inicia sesión con credenciales de Jamf
-4. Descarga e instala el perfil de enrollment
-5. El dispositivo aparecerá en Jamf como "Managed"`,
-                keywords: ['enrollment', 'manual', 'url', 'mac', 'inscribir']
+                content: `Los dispositivos se inscriben automáticamente porque están en Apple School Manager:
+
+EN ASM (school.apple.com):
+1. Los dispositivos comprados a Apple/reseller aparecen automáticamente
+2. Ve a Dispositivos → busca por número de serie
+3. Asigna el dispositivo a tu servidor MDM (Jamf School)
+
+EN JAMF SCHOOL:
+4. El dispositivo aparecerá en Dispositivos → Enrollment automático
+5. Configura un PreStage Enrollment para definir qué configuración recibe
+
+EN EL DISPOSITIVO:
+6. Al encenderlo y conectar a WiFi, se inscribe solo
+7. Aparece como "Gestionado" con las apps y restricciones configuradas`,
+                keywords: ['enrollment', 'inscribir', 'asm', 'apple school manager', 'automatico', 'prestage', 'dispositivo nuevo']
+            },
+            {
+                id: 'aula-app',
+                title: 'App Aula (Apple Classroom) para Profesores',
+                category: 'Aula',
+                content: `La app Aula permite a los profesores gestionar la clase en tiempo real:
+
+QUÉ PUEDE HACER UN PROFESOR:
+- Ver las pantallas de todos los iPads de su clase
+- Abrir una app en todos los iPads a la vez
+- Bloquear los iPads durante un examen
+- Silenciar dispositivos
+- Enviar/recibir archivos con AirDrop
+
+REQUISITOS PARA QUE FUNCIONE:
+1. Las clases deben estar creadas en Apple School Manager (NO en Jamf)
+2. Jamf School sincroniza las clases desde ASM
+3. Bluetooth activado en todos los dispositivos
+4. Misma red WiFi (sin "aislamiento de clientes")
+5. iPads deben ser supervisados
+
+SI NO FUNCIONA: Ver diagnóstico "Problemas con Aula"`,
+                keywords: ['aula', 'classroom', 'apple classroom', 'profesor', 'ver pantallas', 'bloquear', 'clase']
+            },
+            {
+                id: 'aula-troubleshoot',
+                title: 'Problemas con App Aula',
+                category: 'Aula',
+                content: `Si el profesor no ve los dispositivos en Aula:
+
+PASO 1 - VERIFICAR EN ASM (school.apple.com):
+- ¿Existe la clase con el profesor asignado?
+- ¿Los alumnos/iPads están en esa clase?
+
+PASO 2 - VERIFICAR EN JAMF SCHOOL:
+- ¿Se ha sincronizado la clase desde ASM?
+- Ir a Usuarios → Clases → ¿Aparece la clase?
+
+PASO 3 - VERIFICAR EN LOS DISPOSITIVOS:
+- Bluetooth activado en TODOS (profesor + alumnos)
+- Misma red WiFi (preguntar a IT si hay "client isolation")
+- Reiniciar la app Aula en el iPad del profesor
+
+PASO 4 - FORZAR SINCRONIZACIÓN:
+- En Jamf School: seleccionar dispositivos → Send Blank Push
+- Esperar 2-3 minutos y reiniciar Aula
+
+TODAVÍA NO FUNCIONA:
+- Reiniciar los iPads
+- Verificar que los iPads son supervisados (Ajustes → General → Info)`,
+                keywords: ['aula', 'problema', 'no ve', 'no aparece', 'classroom', 'troubleshooting', 'bluetooth', 'wifi']
+            },
+            {
+                id: 'crear-clases',
+                title: 'Crear Clases (se hace en ASM)',
+                category: 'Clases',
+                content: `Las clases se crean en Apple School Manager, NO en Jamf:
+
+EN ASM (school.apple.com):
+1. Ir a Clases → Crear clase
+2. Nombre de la clase (ej: "3º ESO - Matemáticas")
+3. Asignar profesor/es
+4. Asignar alumnos (o importar desde tu sistema de gestión escolar)
+5. Guardar
+
+EN JAMF SCHOOL:
+6. Ir a Configuración → Apple School Manager → Sincronizar
+7. La clase aparecerá en Usuarios → Clases
+8. Los dispositivos de los alumnos ya estarán asociados
+
+EN APP AULA:
+9. El profesor abre Aula y ve su clase automáticamente
+10. Puede empezar a gestionar los iPads
+
+NOTA: Si usas SFTP o API para importar datos, las clases también vienen de ASM.`,
+                keywords: ['clase', 'crear clase', 'asm', 'profesor', 'alumnos', 'aula']
             },
             {
                 id: 'apps-vpp',
-                title: 'Distribución de Apps con VPP/ABM',
+                title: 'Instalar Apps (VPP desde ASM)',
                 category: 'Apps',
-                content: `Para distribuir apps usando Volume Purchase Program:
-1. Compra las apps en Apple Business Manager (Apps y Libros)
-2. Asigna las licencias a tu ubicación
-3. En Jamf: Apps → Mobile Device Apps → + Add
-4. Busca la app y selecciona distribución
-5. Define el Scope: All Devices o Smart Group
-6. Guarda y las apps se instalarán`,
-                keywords: ['apps', 'vpp', 'instalar', 'distribuir', 'licencias']
+                content: `Las apps se compran/asignan en ASM y se distribuyen desde Jamf:
+
+PASO 1 - EN ASM (school.apple.com):
+1. Ir a Apps y libros
+2. Buscar la app que necesitas
+3. Comprar licencias (muchas apps educativas son gratis)
+4. Asignar a tu ubicación
+
+PASO 2 - EN JAMF SCHOOL:
+5. Ir a Apps → App Store → la app aparece automáticamente
+6. Crear distribución: seleccionar la app → Distribute
+7. Elegir a quién: grupo de dispositivos, clase, o todos
+8. Modo: Automático (se instala sola) o Bajo demanda
+
+PARA PROFESORES (con Jamf Teacher):
+- El profesor puede instalar apps desde la app Jamf Teacher
+- Solo ve apps marcadas como "Available in Teacher"
+- Útil para instalar apps específicas durante una clase`,
+                keywords: ['apps', 'vpp', 'instalar', 'distribuir', 'licencias', 'app store', 'asm']
             },
             {
-                id: 'apps-teacher',
-                title: 'Jamf Teacher: Apps bajo demanda por profesores',
-                category: 'Apps',
-                content: `Para que los profesores instalen apps en iPads del alumnado:
-1. En Jamf: Devices → Settings → Teacher Permissions → Activar permisos
-2. Apps → [App] → Scope → Marca "Available in Teacher"
-3. Configura clases en Users → Classes
-4. El profesor usa Jamf Teacher app o portal web tudominio.jamfcloud.com/teacher
-5. Puede instalar/desinstalar apps en iPads de su clase
-Requisitos: iPads supervisados, apps en ABM, Jamf School`,
-                keywords: ['teacher', 'profesor', 'instalar apps', 'jamf teacher', 'classroom']
-            },
-            {
-                id: 'classroom-setup',
-                title: 'Configuración de Apple Classroom',
-                category: 'Classroom',
-                content: `Para configurar Apple Classroom:
-1. Crea clases en Jamf: Users → Classes → + New
-2. Asigna profesor y alumnos/dispositivos
-3. Instala Apple Classroom en dispositivo del profesor
-4. Requisitos: iPads supervisados, Bluetooth activado, misma red WiFi
-Permite: ver pantallas, abrir apps, bloquear dispositivos`,
-                keywords: ['classroom', 'apple classroom', 'clase', 'profesor']
-            },
-            {
-                id: 'classroom-troubleshoot',
-                title: 'Problemas con Apple Classroom',
-                category: 'Classroom',
-                content: `Si el profesor no ve los dispositivos:
-1. Verificar Bluetooth activado en todos
-2. Verificar misma red WiFi (sin aislamiento de clientes)
-3. Verificar clases en Jamf con profesor y alumnos asignados
-4. Forzar sincronización: seleccionar dispositivos → Send Blank Push
-5. Reiniciar dispositivos si persiste`,
-                keywords: ['classroom', 'problema', 'no ve', 'troubleshooting', 'bluetooth']
-            },
-            {
-                id: 'restrictions-profile',
+                id: 'restricciones',
                 title: 'Perfiles de Restricción',
                 category: 'Restricciones',
-                content: `Para crear perfiles de restricción:
-1. Configuration Profiles → + New → Mobile Device → Restrictions
-2. Configurar según edad: Primaria (sin Safari/App Store), ESO (Safari con filtro)
-3. Define el Scope (Smart Group por curso)
-4. Guarda y se aplica automáticamente`,
-                keywords: ['restricciones', 'perfil', 'bloquear', 'safari', 'seguridad']
+                content: `Los perfiles de restricción se crean en Jamf School:
+
+EN JAMF SCHOOL:
+1. Ir a Perfiles → + Nuevo perfil
+2. Tipo: iOS/iPadOS
+3. Sección: Restricciones
+4. Configurar según edad/curso:
+
+PRIMARIA (más restrictivo):
+- Sin Safari
+- Sin App Store
+- Sin cámara (opcional)
+- Sin AirDrop
+- Sin cambios de cuenta
+
+ESO/BACHILLERATO (menos restrictivo):
+- Safari con filtro de contenido
+- App Store con restricción de edad (+12)
+- Cámara permitida
+- AirDrop solo para la clase
+
+5. Asignar a Smart Group (ej: "iPads Primaria")
+6. El perfil se aplica automáticamente
+
+IMPORTANTE: Los iPads deben ser supervisados para que funcionen todas las restricciones.`,
+                keywords: ['restricciones', 'perfil', 'bloquear', 'safari', 'seguridad', 'primaria', 'eso']
             },
             {
                 id: 'activation-lock',
                 title: 'Bloqueo de Activación',
                 category: 'Seguridad',
-                content: `Para resolver bloqueo de activación:
-1. Si está en Jamf: Devices → Mobile Devices → buscar → Security → Activation Lock Bypass Code
-2. En pantalla de bloqueo: email cualquiera + código bypass como contraseña
-3. Si NO hay código: contactar Apple con factura original
-Prevención: Activar "Activation Lock Bypass" en PreStage Enrollment`,
-                keywords: ['bloqueo', 'activacion', 'activation lock', 'bypass', 'apple id']
-            },
-            {
-                id: 'self-service',
-                title: 'Self Service para Macs',
-                category: 'Macs',
-                content: `Self Service permite a usuarios instalar software:
-1. Policies → [Policy] → Self Service → Make Available
-2. Añade apps, impresoras, scripts como opciones
-3. Usuarios abren Self Service y ven opciones disponibles
-4. Al hacer clic se ejecuta la política`,
-                keywords: ['self service', 'mac', 'autoservicio', 'instalar']
+                content: `Si un iPad pide Apple ID y contraseña al restaurarlo:
+
+OPCIÓN 1 - CÓDIGO BYPASS (si está en Jamf):
+1. En Jamf School: Dispositivos → buscar el iPad
+2. Ir a Seguridad → Activation Lock Bypass Code
+3. En el iPad: poner cualquier email + el código bypass como contraseña
+
+OPCIÓN 2 - NO HAY CÓDIGO:
+- Contactar a Apple con la factura original del dispositivo
+- Apple puede desbloquearlo remotamente
+
+PREVENCIÓN:
+- En el PreStage Enrollment de Jamf, activar "Activation Lock Bypass"
+- Así Jamf guarda el código automáticamente para todos los dispositivos nuevos`,
+                keywords: ['bloqueo', 'activacion', 'activation lock', 'bypass', 'apple id', 'restaurar']
             },
             {
                 id: 'smart-groups',
-                title: 'Smart Groups',
+                title: 'Grupos Inteligentes (Smart Groups)',
                 category: 'Administración',
-                content: `Smart Groups son grupos dinámicos por criterios:
-1. Devices → Smart Device Groups → + New
-2. Define criterios: modelo, OS, ubicación, usuario
-3. Dispositivos que cumplan se añaden automáticamente
-4. Úsalos para Scope de apps, perfiles, políticas
-Ejemplos: "iPads 1º ESO", "iPads sin actualizar", "Macs profesorado"`,
-                keywords: ['smart group', 'grupo', 'filtro', 'criterio']
+                content: `Los Smart Groups organizan dispositivos automáticamente:
+
+EN JAMF SCHOOL:
+1. Ir a Dispositivos → Smart Groups → + Nuevo
+2. Definir criterios, por ejemplo:
+   - Modelo: iPad
+   - Usuario contiene: "1ESO"
+   - Esto crea grupo "iPads de 1º ESO" automáticamente
+
+USOS COMUNES:
+- "iPads Primaria" → para restricciones más fuertes
+- "iPads sin actualizar" → para forzar actualización
+- "Macs profesorado" → para apps de profesores
+- "iPads de 3ºA" → para asignar apps de esa clase
+
+Los dispositivos entran/salen del grupo automáticamente según cumplan los criterios.`,
+                keywords: ['smart group', 'grupo', 'filtro', 'criterio', 'organizar']
             },
             {
-                id: 'os-updates',
-                title: 'Actualizaciones de Sistema',
-                category: 'Mantenimiento',
-                content: `Para gestionar actualizaciones iOS/macOS:
-1. Jamf School: Devices → Actions → Update OS
-2. Jamf Pro: Policies con "Software Updates"
-3. Puedes forzar o dejar disponible para usuario
-Buenas prácticas: probar en grupo piloto primero`,
-                keywords: ['actualizar', 'update', 'ios', 'macos', 'sistema']
+                id: 'sincronizacion-asm',
+                title: 'Sincronización ASM ↔ Jamf',
+                category: 'Administración',
+                content: `Jamf School se sincroniza con Apple School Manager:
+
+QUÉ SE SINCRONIZA:
+- Usuarios (profesores y alumnos)
+- Clases
+- Dispositivos asignados
+- Apps y licencias VPP
+
+CÓMO FORZAR SINCRONIZACIÓN:
+1. Jamf School → Configuración → Apple School Manager
+2. Click en "Sincronizar ahora"
+3. Esperar unos minutos
+
+SI ALGO NO APARECE EN JAMF:
+1. Verificar que existe en ASM (school.apple.com)
+2. Verificar que está asignado a tu ubicación/servidor
+3. Forzar sincronización
+4. Si sigue sin aparecer: contactar soporte Jamf
+
+FRECUENCIA: Jamf sincroniza automáticamente cada pocas horas.`,
+                keywords: ['sincronizar', 'asm', 'no aparece', 'jamf', 'conexion']
             }
         ];
     }
@@ -454,20 +569,38 @@ Buenas prácticas: probar en grupo piloto primero`,
             });
         }
 
-        const systemPrompt = `Eres un asistente experto en Jamf para entornos educativos.
+        const systemPrompt = `Eres un asistente experto en el ecosistema educativo de Apple para un centro escolar.
+
+ECOSISTEMA (orden de importancia):
+1. APPLE SCHOOL MANAGER (ASM) - school.apple.com - ES EL CENTRO DE TODO
+   - Aquí se crean usuarios (profesores, alumnos)
+   - Aquí se crean las clases
+   - Aquí se asignan dispositivos al servidor MDM
+   - Aquí se compran y asignan apps (VPP integrado)
+
+2. JAMF SCHOOL - Herramienta de gestión (MDM)
+   - RECIBE usuarios y dispositivos desde ASM (sincronización)
+   - Aplica perfiles de configuración y restricciones
+   - Distribuye apps a los dispositivos
+   - NO es donde se crean usuarios ni clases (eso es en ASM)
+
+3. DISPOSITIVOS + APP AULA
+   - iPads supervisados para alumnado
+   - Macs para profesorado
+   - App Aula (Apple Classroom) usa las clases creadas en ASM
+
+FLUJO CORRECTO: ASM crea → Jamf sincroniza → Dispositivos reciben
 
 INSTRUCCIONES:
-1. Responde en español
-2. Usa la DOCUMENTACIÓN proporcionada
-3. Sé conciso pero completo
-4. Usa listas numeradas
-5. Da rutas de menú exactas
+1. Responde en español, con lenguaje accesible para profesores (no solo IT)
+2. Usa la DOCUMENTACIÓN proporcionada como base
+3. Siempre menciona si algo se hace en ASM o en Jamf School
+4. Para problemas: primero verificar ASM, luego Jamf, luego dispositivo
+5. Da rutas de menú exactas cuando sea posible
+6. La app Aula es fundamental - prioriza soluciones relacionadas
 
-CONTEXTO:
-- Jamf School/Pro para MDM
-- iPads supervisados para alumnado
-- Macs para profesorado
-- Apple Classroom
+IMPORTANTE: Si el usuario pregunta cómo crear algo (usuarios, clases, etc.),
+recuerda que se crea en Apple School Manager, NO en Jamf.
 ${context}`;
 
         this.conversationHistory.push({ role: 'user', parts: [{ text: userMessage }] });

@@ -171,20 +171,25 @@ class JamfAssistant {
 
                 <h2 class="content-title"><i class="ri-error-warning-line"></i> Problemas Comunes</h2>
                 <div class="action-cards">
-                    <div class="action-card" data-diagnostic="device-not-visible">
-                        <div class="action-icon"><i class="ri-eye-off-line"></i></div>
-                        <h3>No veo dispositivos en App Aula</h3>
-                        <p>Solucionar problemas de visibilidad</p>
+                    <div class="action-card" data-diagnostic="aula-no-funciona">
+                        <div class="action-icon"><i class="ri-graduation-cap-line"></i></div>
+                        <h3>La app Aula no funciona</h3>
+                        <p>No veo alumnos, pantallas en gris</p>
+                    </div>
+                    <div class="action-card" data-diagnostic="aula-funciones-avanzadas">
+                        <div class="action-icon"><i class="ri-rocket-line"></i></div>
+                        <h3>Funciones avanzadas de Aula</h3>
+                        <p>AirDrop, AirPlay, resetear contraseñas</p>
+                    </div>
+                    <div class="action-card" data-diagnostic="aula-remoto">
+                        <div class="action-icon"><i class="ri-global-line"></i></div>
+                        <h3>Problemas con clases remotas</h3>
+                        <p>Alumnos no reciben invitación</p>
                     </div>
                     <div class="action-card" data-diagnostic="apps-not-installing">
                         <div class="action-icon"><i class="ri-download-cloud-2-line"></i></div>
                         <h3>Las apps no se instalan</h3>
                         <p>Diagnóstico guiado paso a paso</p>
-                    </div>
-                    <div class="action-card" data-diagnostic="activation-lock">
-                        <div class="action-icon"><i class="ri-lock-line"></i></div>
-                        <h3>Bloqueo de activación</h3>
-                        <p>Desbloquear iPads con cuenta anterior</p>
                     </div>
                 </div>
             </section>
@@ -325,7 +330,7 @@ class JamfAssistant {
                     <div class="info-icon"><i class="ri-lightbulb-line"></i></div>
                     <div class="info-content">
                         <h4>¿Qué es la App Aula?</h4>
-                        <p>Es la herramienta principal que los profesores usan todos los días en sus Macs para controlar los iPads del alumnado. Permite ver pantallas, abrir apps, bloquear dispositivos y guiar la clase de forma interactiva.</p>
+                        <p>Es la herramienta principal que los profesores usan todos los días para controlar los iPads del alumnado. Permite ver pantallas, abrir apps, bloquear dispositivos y guiar la clase de forma interactiva.</p>
                     </div>
                 </div>
 
@@ -333,13 +338,27 @@ class JamfAssistant {
                     <div class="info-icon" style="color: #f59e0b;"><i class="ri-star-line"></i></div>
                     <div class="info-content">
                         <h4 style="color: #92400e;">Herramienta fundamental para profesores</h4>
-                        <p style="color: #78350f;">Esta app se utiliza a diario en cada clase. Es importante que todos los profesores sepan usarla y que funcione correctamente para aprovechar al máximo los iPads en el aula.</p>
+                        <p style="color: #78350f;">Esta app se utiliza a diario en cada clase. Es importante que todos los profesores sepan usarla y que funcione correctamente.</p>
                     </div>
                 </div>
 
+                <h2 class="content-title"><i class="ri-book-read-line"></i> Guías Básicas</h2>
                 <div class="guide-cards">
-                    ${this.renderGuideCard('classroom-setup', KnowledgeBase.classroom.setup)}
-                    ${this.renderGuideCard('classroom-troubleshoot', KnowledgeBase.classroom.troubleshoot)}
+                    ${this.renderGuideCard('aula-overview', KnowledgeBase.aula.overview)}
+                    ${this.renderGuideCard('aula-howto', KnowledgeBase.aula.howto)}
+                    ${this.renderGuideCard('aula-setup', KnowledgeBase.aula.setup)}
+                </div>
+
+                <h2 class="content-title"><i class="ri-rocket-line"></i> Funciones Avanzadas</h2>
+                <div class="guide-cards">
+                    ${this.renderGuideCard('aula-advanced', KnowledgeBase.aula.advanced)}
+                    ${this.renderGuideCard('aula-remotehybrid', KnowledgeBase.aula.remotehybrid)}
+                    ${this.renderGuideCard('aula-sharedipad', KnowledgeBase.aula.sharedipad)}
+                </div>
+
+                <h2 class="content-title"><i class="ri-tools-line"></i> Solucionar Problemas</h2>
+                <div class="guide-cards">
+                    ${this.renderGuideCard('aula-troubleshoot', KnowledgeBase.aula.troubleshoot)}
                 </div>
             </section>
         `;
@@ -472,9 +491,13 @@ class JamfAssistant {
         } else if (guideId.startsWith('mac-')) {
             const key = guideId.replace('mac-', '');
             guide = KnowledgeBase.macs[key];
+        } else if (guideId.startsWith('aula-')) {
+            const key = guideId.replace('aula-', '');
+            guide = KnowledgeBase.aula[key];
         } else if (guideId.startsWith('classroom-')) {
+            // Legacy support - redirect to aula
             const key = guideId.replace('classroom-', '');
-            guide = KnowledgeBase.classroom[key];
+            guide = KnowledgeBase.aula[key];
         } else if (guideId === 'teacher-setup') {
             guide = KnowledgeBase.teacher.setup;
         }
@@ -693,7 +716,7 @@ class JamfAssistant {
 
         searchInGuides(KnowledgeBase.ipads, 'ipad', 'iPads');
         searchInGuides(KnowledgeBase.macs, 'mac', 'Macs');
-        searchInGuides(KnowledgeBase.classroom, 'classroom', 'App Aula');
+        searchInGuides(KnowledgeBase.aula, 'aula', 'App Aula');
 
         // Search diagnostics
         Object.entries(Diagnostics).forEach(([key, diag]) => {

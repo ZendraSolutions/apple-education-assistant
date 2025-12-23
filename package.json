@@ -1,0 +1,17 @@
+{
+    "name": "jamf-assistant",
+    "version": "1.0.0",
+    "description": "Asistente de soporte para gestión de dispositivos Apple con Jamf",
+    "scripts": {
+        "update-docs": "node scripts/update-docs.js"
+    },
+    "keywords": [
+        "jamf",
+        "apple",
+        "mdm",
+        "education",
+        "assistant"
+    ],
+    "author": "",
+    "license": "MIT"
+}

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jamf Assistant - Centro Escolar</title>
+    <meta name="description" content="Asistente de gestión de dispositivos Apple con Jamf">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Fonts: Outfit (Rounded Sans) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons: Remixicon -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+</head>
+
+<body>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="ri-apple-fill logo-icon"></i>
+                <span class="logo-text">Jamf Assistant</span>
+            </div>
+        </div>
+
+        <div class="nav-section">
+            <span class="nav-label">Principal</span>
+            <ul class="nav-menu">
+                <li class="nav-item active" data-section="dashboard">
+                    <i class="ri-dashboard-line"></i> Dashboard
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <span class="nav-label">Dispositivos</span>
+            <ul class="nav-menu">
+                <li class="nav-item" data-section="ipads">
+                    <i class="ri-tablet-line"></i> iPads Alumnado
+                </li>
+                <li class="nav-item" data-section="macs">
+                    <i class="ri-macbook-line"></i> Macs Profesorado
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <span class="nav-label">Herramientas</span>
+            <ul class="nav-menu">
+                <li class="nav-item" data-section="classroom">
+                    <i class="ri-group-line"></i> Apple Classroom
+                </li>
+                <li class="nav-item" data-section="teacher">
+                    <i class="ri-presentation-line"></i> Jamf Teacher
+                </li>
+                <li class="nav-item" data-section="troubleshooting">
+                    <i class="ri-tools-line"></i> Troubleshooting
+                </li>
+            </ul>
+        </div>
+
+        <div class="nav-section">
+            <span class="nav-label">Recursos</span>
+            <ul class="nav-menu">
+                <li class="nav-item" data-section="checklists">
+                    <i class="ri-task-line"></i> Checklists
+                </li>
+            </ul>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="theme-toggle-container">
+                <button id="themeToggle" class="theme-btn" title="Cambiar tema">
+                    <i class="ri-moon-line" id="themeIcon"></i>
+                </button>
+            </div>
+            <div class="update-info" id="updateInfo">
+                <i class="ri-book-open-line update-icon"></i>
+                <span class="update-text">Cargando...</span>
+            </div>
+            <a href="https://learn.jamf.com" target="_blank" class="docs-link">
+                <i class="ri-external-link-line"></i> Docs oficiales
+            </a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <button class="menu-toggle" id="menuToggle"><i class="ri-menu-2-line"></i></button>
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <i class="ri-search-line search-icon-input"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar soluciones...">
+                </div>
+            </div>
+        </header>
+
+        <div class="content-wrapper" id="contentWrapper">
+            <!-- Content loaded dynamically -->
+        </div>
+    </main>
+
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <div class="modal" id="guideModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">✕</button>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chatbot-fab" id="chatbotFab">
+        <span class="fab-icon"><i class="ri-robot-line"></i></span>
+        <span class="fab-badge" id="fabBadge"></span>
+    </div>
+
+    <div class="chatbot-panel" id="chatbotPanel">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <i class="ri-robot-line"></i>
+                <span>Asistente Jamf IA</span>
+            </div>
+            <div class="chatbot-actions">
+                <button class="chatbot-settings" id="chatbotSettings" title="Configurar API"><i
+                        class="ri-settings-3-line"></i></button>
+                <button class="chatbot-close" id="chatbotClose">✕</button>
+            </div>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="chat-message bot">
+                <div class="message-avatar"><i class="ri-robot-line"></i></div>
+                <div class="message-content">
+                    <p>¡Hola! Soy tu asistente de Jamf. Puedo ayudarte con:</p>
+                    <ul>
+                        <li>Gestión de iPads y Macs</li>
+                        <li>Apple Classroom y Jamf Teacher</li>
+                        <li>Troubleshooting de problemas</li>
+                    </ul>
+                    <p>¿En qué puedo ayudarte hoy?</p>
+                </div>
+            </div>
+        </div>
+        <div class="chatbot-input-container">
+            <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Escribe tu pregunta...">
+            <button class="chatbot-send" id="chatbotSend">
+                <i class="ri-send-plane-fill"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- API Key Modal -->
+    <div class="modal" id="apiModal">
+        <div class="modal-content api-modal">
+            <button class="modal-close" id="apiModalClose">✕</button>
+            <div class="modal-body">
+                <h2><i class="ri-settings-3-line"></i> Configurar API de IA</h2>
+                <p>Para usar el asistente con IA, necesitas una API Key de Google Gemini (gratuita).</p>
+
+                <div class="api-steps">
+                    <div class="api-step">
+                        <span class="step-num">1</span>
+                        <span>Ve a <a href="https://aistudio.google.com/apikey" target="_blank">Google AI
+                                Studio</a></span>
+                    </div>
+                    <div class="api-step">
+                        <span class="step-num">2</span>
+                        <span>Crea una API Key (es gratis)</span>
+                    </div>
+                    <div class="api-step">
+                        <span class="step-num">3</span>
+                        <span>Pégala aquí abajo:</span>
+                    </div>
+                </div>
+
+                <div class="api-input-group">
+                    <input type="password" id="apiKeyInput" class="api-key-input" placeholder="AIza...">
+                    <button id="saveApiKey" class="save-api-btn">Guardar</button>
+                </div>
+
+                <label class="pin-checkbox">
+                    <input type="checkbox" id="pinApiKey">
+                    <span><i class="ri-pushpin-line"></i> Anclar API Key (guardar permanentemente)</span>
+                </label>
+                <p class="pin-info">Sin anclar, la key se borra automáticamente en 24 horas.</p>
+
+                <div class="api-status" id="apiStatus"></div>
+
+                <div class="info-box" style="margin-top: 20px;">
+                    <div class="info-icon"><i class="ri-lock-line"></i></div>
+                    <div class="info-content">
+                        <p>Tu API Key se guarda solo en tu navegador (localStorage). No se envía a ningún servidor.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/knowledge-base.js"></script>
+    <script src="js/diagnostics.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

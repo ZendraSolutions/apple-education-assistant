@@ -1,0 +1,171 @@
+{
+    "version": "1.0.0",
+    "lastUpdated": "2025-12-23",
+    "lastAutoCheck": "2025-12-23",
+    "source": "Documentación oficial de Jamf + experiencia de implementación",
+    "updateFrequency": "Manual - Actualizar cuando cambie la documentación oficial",
+    "nextUpdateCheck": "2025-03-01",
+    "articles": [
+        {
+            "id": "enrollment-abm",
+            "title": "Enrollment Automático con Apple Business Manager",
+            "category": "Enrollment",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/Automated_Device_Enrollment.html",
+            "content": "Para inscribir dispositivos automáticamente en Jamf usando Apple Business Manager (ABM):\n\n1. Los dispositivos deben estar comprados a través de Apple o un reseller autorizado\n2. Accede a business.apple.com y verifica que el dispositivo aparece\n3. Asigna el dispositivo a tu servidor MDM (Jamf)\n4. En Jamf, configura el PreStage Enrollment con las apps y perfiles\n5. Cuando el dispositivo se encienda y conecte a internet, se inscribirá automáticamente\n\nRequisitos: Cuenta de ABM, servidor MDM registrado en ABM, dispositivo elegible.",
+            "keywords": [
+                "enrollment",
+                "inscribir",
+                "abm",
+                "apple business manager",
+                "automatico",
+                "prestage"
+            ]
+        },
+        {
+            "id": "enrollment-manual",
+            "title": "Enrollment Manual vía URL",
+            "category": "Enrollment",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/User-Initiated_Enrollment.html",
+            "content": "Para inscribir manualmente un Mac que no está en ABM:\n\n1. Abre Safari en el Mac\n2. Ve a: tudominio.jamfcloud.com/enroll\n3. Inicia sesión con credenciales de Jamf\n4. Descarga el perfil de enrollment\n5. Instala el perfil siguiendo las instrucciones\n6. El dispositivo aparecerá en Jamf como 'Managed'\n\nNota: Este método no permite supervisión completa.",
+            "keywords": [
+                "enrollment",
+                "manual",
+                "url",
+                "mac",
+                "inscribir"
+            ]
+        },
+        {
+            "id": "apps-vpp",
+            "title": "Distribución de Apps con VPP/ABM",
+            "category": "Apps",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/Apps.html",
+            "content": "Para distribuir apps a dispositivos usando Volume Purchase Program:\n\n1. Compra las apps en Apple Business Manager (Apps y Libros)\n2. Asigna las licencias a tu ubicación\n3. En Jamf, ve a Apps → Mobile Device Apps → + Add\n4. Busca la app y selecciona 'Install Automatically' o 'Available in Teacher'\n5. Define el Scope: All Devices, Smart Group específico, o dispositivos individuales\n6. Guarda. Las apps se instalarán en los dispositivos del Scope.\n\nTiempo estimado de instalación: 5-15 minutos.",
+            "keywords": [
+                "apps",
+                "vpp",
+                "instalar",
+                "distribuir",
+                "licencias",
+                "apple business manager"
+            ]
+        },
+        {
+            "id": "apps-teacher",
+            "title": "Jamf Teacher: Apps bajo demanda por profesores",
+            "category": "Apps",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/Jamf_Teacher.html",
+            "content": "Para que los profesores puedan instalar apps en iPads del alumnado:\n\n1. En Jamf: Devices → Settings → Teacher Permissions → Activar 'Allow teachers to install apps'\n2. Ve a Apps → [Selecciona app] → Scope → Distribution → Marca 'Available in Teacher'\n3. Configura clases en Users → Classes con profesor y alumnos asignados\n4. El profesor accede a: app Jamf Teacher (iOS) o portal web tudominio.jamfcloud.com/teacher\n5. Desde ahí puede instalar/desinstalar apps en los iPads de su clase\n\nRequisitos: iPads supervisados, apps compradas en ABM, Jamf School.",
+            "keywords": [
+                "teacher",
+                "profesor",
+                "instalar apps",
+                "bajo demanda",
+                "jamf teacher",
+                "classroom"
+            ]
+        },
+        {
+            "id": "classroom-setup",
+            "title": "Configuración de Apple Classroom",
+            "category": "Classroom",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/Apple_Classroom.html",
+            "content": "Para configurar Apple Classroom en tu centro:\n\n1. Crea clases en Jamf: Users → Classes → + New\n2. Asigna un profesor y los alumnos/dispositivos de esa clase\n3. Instala la app Apple Classroom en el dispositivo del profesor\n4. Requisitos técnicos: iPads supervisados, Bluetooth activado, misma red WiFi\n5. El profesor abre Classroom y verá las clases asignadas\n\nApple Classroom permite: ver pantallas, abrir apps, bloquear dispositivos, silenciar notificaciones, guiar navegación web.",
+            "keywords": [
+                "classroom",
+                "apple classroom",
+                "clase",
+                "profesor",
+                "configurar"
+            ]
+        },
+        {
+            "id": "classroom-troubleshoot",
+            "title": "Problemas con Apple Classroom",
+            "category": "Classroom",
+            "officialDocUrl": "https://support.apple.com/guide/classroom/welcome/ipados",
+            "content": "Si el profesor no ve los dispositivos en Classroom:\n\n1. Verificar Bluetooth: Debe estar activado en profesor y alumnos\n2. Verificar WiFi: Todos deben estar en la misma red. Evitar redes con aislamiento de clientes\n3. Verificar clases en Jamf: El profesor y alumnos deben estar asignados a la misma clase\n4. Forzar sincronización: En Jamf, seleccionar dispositivos → Send Blank Push\n5. Reiniciar dispositivos si persiste\n6. Verificar que los iPads están supervisados\n\nError común: 'No se encontraron dispositivos' - usualmente es problema de Bluetooth o red.",
+            "keywords": [
+                "classroom",
+                "problema",
+                "no ve",
+                "dispositivos",
+                "troubleshooting",
+                "bluetooth"
+            ]
+        },
+        {
+            "id": "restrictions-profile",
+            "title": "Perfiles de Restricción",
+            "category": "Restricciones",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/Configuration_Profiles.html",
+            "content": "Para crear perfiles de restricción en Jamf:\n\n1. Ve a Configuration Profiles → + New → Mobile Device\n2. Selecciona 'Restrictions'\n3. Configura las restricciones según edad/curso:\n   - Primaria: Deshabilitar Safari, App Store, AirDrop\n   - ESO: Safari con filtro, sin App Store\n4. Define el Scope (Smart Group por curso)\n5. Guarda y el perfil se aplicará automáticamente\n\nRestricciones más usadas: Allow App Store, Allow Safari, Allow AirDrop, Content Rating.",
+            "keywords": [
+                "restricciones",
+                "perfil",
+                "bloquear",
+                "safari",
+                "app store",
+                "seguridad"
+            ]
+        },
+        {
+            "id": "activation-lock",
+            "title": "Bloqueo de Activación",
+            "category": "Seguridad",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/Activation_Lock_Bypass.html",
+            "content": "Para resolver un bloqueo de activación en iPad:\n\n1. Si el iPad está en Jamf: Devices → Mobile Devices → buscar → Security → ver 'Activation Lock Bypass Code'\n2. En la pantalla de bloqueo: introducir cualquier email y el código de bypass como contraseña\n3. Si NO está en Jamf o no hay código: Contactar a Apple con factura de compra original\n\nPrevención: Activar 'Activation Lock Bypass' en el PreStage Enrollment para que Jamf guarde los códigos automáticamente.",
+            "keywords": [
+                "bloqueo",
+                "activacion",
+                "activation lock",
+                "bypass",
+                "desbloquear",
+                "apple id"
+            ]
+        },
+        {
+            "id": "self-service",
+            "title": "Self Service para Macs",
+            "category": "Macs",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-pro-documentation/page/Self_Service.html",
+            "content": "Self Service es una app de Jamf que permite a los usuarios instalar software bajo demanda:\n\n1. Configura políticas disponibles en Self Service: Policies → [Policy] → Self Service → Make Available\n2. Añade apps, impresoras, scripts como opciones\n3. Los usuarios abren Self Service en su Mac y ven las opciones disponibles\n4. Al hacer clic, se ejecuta la política (instala app, configura impresora, etc.)\n\nCasos de uso: Instalar apps opcionales, configurar impresoras, ejecutar mantenimiento.",
+            "keywords": [
+                "self service",
+                "mac",
+                "autoservicio",
+                "instalar",
+                "usuario"
+            ]
+        },
+        {
+            "id": "smart-groups",
+            "title": "Smart Groups",
+            "category": "Administración",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/Smart_Device_Groups.html",
+            "content": "Smart Groups son grupos dinámicos basados en criterios:\n\n1. Ve a Devices → Smart Device Groups → + New\n2. Define criterios: modelo, sistema operativo, ubicación, usuario, etc.\n3. Los dispositivos que cumplan los criterios se añaden automáticamente\n4. Usa Smart Groups para Scope de apps, perfiles, políticas\n\nEjemplos útiles:\n- 'iPads 1º ESO': Building = 'Edificio A' AND User Department = '1º ESO'\n- 'iPads sin actualizar': OS Version < 17.0\n- 'Macs profesorado': Model Like 'Mac' AND User Position = 'Profesor'",
+            "keywords": [
+                "smart group",
+                "grupo",
+                "filtro",
+                "criterio",
+                "dinamico"
+            ]
+        },
+        {
+            "id": "os-updates",
+            "title": "Actualizaciones de Sistema",
+            "category": "Mantenimiento",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/Software_Updates.html",
+            "content": "Para gestionar actualizaciones de iOS/macOS en Jamf:\n\n1. Jamf School: Devices → Actions → Update OS\n2. Jamf Pro: Policies con acción 'Software Updates' o MDM command\n3. Puedes forzar la actualización o dejarla disponible para el usuario\n4. Considera: horario nocturno, conexión WiFi, batería suficiente\n\nBuenas prácticas: Probar en grupo piloto antes de desplegar a todos. Supervisar con Smart Group 'OS < X.X'.",
+            "keywords": [
+                "actualizar",
+                "update",
+                "ios",
+                "macos",
+                "ipados",
+                "sistema operativo"
+            ]
+        }
+    ]
+}

@@ -541,7 +541,7 @@ button,
     letter-spacing: 0.5px;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 4px 14px -4px currentColor;
+    box-shadow: var(--shadow-sm);
 }
 
 .diagnostic-btn:hover {

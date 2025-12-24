@@ -3,88 +3,133 @@
    Styles: Soft, Tacit, Rounded, Accessible
    =========================================== */
 
-/* --- 1. ORGANIC SCHOOL PALETTE (HSL) --- */
+/* --- 1. REFINED CREAM & GREY PALETTE (HSL) --- */
+/*
+   UX BASADA EN MAPAS DE CALOR - Flujo del profesor:
+   1. Dashboard → Problemas comunes (zona caliente)
+   2. Chatbot FAB → Preguntas rápidas (muy visible)
+   3. Sección Aula → Herramienta principal
+   4. Buscador → Encontrar soluciones
+
+   Jerarquía: Cards de acción > Navegación > Info secundaria
+*/
 :root {
-    /* ===== LIGHT MODE: Warm Paper / Cream ===== */
+    /* ===== LIGHT MODE: Soft Cream & Cool Grey ===== */
 
-    /* Backgrounds - Warm, organic, like aged paper */
-    --bg-page: hsl(38, 35%, 95%);
-    /* Warm cream #F7F3ED */
-    --bg-sidebar: hsl(35, 25%, 92%);
-    /* Slightly warmer sidebar */
-    --bg-card: hsl(40, 40%, 98%);
-    /* Bright warm white */
-    --bg-input: hsl(40, 30%, 97%);
+    /* Backgrounds - Cream neutro, menos amarillo, más refinado */
+    --bg-page: hsl(40, 15%, 96%);
+    /* #F6F5F3 - Cream muy suave */
+    --bg-sidebar: hsl(220, 12%, 95%);
+    /* #F1F2F4 - Gris frío claro (contraste con page) */
+    --bg-card: hsl(0, 0%, 100%);
+    /* #FFFFFF - Blanco puro para cards (máximo contraste) */
+    --bg-input: hsl(220, 15%, 97%);
+    /* #F7F8FA - Input gris muy claro */
+    --bg-elevated: hsl(40, 10%, 99%);
+    /* Para elementos destacados */
 
-    /* Text - Warm dark tones, not pure black */
-    --text-primary: hsl(25, 25%, 20%);
-    /* Warm charcoal #3D3530 */
-    --text-secondary: hsl(25, 15%, 45%);
-    /* Muted brown */
-    --text-muted: hsl(30, 12%, 60%);
-    /* Soft taupe */
+    /* Text - Grises neutros profesionales */
+    --text-primary: hsl(220, 15%, 18%);
+    /* #282D33 - Gris oscuro legible */
+    --text-secondary: hsl(220, 10%, 42%);
+    /* #636973 - Gris medio */
+    --text-muted: hsl(220, 8%, 58%);
+    /* #8D929A - Gris claro */
+    --text-placeholder: hsl(220, 8%, 68%);
+    /* Para placeholders */
 
-    /* Borders - Subtle, warm */
-    --border-subtle: hsl(30, 20%, 88%);
+    /* Borders - Grises sutiles */
+    --border-subtle: hsl(220, 12%, 90%);
+    /* #E2E4E8 - Borde suave */
+    --border-medium: hsl(220, 10%, 85%);
+    /* Para separadores más visibles */
 
-    /* Accent - Sage green (organic, school-friendly) */
-    --accent-primary: hsl(145, 35%, 42%);
-    /* Muted sage green */
-    --accent-hover: hsl(145, 40%, 38%);
-    --accent-bg: hsl(145, 30%, 94%);
-    /* Very light sage */
+    /* Accent - Sage green más suave y profesional */
+    --accent-primary: hsl(152, 38%, 42%);
+    /* #439D6F - Verde sage refinado */
+    --accent-hover: hsl(152, 42%, 38%);
+    /* Hover más oscuro */
+    --accent-bg: hsl(152, 35%, 95%);
+    /* #EEF7F2 - Fondo verde muy claro */
+    --accent-light: hsl(152, 30%, 90%);
+    /* Para hover suave */
 
-    /* Status Colors - Muted, organic versions */
-    --success: hsl(145, 40%, 45%);
-    /* Forest green */
-    --warning: hsl(35, 70%, 50%);
-    /* Warm amber/ochre */
-    --error: hsl(5, 55%, 55%);
-    /* Terracotta red */
-    --info: hsl(200, 45%, 50%);
-    /* Dusty blue */
+    /* Status Colors - Tonos suaves y accesibles */
+    --success: hsl(152, 45%, 40%);
+    /* Verde éxito */
+    --warning: hsl(38, 85%, 52%);
+    /* Ámbar cálido */
+    --error: hsl(0, 60%, 55%);
+    /* Rojo suave */
+    --info: hsl(210, 55%, 52%);
+    /* Azul informativo */
 
-    /* Shadows - Very soft, diffuse, matte (NO glows) */
-    --shadow-sm: 0 2px 6px rgba(60, 50, 40, 0.04);
-    --shadow-md: 0 8px 20px rgba(60, 50, 40, 0.06);
-    --shadow-lg: 0 16px 32px rgba(60, 50, 40, 0.08);
+    /* Zonas de atención (para elementos importantes) */
+    --highlight-bg: hsl(45, 100%, 97%);
+    /* Amarillo muy suave para destacar */
+    --highlight-border: hsl(45, 80%, 75%);
 
-    /* Shapes - Soft, organic radii */
-    --radius-sm: 10px;
-    --radius-md: 16px;
-    --radius-lg: 22px;
+    /* Shadows - Suaves, difusas, profesionales */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.03);
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04);
+    --shadow-focus: 0 0 0 3px hsla(152, 38%, 42%, 0.2);
+
+    /* Shapes - Radios más modernos */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
     --radius-pill: 50px;
+
+    /* Spacing consistente */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
 }
 
-/* ===== DARK MODE: Earthy Brown / Charcoal ===== */
+/* ===== DARK MODE: Neutral Charcoal (menos marrón) ===== */
 [data-theme="dark"] {
-    /* Backgrounds - Warm dark, like walnut wood or chocolate */
-    --bg-page: hsl(25, 15%, 12%);
-    /* Dark warm brown #211D1A */
-    --bg-sidebar: hsl(25, 12%, 15%);
-    /* Slightly lighter */
-    --bg-card: hsl(25, 10%, 18%);
-    /* Card surface */
-    --bg-input: hsl(25, 10%, 16%);
+    /* Backgrounds - Grises neutros oscuros */
+    --bg-page: hsl(220, 12%, 10%);
+    /* #161819 - Gris muy oscuro */
+    --bg-sidebar: hsl(220, 10%, 13%);
+    /* #1E2023 - Sidebar ligeramente más claro */
+    --bg-card: hsl(220, 10%, 16%);
+    /* #252729 - Cards */
+    --bg-input: hsl(220, 10%, 14%);
+    --bg-elevated: hsl(220, 10%, 18%);
 
-    /* Text - Warm light tones */
-    --text-primary: hsl(35, 25%, 90%);
-    /* Warm off-white */
-    --text-secondary: hsl(30, 15%, 65%);
-    /* Muted tan */
-    --text-muted: hsl(25, 10%, 45%);
-    /* Dark taupe */
+    /* Text - Tonos claros neutros */
+    --text-primary: hsl(220, 10%, 92%);
+    /* #EAEBEC - Casi blanco */
+    --text-secondary: hsl(220, 8%, 65%);
+    /* #A0A4AA - Gris claro */
+    --text-muted: hsl(220, 6%, 45%);
+    /* #6C7076 - Gris medio */
+    --text-placeholder: hsl(220, 6%, 40%);
 
     /* Borders */
-    --border-subtle: hsl(25, 12%, 25%);
+    --border-subtle: hsl(220, 10%, 22%);
+    --border-medium: hsl(220, 8%, 28%);
 
     /* Accent adjustments for dark */
-    --accent-bg: hsl(145, 25%, 18%);
+    --accent-primary: hsl(152, 45%, 50%);
+    /* Verde más brillante en dark */
+    --accent-bg: hsl(152, 30%, 15%);
+    --accent-light: hsl(152, 25%, 20%);
 
-    /* Shadows - Deeper for dark mode */
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-    --shadow-md: 0 10px 24px rgba(0, 0, 0, 0.25);
-    --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.3);
+    /* Highlight en dark */
+    --highlight-bg: hsl(45, 50%, 15%);
+    --highlight-border: hsl(45, 60%, 35%);
+
+    /* Shadows - Más profundas */
+    --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.5);
+    --shadow-focus: 0 0 0 3px hsla(152, 45%, 50%, 0.3);
 }
 
 /* --- 2. RESET & BASE --- */
@@ -288,11 +333,6 @@ body {
     margin-bottom: 40px;
 }
 
-.search-wrapper {
-    position: relative;
-    width: 400px;
-}
-
 .search-icon-input {
     position: absolute;
     left: 18px;
@@ -300,24 +340,10 @@ body {
     transform: translateY(-50%);
     color: var(--text-muted);
     font-size: 18px;
+    z-index: 1;
 }
 
-.search-input {
-    width: 100%;
-    padding: 16px 16px 16px 50px;
-    background: var(--bg-card);
-    border: none;
-    border-radius: var(--radius-pill);
-    box-shadow: var(--shadow-sm);
-    font-size: 15px;
-    color: var(--text-primary);
-    transition: box-shadow 0.2s ease;
-}
-
-.search-input:focus {
-    outline: none;
-    box-shadow: var(--shadow-md), 0 0 0 2px var(--accent-primary);
-}
+/* search-wrapper y search-input definidos en sección 9 (UX Hierarchy) */
 
 /* Sections */
 .content-section {
@@ -608,24 +634,14 @@ button,
     color: white;
 }
 
-/* Info Box */
-.info-box {
-    background: var(--bg-card);
-    border-left: 4px solid var(--info);
-    border-radius: var(--radius-sm);
-    padding: 20px;
-    display: flex;
-    gap: 15px;
-    margin-bottom: 25px;
-    box-shadow: var(--shadow-sm);
-}
-
+/* Info Box - estilos base, mejorados en sección 9 */
 .info-box.success {
     border-left-color: var(--success);
 }
 
 .info-box.warning {
     border-left-color: var(--warning);
+    background: var(--highlight-bg);
 }
 
 .info-icon {
@@ -747,13 +763,7 @@ button,
     margin-right: 4px;
 }
 
-/* Content Title */
-.content-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: var(--text-primary);
-}
+/* Content Title - definido en sección 9 (UX Hierarchy) */
 
 /* Checklist Components */
 .checklist-header {
@@ -934,26 +944,7 @@ button,
 }
 
 /* --- 8. CHATBOT STYLES --- */
-.chatbot-fab {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    background: var(--accent-primary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: var(--shadow-lg);
-    z-index: 500;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.chatbot-fab:hover {
-    transform: scale(1.1);
-}
+/* chatbot-fab definido en sección 9 (UX Hierarchy) con mejoras visuales */
 
 .fab-icon {
     font-size: 28px;
@@ -1268,6 +1259,405 @@ button,
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--text-muted);
+}
+
+/* ===========================================
+   9. UX HIERARCHY - HEAT MAP BASED
+   Zonas calientes: Problemas comunes, Aula, Chatbot, Search
+   =========================================== */
+
+/* --- ZONA CALIENTE: Sección Aula en navegación --- */
+.nav-item[data-section="aula"] {
+    position: relative;
+    background: linear-gradient(135deg, var(--accent-bg) 0%, transparent 100%);
+    border-left: 3px solid var(--accent-primary);
+}
+
+.nav-item[data-section="aula"]::after {
+    content: "★";
+    position: absolute;
+    right: 12px;
+    font-size: 10px;
+    color: var(--accent-primary);
+    opacity: 0.7;
+}
+
+.nav-item[data-section="aula"]:hover {
+    background: var(--accent-bg);
+}
+
+/* --- ZONA CALIENTE: Cards de problemas comunes (Dashboard) --- */
+.action-card[data-diagnostic] {
+    border: 1px solid transparent;
+    transition: all 0.25s ease;
+}
+
+.action-card[data-diagnostic]:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-4px);
+}
+
+/* Card destacada especial para Aula */
+.action-card[data-diagnostic="aula-no-funciona"] {
+    background: linear-gradient(145deg, var(--bg-card) 0%, var(--highlight-bg) 100%);
+    border: 1px solid var(--highlight-border);
+    order: -1; /* Aparece primero */
+}
+
+.action-card[data-diagnostic="aula-no-funciona"] .action-icon {
+    background: var(--highlight-bg);
+    color: var(--warning);
+}
+
+/* --- ZONA CALIENTE: Buscador más prominente --- */
+.search-wrapper {
+    position: relative;
+    width: 450px;
+    max-width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    padding: 14px 16px 14px 48px;
+    background: var(--bg-card);
+    border: 2px solid var(--border-subtle);
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadow-sm);
+    font-size: 15px;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+    color: var(--text-placeholder);
+}
+
+.search-input:hover {
+    border-color: var(--border-medium);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: var(--shadow-focus), var(--shadow-md);
+}
+
+/* --- ZONA CALIENTE: Chatbot FAB más visible --- */
+.chatbot-fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-hover) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-lg), 0 0 0 4px rgba(67, 157, 111, 0.15);
+    z-index: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: fabPulse 3s ease-in-out infinite;
+}
+
+@keyframes fabPulse {
+    0%, 100% { box-shadow: var(--shadow-lg), 0 0 0 4px rgba(67, 157, 111, 0.15); }
+    50% { box-shadow: var(--shadow-lg), 0 0 0 8px rgba(67, 157, 111, 0.1); }
+}
+
+.chatbot-fab:hover {
+    transform: scale(1.08);
+    animation: none;
+    box-shadow: var(--shadow-lg), 0 0 0 6px rgba(67, 157, 111, 0.2);
+}
+
+/* --- JERARQUÍA: Títulos de sección con iconos --- */
+.content-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.content-title i {
+    color: var(--accent-primary);
+    font-size: 20px;
+}
+
+/* --- JERARQUÍA: Info boxes con mejor diferenciación --- */
+.info-box {
+    background: var(--bg-card);
+    border-left: 4px solid var(--info);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    display: flex;
+    gap: 15px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.info-box:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.info-box.highlight {
+    background: var(--highlight-bg);
+    border-left-color: var(--warning);
+}
+
+.info-box.highlight .info-icon {
+    color: var(--warning);
+}
+
+/* --- JERARQUÍA: Cards con mejor feedback visual --- */
+.guide-card, .action-card, .diagnostic-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-subtle);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.guide-card:hover, .action-card:hover, .diagnostic-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-primary);
+}
+
+.guide-card::before, .action-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--accent-primary);
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+}
+
+.guide-card:hover::before, .action-card:hover::before {
+    transform: scaleX(1);
+}
+
+/* --- JERARQUÍA: Nav item activo más visible --- */
+.nav-item.active {
+    background: var(--accent-bg);
+    color: var(--accent-primary);
+    font-weight: 600;
+    border-left: 3px solid var(--accent-primary);
+    padding-left: 13px;
+}
+
+/* --- ACCESIBILIDAD: Focus visible para teclado --- */
+.nav-item:focus-visible,
+.action-card:focus-visible,
+.guide-card:focus-visible,
+button:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* --- FEEDBACK: Estados de loading y éxito --- */
+.loading-state {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.success-flash {
+    animation: successFlash 0.5s ease;
+}
+
+@keyframes successFlash {
+    0%, 100% { background-color: var(--bg-card); }
+    50% { background-color: var(--accent-bg); }
+}
+
+/* ===========================================
+   10. ABOVE THE FOLD OPTIMIZATION
+   Primera impresión: Dashboard con acciones claras
+   =========================================== */
+
+/* --- Header de sección más compacto --- */
+.section-header {
+    margin-bottom: var(--space-lg);
+}
+
+.section-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+    color: var(--text-primary);
+}
+
+.section-subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 0;
+}
+
+/* --- Dashboard: Priorizar problemas comunes --- */
+.action-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+    margin-bottom: 36px;
+}
+
+/* --- Stat cards más compactas --- */
+.quick-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.stat-card {
+    padding: 20px;
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-subtle);
+}
+
+/* --- Quick Action Bar (encima del fold) --- */
+.quick-actions-bar {
+    display: flex;
+    gap: 12px;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    margin-bottom: 28px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-subtle);
+    flex-wrap: wrap;
+}
+
+.quick-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-pill);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.quick-action-btn:hover {
+    background: var(--accent-bg);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.quick-action-btn i {
+    font-size: 16px;
+}
+
+/* --- Welcome banner para profesores nuevos --- */
+.welcome-banner {
+    background: linear-gradient(135deg, var(--accent-bg) 0%, var(--bg-card) 100%);
+    border: 1px solid var(--accent-light);
+    border-radius: var(--radius-lg);
+    padding: 24px 28px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.welcome-banner .welcome-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--accent-primary);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.welcome-banner .welcome-content h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+}
+
+.welcome-banner .welcome-content p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.welcome-banner .welcome-action {
+    margin-left: auto;
+    padding: 10px 20px;
+    background: var(--accent-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.welcome-banner .welcome-action:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+/* --- Sidebar: Aula siempre visible --- */
+.nav-section:has(.nav-item[data-section="aula"]) {
+    order: -1;
+    /* Mover Herramientas Esenciales arriba */
+}
+
+/* --- Responsive: Above the fold en móvil --- */
+@media (max-width: 768px) {
+    .section-header h1 {
+        font-size: 24px;
+    }
+
+    .action-cards {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .welcome-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .welcome-banner .welcome-action {
+        margin-left: 0;
+        width: 100%;
+    }
 }
 
 /* Mobile search overlay adjustment */

@@ -117,79 +117,103 @@ class JamfAssistant {
         return `
             <section class="content-section active">
                 <div class="section-header">
-                    <h1>Dashboard</h1>
-                    <p class="section-subtitle">Resumen de gestión y accesos rápidos</p>
+                    <h1>Asistente Apple Education</h1>
+                    <p class="section-subtitle">Gestión de iPads, Macs y App Aula para tu centro escolar</p>
                 </div>
 
+                <!-- Barra de acciones rápidas - Above the fold -->
+                <div class="quick-actions-bar">
+                    <button class="quick-action-btn" data-section="aula">
+                        <i class="ri-group-line"></i> Problemas con Aula
+                    </button>
+                    <button class="quick-action-btn" data-diagnostic="aula-no-funciona">
+                        <i class="ri-error-warning-line"></i> No veo alumnos
+                    </button>
+                    <button class="quick-action-btn" data-diagnostic="apps-not-installing">
+                        <i class="ri-download-cloud-2-line"></i> Apps no instalan
+                    </button>
+                    <button class="quick-action-btn" data-section="ecosistema">
+                        <i class="ri-flow-chart"></i> ¿Cómo funciona?
+                    </button>
+                </div>
+
+                <!-- Secciones principales -->
                 <div class="quick-stats">
                     <div class="stat-card" data-section="aula">
                         <div class="stat-icon classroom"><i class="ri-group-line"></i></div>
                         <div class="stat-info">
                             <span class="stat-label">App Aula</span>
-                            <span class="stat-value">Herramienta principal</span>
+                            <span class="stat-value">Control de clase</span>
                         </div>
                     </div>
                     <div class="stat-card" data-section="ipads">
                         <div class="stat-icon ipads"><i class="ri-tablet-line"></i></div>
                         <div class="stat-info">
                             <span class="stat-label">iPads Alumnado</span>
-                            <span class="stat-value">Gestión completa</span>
+                            <span class="stat-value">Gestión y apps</span>
                         </div>
                     </div>
                     <div class="stat-card" data-section="macs">
                         <div class="stat-icon macs"><i class="ri-macbook-line"></i></div>
                         <div class="stat-info">
                             <span class="stat-label">Macs Profesorado</span>
-                            <span class="stat-value">Configuración y soporte</span>
+                            <span class="stat-value">Configuración</span>
+                        </div>
+                    </div>
+                    <div class="stat-card" data-section="ecosistema">
+                        <div class="stat-icon"><i class="ri-flow-chart"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Ecosistema</span>
+                            <span class="stat-value">ASM + Jamf</span>
                         </div>
                     </div>
                 </div>
 
-                <h2 class="content-title"><i class="ri-rocket-line"></i> Acciones Frecuentes</h2>
-                <div class="action-cards">
-                    <div class="action-card" data-guide="classroom-setup">
-                        <div class="action-icon"><i class="ri-building-line"></i></div>
-                        <h3>Configurar App Aula</h3>
-                        <p>Crear clases y asignar profesores</p>
-                    </div>
-                    <div class="action-card" data-guide="teacher-setup">
-                        <div class="action-icon"><i class="ri-install-line"></i></div>
-                        <h3>Instalar Apps desde Profesor</h3>
-                        <p>Configurar Jamf Teacher para que docentes gestionen apps</p>
-                    </div>
-                    <div class="action-card" data-guide="ipad-apps">
-                        <div class="action-icon"><i class="ri-app-store-line"></i></div>
-                        <h3>Distribuir Apps a iPads</h3>
-                        <p>Guía paso a paso para instalar aplicaciones</p>
-                    </div>
-                    <div class="action-card" data-guide="ipad-enrollment">
-                        <div class="action-icon"><i class="ri-add-circle-line"></i></div>
-                        <h3>Inscribir Dispositivos</h3>
-                        <p>Enrollment en Jamf para iPads nuevos</p>
-                    </div>
-                </div>
-
-                <h2 class="content-title"><i class="ri-error-warning-line"></i> Problemas Comunes</h2>
+                <h2 class="content-title"><i class="ri-error-warning-line"></i> Solucionar Problemas</h2>
                 <div class="action-cards">
                     <div class="action-card" data-diagnostic="aula-no-funciona">
                         <div class="action-icon"><i class="ri-graduation-cap-line"></i></div>
                         <h3>La app Aula no funciona</h3>
-                        <p>No veo alumnos, pantallas en gris</p>
+                        <p>No veo alumnos, pantallas en gris, no detecta iPads</p>
                     </div>
                     <div class="action-card" data-diagnostic="aula-funciones-avanzadas">
                         <div class="action-icon"><i class="ri-rocket-line"></i></div>
                         <h3>Funciones avanzadas de Aula</h3>
-                        <p>AirDrop, AirPlay, resetear contraseñas</p>
+                        <p>AirDrop, AirPlay, restablecer contraseñas</p>
                     </div>
                     <div class="action-card" data-diagnostic="aula-remoto">
                         <div class="action-icon"><i class="ri-global-line"></i></div>
-                        <h3>Problemas con clases remotas</h3>
-                        <p>Alumnos no reciben invitación</p>
+                        <h3>Clases remotas no funcionan</h3>
+                        <p>Alumnos en casa no reciben invitación</p>
                     </div>
                     <div class="action-card" data-diagnostic="apps-not-installing">
                         <div class="action-icon"><i class="ri-download-cloud-2-line"></i></div>
                         <h3>Las apps no se instalan</h3>
                         <p>Diagnóstico guiado paso a paso</p>
+                    </div>
+                </div>
+
+                <h2 class="content-title"><i class="ri-book-read-line"></i> Guías Rápidas</h2>
+                <div class="action-cards">
+                    <div class="action-card" data-guide="aula-setup">
+                        <div class="action-icon"><i class="ri-building-line"></i></div>
+                        <h3>Configurar App Aula</h3>
+                        <p>Requisitos y pasos iniciales</p>
+                    </div>
+                    <div class="action-card" data-guide="aula-howto">
+                        <div class="action-icon"><i class="ri-play-circle-line"></i></div>
+                        <h3>Usar Aula en clase</h3>
+                        <p>Ver pantallas, bloquear, abrir apps</p>
+                    </div>
+                    <div class="action-card" data-guide="teacher-setup">
+                        <div class="action-icon"><i class="ri-install-line"></i></div>
+                        <h3>Jamf Teacher</h3>
+                        <p>Instalar apps como profesor</p>
+                    </div>
+                    <div class="action-card" data-guide="ipad-apps">
+                        <div class="action-icon"><i class="ri-app-store-line"></i></div>
+                        <h3>Distribuir Apps</h3>
+                        <p>Instalación masiva desde Jamf</p>
                     </div>
                 </div>
             </section>
@@ -455,6 +479,19 @@ class JamfAssistant {
         document.querySelectorAll('.stat-card[data-section]').forEach(card => {
             card.addEventListener('click', () => {
                 this.navigateTo(card.dataset.section);
+            });
+        });
+
+        // Quick action buttons (above the fold bar)
+        document.querySelectorAll('.quick-action-btn[data-section]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.navigateTo(btn.dataset.section);
+            });
+        });
+
+        document.querySelectorAll('.quick-action-btn[data-diagnostic]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.openDiagnostic(btn.dataset.diagnostic);
             });
         });
 

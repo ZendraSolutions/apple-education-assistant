@@ -14,75 +14,77 @@
    Jerarquía: Cards de acción > Navegación > Info secundaria
 */
 :root {
-    /* ===== LIGHT MODE: Soft Cream & Cool Grey ===== */
+    /* ===== LIGHT MODE: Organic Earth Tones ===== */
+    /* Paleta inspirada en naturaleza: arena, piedra, terracota, salvia */
 
-    /* Backgrounds - Cream neutro, menos amarillo, más refinado */
-    --bg-page: hsl(40, 15%, 96%);
-    /* #F6F5F3 - Cream muy suave */
-    --bg-sidebar: hsl(220, 12%, 95%);
-    /* #F1F2F4 - Gris frío claro (contraste con page) */
-    --bg-card: hsl(0, 0%, 100%);
-    /* #FFFFFF - Blanco puro para cards (máximo contraste) */
-    --bg-input: hsl(220, 15%, 97%);
-    /* #F7F8FA - Input gris muy claro */
-    --bg-elevated: hsl(40, 10%, 99%);
-    /* Para elementos destacados */
+    /* Backgrounds - Tonos arena/piedra cálidos */
+    --bg-page: hsl(38, 18%, 96%);
+    /* Arena muy clara - fondo principal */
+    --bg-sidebar: hsl(35, 15%, 93%);
+    /* Piedra clara - sidebar */
+    --bg-card: hsl(40, 20%, 99%);
+    /* Blanco cálido para cards */
+    --bg-input: hsl(38, 12%, 95%);
+    /* Input arena */
+    --bg-elevated: hsl(40, 15%, 98%);
+    /* Elementos elevados */
 
-    /* Text - Grises neutros profesionales */
-    --text-primary: hsl(220, 15%, 18%);
-    /* #282D33 - Gris oscuro legible */
-    --text-secondary: hsl(220, 10%, 42%);
-    /* #636973 - Gris medio */
-    --text-muted: hsl(220, 8%, 58%);
-    /* #8D929A - Gris claro */
-    --text-placeholder: hsl(220, 8%, 68%);
-    /* Para placeholders */
+    /* Text - Marrones orgánicos (WCAG AA+ contrast) */
+    --text-primary: hsl(25, 20%, 18%);
+    /* Marrón oscuro - ratio ~12:1 */
+    --text-secondary: hsl(25, 12%, 38%);
+    /* Marrón medio - ratio ~6:1 */
+    --text-muted: hsl(25, 8%, 50%);
+    /* Marrón suave - ratio ~4.5:1 */
+    --text-placeholder: hsl(25, 6%, 58%);
+    /* Placeholder - ratio ~3.5:1 */
 
-    /* Borders - Grises sutiles */
-    --border-subtle: hsl(220, 12%, 90%);
-    /* #E2E4E8 - Borde suave */
-    --border-medium: hsl(220, 10%, 85%);
-    /* Para separadores más visibles */
+    /* Borders - Tonos tierra sutiles */
+    --border-subtle: hsl(35, 12%, 85%);
+    /* Borde arena */
+    --border-medium: hsl(35, 10%, 78%);
+    /* Borde piedra */
 
-    /* Accent - Sage green más suave y profesional */
-    --accent-primary: hsl(152, 38%, 42%);
-    /* #439D6F - Verde sage refinado */
-    --accent-hover: hsl(152, 42%, 38%);
-    /* Hover más oscuro */
-    --accent-bg: hsl(152, 35%, 95%);
-    /* #EEF7F2 - Fondo verde muy claro */
-    --accent-light: hsl(152, 30%, 90%);
-    /* Para hover suave */
+    /* Accent - Verde salvia orgánico (menos saturado) */
+    --accent-primary: hsl(145, 22%, 38%);
+    /* Verde salvia - sobrio */
+    --accent-hover: hsl(145, 25%, 32%);
+    /* Hover más profundo */
+    --accent-bg: hsl(145, 18%, 94%);
+    /* Fondo verde muy suave */
+    --accent-light: hsl(145, 15%, 90%);
+    /* Hover suave */
 
-    /* Status Colors - Tonos suaves y accesibles */
-    --success: hsl(152, 45%, 40%);
-    /* Verde éxito */
-    --warning: hsl(38, 85%, 52%);
-    /* Ámbar cálido */
-    --error: hsl(0, 60%, 55%);
-    /* Rojo suave */
-    --info: hsl(210, 55%, 52%);
-    /* Azul informativo */
+    /* Status Colors - Tonos tierra naturales */
+    --success: hsl(145, 25%, 38%);
+    /* Verde salvia */
+    --warning: hsl(30, 50%, 48%);
+    /* Ocre/ámbar tierra */
+    --error: hsl(8, 45%, 48%);
+    /* Terracota */
+    --info: hsl(200, 28%, 45%);
+    /* Azul piedra */
 
-    /* Zonas de atención (para elementos importantes) */
-    --highlight-bg: hsl(45, 100%, 97%);
-    /* Amarillo muy suave para destacar */
-    --highlight-border: hsl(45, 80%, 75%);
+    /* Zonas de atención */
+    --highlight-bg: hsl(42, 35%, 94%);
+    /* Crema cálida */
+    --highlight-border: hsl(35, 35%, 70%);
+    /* Borde ocre */
 
-    /* Shadows - Suaves, difusas, profesionales */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.03);
-    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.04);
-    --shadow-focus: 0 0 0 3px hsla(152, 38%, 42%, 0.2);
+    /* Shadows - Tonos cálidos */
+    --shadow-sm: 0 1px 3px hsla(25, 20%, 20%, 0.04), 0 1px 2px hsla(25, 20%, 20%, 0.03);
+    --shadow-md: 0 4px 12px hsla(25, 20%, 20%, 0.06), 0 2px 4px hsla(25, 20%, 20%, 0.04);
+    --shadow-lg: 0 10px 30px hsla(25, 20%, 20%, 0.08), 0 4px 8px hsla(25, 20%, 20%, 0.05);
+    --shadow-focus: 0 0 0 3px hsla(145, 22%, 38%, 0.18);
 
-    /* Shapes - Radios más modernos */
+    /* Shapes */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 16px;
     --radius-xl: 20px;
     --radius-pill: 50px;
 
-    /* Spacing consistente */
+    /* Spacing */
     --space-xs: 4px;
     --space-sm: 8px;
     --space-md: 16px;
@@ -90,46 +92,60 @@
     --space-xl: 32px;
 }
 
-/* ===== DARK MODE: Neutral Charcoal (menos marrón) ===== */
+/* ===== DARK MODE: Organic Dark Earth ===== */
+/* Paleta nocturna orgánica: carbón cálido, musgo, arcilla */
 [data-theme="dark"] {
-    /* Backgrounds - Grises neutros oscuros */
-    --bg-page: hsl(220, 12%, 10%);
-    /* #161819 - Gris muy oscuro */
-    --bg-sidebar: hsl(220, 10%, 13%);
-    /* #1E2023 - Sidebar ligeramente más claro */
-    --bg-card: hsl(220, 10%, 16%);
-    /* #252729 - Cards */
-    --bg-input: hsl(220, 10%, 14%);
-    --bg-elevated: hsl(220, 10%, 18%);
+    /* Backgrounds - Carbón con matices cálidos */
+    --bg-page: hsl(30, 8%, 10%);
+    /* Carbón cálido - fondo */
+    --bg-sidebar: hsl(30, 6%, 13%);
+    /* Carbón sidebar */
+    --bg-card: hsl(30, 5%, 16%);
+    /* Cards carbón */
+    --bg-input: hsl(30, 5%, 14%);
+    --bg-elevated: hsl(30, 5%, 18%);
 
-    /* Text - Tonos claros neutros */
-    --text-primary: hsl(220, 10%, 92%);
-    /* #EAEBEC - Casi blanco */
-    --text-secondary: hsl(220, 8%, 65%);
-    /* #A0A4AA - Gris claro */
-    --text-muted: hsl(220, 6%, 45%);
-    /* #6C7076 - Gris medio */
-    --text-placeholder: hsl(220, 6%, 40%);
+    /* Text - Crema/arena clara (WCAG AA+ contrast) */
+    --text-primary: hsl(38, 15%, 88%);
+    /* Arena clara - ratio ~11:1 */
+    --text-secondary: hsl(35, 10%, 65%);
+    /* Arena media - ratio ~6:1 */
+    --text-muted: hsl(35, 8%, 50%);
+    /* Arena suave - ratio ~4:1 */
+    --text-placeholder: hsl(35, 6%, 42%);
+    /* Placeholder */
 
-    /* Borders */
-    --border-subtle: hsl(220, 10%, 22%);
-    --border-medium: hsl(220, 8%, 28%);
+    /* Borders - Tonos carbón más claros */
+    --border-subtle: hsl(30, 6%, 22%);
+    --border-medium: hsl(30, 5%, 28%);
 
-    /* Accent adjustments for dark */
-    --accent-primary: hsl(152, 45%, 50%);
-    /* Verde más brillante en dark */
-    --accent-bg: hsl(152, 30%, 15%);
-    --accent-light: hsl(152, 25%, 20%);
+    /* Accent - Verde salvia más luminoso para dark */
+    --accent-primary: hsl(145, 28%, 50%);
+    /* Salvia luminoso */
+    --accent-hover: hsl(145, 30%, 45%);
+    --accent-bg: hsl(145, 20%, 16%);
+    /* Fondo verde oscuro */
+    --accent-light: hsl(145, 18%, 20%);
+
+    /* Status colors - Más luminosos en dark */
+    --success: hsl(145, 30%, 48%);
+    /* Salvia */
+    --warning: hsl(32, 55%, 55%);
+    /* Ocre luminoso */
+    --error: hsl(8, 50%, 55%);
+    /* Terracota luminoso */
+    --info: hsl(200, 35%, 52%);
+    /* Azul piedra luminoso */
 
     /* Highlight en dark */
-    --highlight-bg: hsl(45, 50%, 15%);
-    --highlight-border: hsl(45, 60%, 35%);
+    --highlight-bg: hsl(35, 25%, 15%);
+    --highlight-border: hsl(32, 35%, 38%);
 
-    /* Shadows - Más profundas */
-    --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.5);
-    --shadow-focus: 0 0 0 3px hsla(152, 45%, 50%, 0.3);
+    /* Shadows - Más profundas con tono cálido */
+    --shadow-sm: 0 1px 4px hsla(25, 30%, 5%, 0.4);
+    --shadow-md: 0 4px 16px hsla(25, 30%, 5%, 0.5);
+    --shadow-lg: 0 12px 36px hsla(25, 30%, 5%, 0.6);
+    --shadow-focus: 0 0 0 3px hsla(145, 28%, 50%, 0.25);
 }
 
 /* --- 2. RESET & BASE --- */
@@ -479,26 +495,30 @@ p {
 }
 
 .diagnostic-severity.high {
-    background: hsla(350, 70%, 96%, 1);
+    background: hsl(8, 35%, 94%);
     color: var(--error);
 }
 
 .diagnostic-severity.medium {
-    background: hsla(35, 85%, 96%, 1);
+    background: hsl(30, 40%, 93%);
     color: var(--warning);
 }
 
 .diagnostic-severity.low {
-    background: hsla(210, 80%, 96%, 1);
+    background: hsl(200, 25%, 94%);
     color: var(--info);
 }
 
 [data-theme="dark"] .diagnostic-severity.high {
-    background: hsla(350, 70%, 20%, 1);
+    background: hsl(8, 30%, 18%);
 }
 
 [data-theme="dark"] .diagnostic-severity.medium {
-    background: hsla(35, 85%, 20%, 1);
+    background: hsl(30, 30%, 18%);
+}
+
+[data-theme="dark"] .diagnostic-severity.low {
+    background: hsl(200, 25%, 18%);
 }
 
 /* Buttons */
@@ -1342,34 +1362,37 @@ button,
     box-shadow: var(--shadow-focus), var(--shadow-md);
 }
 
-/* --- ZONA CALIENTE: Chatbot FAB más visible --- */
+/* --- ZONA CALIENTE: Chatbot FAB --- */
 .chatbot-fab {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    width: 64px;
-    height: 64px;
-    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-hover) 100%);
+    width: 60px;
+    height: 60px;
+    background: var(--accent-primary);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: var(--shadow-lg), 0 0 0 4px rgba(67, 157, 111, 0.15);
+    box-shadow: var(--shadow-md);
     z-index: 500;
-    transition: transform 0.2s, box-shadow 0.2s;
-    animation: fabPulse 3s ease-in-out infinite;
-}
-
-@keyframes fabPulse {
-    0%, 100% { box-shadow: var(--shadow-lg), 0 0 0 4px rgba(67, 157, 111, 0.15); }
-    50% { box-shadow: var(--shadow-lg), 0 0 0 8px rgba(67, 157, 111, 0.1); }
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    border: none;
 }
 
 .chatbot-fab:hover {
-    transform: scale(1.08);
-    animation: none;
-    box-shadow: var(--shadow-lg), 0 0 0 6px rgba(67, 157, 111, 0.2);
+    transform: scale(1.05);
+    box-shadow: var(--shadow-lg);
+    background: var(--accent-hover);
+}
+
+.chatbot-fab .fab-icon {
+    color: white;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* --- JERARQUÍA: Títulos de sección con iconos --- */
@@ -2058,48 +2081,53 @@ input:focus-visible {
 }
 
 .category-badge.dispositivos {
-    background: hsl(210, 50%, 95%);
-    color: hsl(210, 55%, 45%);
+    background: hsl(200, 25%, 93%);
+    color: hsl(200, 28%, 42%);
 }
 
 .category-badge.curso-escolar {
-    background: hsl(152, 40%, 95%);
-    color: hsl(152, 45%, 35%);
+    background: hsl(145, 22%, 93%);
+    color: hsl(145, 25%, 35%);
 }
 
 .category-badge.personal {
-    background: hsl(280, 50%, 95%);
-    color: hsl(280, 45%, 45%);
+    background: hsl(270, 20%, 93%);
+    color: hsl(270, 22%, 45%);
 }
 
 .category-badge.soporte {
-    background: hsl(38, 80%, 95%);
-    color: hsl(38, 70%, 40%);
+    background: hsl(32, 35%, 92%);
+    color: hsl(32, 40%, 40%);
 }
 
 .category-badge.aula-cat {
-    background: hsl(0, 60%, 95%);
-    color: hsl(0, 55%, 45%);
+    background: hsl(8, 30%, 93%);
+    color: hsl(8, 35%, 45%);
 }
 
 [data-theme="dark"] .category-badge.dispositivos {
-    background: hsl(210, 50%, 20%);
+    background: hsl(200, 25%, 20%);
+    color: hsl(200, 30%, 65%);
 }
 
 [data-theme="dark"] .category-badge.curso-escolar {
-    background: hsl(152, 40%, 18%);
+    background: hsl(145, 20%, 18%);
+    color: hsl(145, 28%, 58%);
 }
 
 [data-theme="dark"] .category-badge.personal {
-    background: hsl(280, 50%, 20%);
+    background: hsl(270, 18%, 20%);
+    color: hsl(270, 22%, 65%);
 }
 
 [data-theme="dark"] .category-badge.soporte {
-    background: hsl(38, 50%, 18%);
+    background: hsl(32, 28%, 18%);
+    color: hsl(32, 40%, 60%);
 }
 
 [data-theme="dark"] .category-badge.aula-cat {
-    background: hsl(0, 50%, 20%);
+    background: hsl(8, 25%, 18%);
+    color: hsl(8, 35%, 60%);
 }
 
 /* Checklist enhanced styles */
@@ -2148,26 +2176,27 @@ input:focus-visible {
 
 /* Highlight card for Aula */
 .guide-card.highlight-card {
-    border: 2px solid var(--accent-aula, hsl(340, 70%, 55%));
+    border: 2px solid hsl(8, 35%, 55%);
     background: linear-gradient(135deg,
-        hsla(340, 70%, 55%, 0.05) 0%,
+        hsl(8, 30%, 96%) 0%,
         var(--bg-card) 100%);
 }
 
 .guide-card.highlight-card:hover {
-    border-color: var(--accent-aula, hsl(340, 70%, 55%));
-    box-shadow: 0 8px 25px hsla(340, 70%, 55%, 0.15);
+    border-color: hsl(8, 38%, 50%);
+    box-shadow: var(--shadow-md);
 }
 
 .hot-tag {
-    background: var(--accent-aula, hsl(340, 70%, 55%)) !important;
+    background: hsl(8, 35%, 52%) !important;
     color: white !important;
 }
 
 [data-theme="dark"] .guide-card.highlight-card {
     background: linear-gradient(135deg,
-        hsla(340, 70%, 55%, 0.1) 0%,
+        hsl(8, 25%, 16%) 0%,
         var(--bg-card) 100%);
+    border-color: hsl(8, 35%, 45%);
 }
 
 /* --- Responsive Diagrams --- */

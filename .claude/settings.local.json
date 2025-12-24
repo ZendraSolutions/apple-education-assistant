@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"c:\\\\Users\\\\95vaz\\\\Desktop\\\\carpetas que me quedo\\\\PROYECTOS IA\\\\app papa\" /b)",
+      "Bash(gh --version:*)",
+      "Bash(gh auth:*)",
+      "Bash(winget install:*)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" auth login --web --hostname github.com)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo view ZendraSolutions/app-papa --json name,url,defaultBranchRef)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api repos/ZendraSolutions/app-papa/pages -X POST -f build_type=workflow)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api repos/ZendraSolutions/app-papa/pages -X PUT -f build_type=workflow)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo view ZendraSolutions/app-papa --json visibility,isPrivate)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo edit ZendraSolutions/app-papa --visibility public)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" secret set GEMINI_API_KEY --repo ZendraSolutions/app-papa)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" workflow list --repo ZendraSolutions/app-papa)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" workflow run \"Deploy to GitHub Pages\" --repo ZendraSolutions/app-papa)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run list --repo ZendraSolutions/app-papa --limit 3)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run list --repo ZendraSolutions/app-papa --limit 2)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo rename apple-education-assistant --repo ZendraSolutions/app-papa --yes)",
+      "Bash(git remote set-url:*)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo view ZendraSolutions/apple-education-assistant --json name,url,homepageUrl)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api repos/ZendraSolutions/apple-education-assistant/pages)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run list --repo ZendraSolutions/apple-education-assistant --limit 2)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo view ZendraSolutions/apple-education-assistant --json homepageUrl,url)"
+    ]
+  }
+}

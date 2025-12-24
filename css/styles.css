@@ -3007,8 +3007,10 @@ input:focus-visible {
     width: 100%;
     max-width: 600px;
     max-height: 90vh;
-    overflow-y: auto;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
 .consent-modal-header {
@@ -3017,6 +3019,8 @@ input:focus-visible {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-shrink: 0;
+    background: var(--bg-card);
 }
 
 .consent-modal-header h2 {
@@ -3055,6 +3059,9 @@ input:focus-visible {
 
 .consent-modal-body {
     padding: 28px;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .consent-intro {
@@ -3187,6 +3194,8 @@ input:focus-visible {
     border-top: 1px solid var(--border-subtle);
     display: flex;
     gap: 12px;
+    flex-shrink: 0;
+    background: var(--bg-card);
 }
 
 .consent-modal-footer .consent-btn {
@@ -3288,19 +3297,37 @@ input:focus-visible {
     .consent-modal-content {
         margin: 10px;
         max-width: calc(100% - 20px);
+        max-height: calc(100vh - 40px);
     }
 
     .consent-modal-header {
-        padding: 20px;
+        padding: 16px 20px;
+    }
+
+    .consent-modal-header h2 {
+        font-size: 16px;
     }
 
     .consent-modal-body {
-        padding: 20px;
+        padding: 16px 20px;
     }
 
     .consent-modal-footer {
         padding: 16px 20px;
         flex-direction: column;
+    }
+
+    .consent-intro {
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+
+    .consent-option-description {
+        font-size: 12px;
+    }
+
+    .consent-option-details {
+        font-size: 11px;
     }
 
     .consent-option {
@@ -3333,6 +3360,45 @@ input:focus-visible {
         font-size: 13px;
     }
 
+    .consent-settings-modal {
+        padding: 8px;
+    }
+
+    .consent-modal-content {
+        margin: 0;
+        max-width: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+
+    .consent-modal-header {
+        padding: 14px 16px;
+    }
+
+    .consent-modal-header h2 {
+        font-size: 15px;
+        gap: 8px;
+    }
+
+    .consent-modal-close {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+
+    .consent-modal-body {
+        padding: 14px 16px;
+    }
+
+    .consent-modal-footer {
+        padding: 14px 16px;
+    }
+
+    .consent-option {
+        padding: 14px;
+        margin-bottom: 10px;
+    }
+
     .consent-option-header {
         flex-direction: column;
         align-items: flex-start;
@@ -3341,6 +3407,23 @@ input:focus-visible {
 
     .consent-toggle {
         align-self: flex-end;
+        margin-top: -30px;
+    }
+
+    .consent-info-box {
+        padding: 12px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .consent-info-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+
+    .consent-info-text {
+        font-size: 12px;
     }
 }
 

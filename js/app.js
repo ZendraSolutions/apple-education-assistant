@@ -709,11 +709,27 @@ class JamfAssistant {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
         const menuToggle = document.getElementById('menuToggle');
+        const mainContent = document.querySelector('.main-content');
+
+        // Restaurar estado del sidebar desde localStorage
+        const sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+        if (sidebarCollapsed && window.innerWidth > 1024) {
+            sidebar.classList.add('collapsed');
+            mainContent.classList.add('sidebar-collapsed');
+        }
 
         // Abrir/cerrar sidebar
         menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
+            if (window.innerWidth <= 1024) {
+                // Móvil/Tablet: mostrar overlay
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            } else {
+                // Desktop: colapsar sidebar
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('sidebar-collapsed');
+                localStorage.setItem('sidebarCollapsed', sidebar.classList.contains('collapsed'));
+            }
         });
 
         // Cerrar al hacer clic en el overlay
@@ -730,6 +746,14 @@ class JamfAssistant {
                     overlay.classList.remove('active');
                 }
             });
+        });
+
+        // Ajustar al cambiar tamaño de ventana
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1024) {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            }
         });
     }
 

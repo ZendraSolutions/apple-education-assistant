@@ -2551,10 +2551,6 @@ input:focus-visible {
         padding: 32px;
     }
 
-    .menu-toggle {
-        display: none;
-    }
-
     .action-cards,
     .guide-cards,
     .diagnostic-cards,
@@ -2586,10 +2582,6 @@ input:focus-visible {
         margin-left: 320px;
         padding: 40px;
         max-width: 1600px;
-    }
-
-    .menu-toggle {
-        display: none;
     }
 
     .action-cards,
@@ -2646,6 +2638,54 @@ input:focus-visible {
         background: var(--accent-bg);
         border-color: var(--accent-primary);
         color: var(--accent-primary);
+    }
+}
+
+/* --- SIDEBAR COLLAPSIBLE para desktop --- */
+@media (min-width: 1025px) {
+    .menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        color: var(--text-primary);
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+
+    .menu-toggle:hover {
+        background: var(--accent-bg);
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+    }
+
+    /* Sidebar collapsed state */
+    .sidebar.collapsed {
+        width: 0;
+        padding: 0;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* Main content when sidebar is collapsed */
+    .main-content.sidebar-collapsed {
+        margin-left: 40px;
+    }
+
+    /* Transición suave */
+    .sidebar {
+        transition: width 0.3s ease, padding 0.3s ease, opacity 0.3s ease;
+    }
+
+    .main-content {
+        transition: margin-left 0.3s ease;
     }
 }
 

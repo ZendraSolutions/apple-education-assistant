@@ -1159,6 +1159,26 @@ button,
     transform: scale(1.05);
 }
 
+/* Rate Limit Warning */
+.chat-rate-limit-warning {
+    padding: 8px 12px;
+    margin: 8px 12px;
+    background: var(--warning);
+    background: linear-gradient(135deg, hsla(30, 50%, 48%, 0.1) 0%, hsla(30, 50%, 48%, 0.05) 100%);
+    border-left: 3px solid var(--warning);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chat-rate-limit-warning i {
+    color: var(--warning);
+    font-size: 14px;
+}
+
 /* API Modal Specific */
 .api-modal {
     max-width: 500px;
@@ -1220,25 +1240,52 @@ button,
     filter: brightness(1.1);
 }
 
-.pin-checkbox {
+.pin-checkbox,
+.storage-checkbox {
     display: flex;
     align-items: center;
     gap: 10px;
     cursor: pointer;
     font-size: 14px;
     color: var(--text-primary);
+    margin-bottom: 12px;
 }
 
-.pin-checkbox input {
+.pin-checkbox input,
+.storage-checkbox input {
     width: 18px;
     height: 18px;
     accent-color: var(--accent-primary);
+}
+
+.api-storage-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: var(--bg-sidebar);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle);
 }
 
 .pin-info {
     font-size: 12px;
     color: var(--text-muted);
     margin-top: 8px;
+}
+
+.api-validation-info {
+    min-height: 20px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-subtle);
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.api-validation-info:empty {
+    display: none;
 }
 
 .api-status {
@@ -2773,5 +2820,646 @@ input:focus-visible {
 
     .diagnostic-btn {
         border: 2px solid white;
+    }
+}
+
+/* ===========================================
+   13. RGPD CONSENT BANNER
+   Banner de consentimiento GDPR compliant
+   =========================================== */
+
+/* --- Banner Principal --- */
+.consent-banner {
+    position: fixed;
+    bottom: -200%;
+    left: 20px;
+    right: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: 24px 28px;
+    z-index: 2000;
+    border: 1px solid var(--border-subtle);
+    transition: bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.consent-banner.active {
+    bottom: 20px;
+}
+
+/* Dark mode: fondo más oscuro con transparencia */
+[data-theme="dark"] .consent-banner {
+    background: hsla(30, 5%, 16%, 0.95);
+    border-color: var(--border-medium);
+}
+
+/* --- Header del banner --- */
+.consent-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.consent-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--accent-bg);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-primary);
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.consent-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* --- Contenido --- */
+.consent-body {
+    margin-bottom: 18px;
+}
+
+.consent-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+}
+
+.consent-services {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.consent-services strong {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.consent-link {
+    color: var(--accent-primary);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.consent-link:hover {
+    color: var(--accent-hover);
+    text-decoration: underline;
+}
+
+/* --- Botones de acción --- */
+.consent-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.consent-btn {
+    flex: 1;
+    min-width: 140px;
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-family: 'Outfit', sans-serif;
+}
+
+.consent-btn-primary {
+    background: var(--accent-primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.consent-btn-primary:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.consent-btn-secondary {
+    background: var(--bg-sidebar);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+}
+
+.consent-btn-secondary:hover {
+    background: var(--accent-bg);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.consent-btn-text {
+    background: transparent;
+    color: var(--text-secondary);
+    padding: 12px 16px;
+    flex: none;
+    min-width: auto;
+}
+
+.consent-btn-text:hover {
+    color: var(--accent-primary);
+}
+
+.consent-btn i {
+    margin-right: 6px;
+}
+
+/* --- Modal de Configuración --- */
+.consent-settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2100;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+}
+
+.consent-settings-modal.active {
+    display: flex;
+}
+
+.consent-modal-content {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.consent-modal-header {
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.consent-modal-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+}
+
+.consent-modal-header h2 i {
+    color: var(--accent-primary);
+}
+
+.consent-modal-close {
+    background: var(--bg-sidebar);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: var(--text-primary);
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.consent-modal-close:hover {
+    background: var(--error);
+    color: white;
+}
+
+.consent-modal-body {
+    padding: 28px;
+}
+
+.consent-intro {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+/* --- Opciones de cookies --- */
+.consent-option {
+    background: var(--bg-sidebar);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-subtle);
+    transition: all 0.2s;
+}
+
+.consent-option:hover {
+    border-color: var(--accent-primary);
+}
+
+.consent-option-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.consent-option-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.consent-option-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.consent-option-badge.essential {
+    background: var(--accent-bg);
+    color: var(--accent-primary);
+}
+
+.consent-option-badge.optional {
+    background: var(--bg-elevated);
+    color: var(--text-muted);
+}
+
+.consent-toggle {
+    width: 48px;
+    height: 26px;
+    background: var(--border-subtle);
+    border-radius: 13px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.consent-toggle.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.consent-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.consent-toggle-slider {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.consent-toggle input:checked + .consent-toggle-slider {
+    transform: translateX(22px);
+}
+
+.consent-toggle input:checked ~ .consent-toggle {
+    background: var(--accent-primary);
+}
+
+.consent-toggle input:checked + .consent-toggle-slider {
+    background: white;
+}
+
+/* Estilo cuando está activado */
+.consent-toggle.active {
+    background: var(--accent-primary);
+}
+
+.consent-toggle.active .consent-toggle-slider {
+    transform: translateX(22px);
+}
+
+.consent-option-description {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.consent-option-details {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* --- Footer del modal --- */
+.consent-modal-footer {
+    padding: 20px 28px;
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    gap: 12px;
+}
+
+.consent-modal-footer .consent-btn {
+    flex: 1;
+}
+
+/* --- Info Box para privacidad --- */
+.consent-info-box {
+    background: var(--accent-bg);
+    border-left: 4px solid var(--accent-primary);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.consent-info-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--accent-primary);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.consent-info-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* --- Animación de entrada --- */
+@keyframes slideUpBounce {
+    0% {
+        bottom: -200%;
+        opacity: 0;
+    }
+    60% {
+        bottom: 25px;
+        opacity: 1;
+    }
+    80% {
+        bottom: 15px;
+    }
+    100% {
+        bottom: 20px;
+    }
+}
+
+.consent-banner.active {
+    animation: slideUpBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .consent-banner {
+        left: 10px;
+        right: 10px;
+        padding: 20px;
+        bottom: -200%;
+    }
+
+    .consent-banner.active {
+        bottom: 10px;
+    }
+
+    .consent-header {
+        margin-bottom: 12px;
+    }
+
+    .consent-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
+    }
+
+    .consent-title {
+        font-size: 15px;
+    }
+
+    .consent-description {
+        font-size: 13px;
+    }
+
+    .consent-actions {
+        flex-direction: column;
+    }
+
+    .consent-btn {
+        width: 100%;
+        min-width: auto;
+    }
+
+    .consent-modal-content {
+        margin: 10px;
+        max-width: calc(100% - 20px);
+    }
+
+    .consent-modal-header {
+        padding: 20px;
+    }
+
+    .consent-modal-body {
+        padding: 20px;
+    }
+
+    .consent-modal-footer {
+        padding: 16px 20px;
+        flex-direction: column;
+    }
+
+    .consent-option {
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .consent-banner {
+        left: 8px;
+        right: 8px;
+        padding: 16px;
+    }
+
+    .consent-banner.active {
+        bottom: 8px;
+    }
+
+    .consent-title {
+        font-size: 14px;
+    }
+
+    .consent-description,
+    .consent-services {
+        font-size: 12px;
+    }
+
+    .consent-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+
+    .consent-option-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .consent-toggle {
+        align-self: flex-end;
+    }
+}
+
+/* --- Modo landscape móvil --- */
+@media (max-height: 500px) and (orientation: landscape) {
+    .consent-banner {
+        max-width: 500px;
+        padding: 14px 18px;
+    }
+
+    .consent-banner.active {
+        bottom: 10px;
+    }
+
+    .consent-description {
+        margin-bottom: 8px;
+    }
+
+    .consent-services {
+        display: none; /* Ocultar detalles en landscape pequeño */
+    }
+}
+
+/* --- Accesibilidad: Focus visible --- */
+.consent-btn:focus-visible,
+.consent-toggle:focus-visible,
+.consent-modal-close:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* --- High contrast mode --- */
+@media (prefers-contrast: high) {
+    .consent-banner {
+        border: 2px solid var(--text-primary);
+    }
+
+    .consent-btn-primary {
+        border: 2px solid white;
+    }
+
+    .consent-option {
+        border: 2px solid var(--text-primary);
+    }
+}
+
+/* ===========================================
+   FOOTER LEGAL
+   Enlaces a documentos legales
+   =========================================== */
+
+.legal-footer {
+    margin-top: 60px;
+    padding: 30px 0;
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.legal-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+}
+
+.legal-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+}
+
+.legal-link:hover {
+    color: var(--accent-primary);
+    background: var(--accent-bg);
+}
+
+.legal-link i {
+    font-size: 16px;
+}
+
+.legal-info {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legal-info::before {
+    content: "\f1f9";
+    font-family: 'remixicon';
+    font-size: 14px;
+}
+
+/* Responsive footer */
+@media (max-width: 768px) {
+    .legal-footer {
+        margin-top: 40px;
+        padding: 20px 0;
+    }
+
+    .legal-links {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .legal-link {
+        width: 100%;
+        justify-content: center;
     }
 }

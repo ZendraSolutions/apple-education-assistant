@@ -49,9 +49,13 @@ class JamfAssistant {
         const updateEl = document.getElementById('updateInfo');
         if (updateEl && KnowledgeBase._metadata) {
             const meta = KnowledgeBase._metadata;
+            // Security: Sanitize metadata from knowledge base
+            const version = DOMPurify.sanitize(meta.version);
+            const lastUpdated = DOMPurify.sanitize(meta.lastUpdated);
+            const articleCount = parseInt(meta.articleCount) || 0;
             updateEl.innerHTML = `
                 <i class="ri-book-open-line update-icon"></i>
-                <span class="update-text">v${meta.version} • ${meta.lastUpdated}<br>${meta.articleCount} guías</span>
+                <span class="update-text">v${version} • ${lastUpdated}<br>${articleCount} guías</span>
             `;
         }
     }
@@ -107,6 +111,9 @@ class JamfAssistant {
                 break;
             case 'checklists':
                 wrapper.innerHTML = this.renderChecklists();
+                break;
+            case 'mis-datos':
+                wrapper.innerHTML = this.renderMisDatos();
                 break;
         }
 
@@ -492,6 +499,66 @@ class JamfAssistant {
         return icons[category] || 'ri-checkbox-circle-line';
     }
 
+    renderMisDatos() {
+        return `
+            <section class="content-section active">
+                <div class="section-header">
+                    <h1>Gestión de Mis Datos</h1>
+                    <p class="section-subtitle">Ejercita tus derechos ARCO sobre tus datos personales</p>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-icon"><i class="ri-shield-user-line"></i></div>
+                    <div class="info-content">
+                        <h4>Tus datos están seguros</h4>
+                        <p>Toda tu información se almacena únicamente en este navegador (localStorage). No se envía a ningún servidor externo.</p>
+                    </div>
+                </div>
+
+                <h2 class="content-title"><i class="ri-database-2-line"></i> Gestión de Datos</h2>
+                <div class="action-cards">
+                    <div class="action-card" id="viewDataCard">
+                        <div class="action-icon"><i class="ri-eye-line"></i></div>
+                        <h3>Ver mis datos</h3>
+                        <p>Visualiza todos los datos almacenados en formato JSON</p>
+                    </div>
+                    <div class="action-card" id="exportDataCard">
+                        <div class="action-icon"><i class="ri-download-2-line"></i></div>
+                        <h3>Exportar mis datos</h3>
+                        <p>Descarga todos tus datos en formato JSON</p>
+                    </div>
+                    <div class="action-card" id="deleteDataCard">
+                        <div class="action-icon" style="color: var(--error);"><i class="ri-delete-bin-line"></i></div>
+                        <h3>Eliminar todos mis datos</h3>
+                        <p>Borra permanentemente todos los datos almacenados</p>
+                    </div>
+                    <div class="action-card" id="configApiCard">
+                        <div class="action-icon"><i class="ri-settings-3-line"></i></div>
+                        <h3>Configurar API Key</h3>
+                        <p>Acceso rápido a la configuración del chatbot</p>
+                    </div>
+                </div>
+
+                <h2 class="content-title"><i class="ri-information-line"></i> Datos Almacenados</h2>
+                <div class="info-box">
+                    <div class="info-icon"><i class="ri-list-check"></i></div>
+                    <div class="info-content">
+                        <h4>¿Qué datos guardamos?</h4>
+                        <ul>
+                            <li><strong>API Key:</strong> Tu clave de Google Gemini (cifrada)</li>
+                            <li><strong>Tema:</strong> Preferencia de modo claro/oscuro</li>
+                            <li><strong>Sidebar:</strong> Estado del menú lateral (expandido/colapsado)</li>
+                            <li><strong>Progreso de Checklists:</strong> Tareas completadas en cada lista</li>
+                        </ul>
+                        <p style="margin-top: 10px; color: var(--text-muted); font-size: 14px;">
+                            <i class="ri-lock-line"></i> Todos estos datos permanecen en tu dispositivo y nunca se comparten.
+                        </p>
+                    </div>
+                </div>
+            </section>
+        `;
+    }
+
     renderGuideCard(id, guide) {
         return `
             <div class="guide-card" data-guide="${id}">
@@ -551,6 +618,28 @@ class JamfAssistant {
                 this.openChecklist(card.dataset.checklist);
             });
         });
+
+        // Mis Datos section cards
+        const viewDataCard = document.getElementById('viewDataCard');
+        const exportDataCard = document.getElementById('exportDataCard');
+        const deleteDataCard = document.getElementById('deleteDataCard');
+        const configApiCard = document.getElementById('configApiCard');
+
+        if (viewDataCard) {
+            viewDataCard.addEventListener('click', () => this.viewMyData());
+        }
+        if (exportDataCard) {
+            exportDataCard.addEventListener('click', () => this.exportMyData());
+        }
+        if (deleteDataCard) {
+            deleteDataCard.addEventListener('click', () => this.deleteAllMyData());
+        }
+        if (configApiCard) {
+            configApiCard.addEventListener('click', () => {
+                // Open API modal (assuming it exists from chatbot functionality)
+                document.getElementById('apiModal')?.classList.add('active');
+            });
+        }
     }
 
     // Open guide in modal
@@ -696,7 +785,11 @@ class JamfAssistant {
     }
 
     showModal(content) {
-        document.getElementById('modalBody').innerHTML = content;
+        // Security: Sanitize modal content (guides, diagnostics, checklists)
+        document.getElementById('modalBody').innerHTML = DOMPurify.sanitize(content, {
+            ALLOWED_TAGS: ['h1', 'h2', 'h3', 'h4', 'p', 'ul', 'ol', 'li', 'strong', 'em', 'br', 'div', 'span', 'a', 'i', 'button', 'label', 'input'],
+            ALLOWED_ATTR: ['class', 'href', 'target', 'data-idx', 'data-next', 'data-solution', 'id', 'type', 'checked', 'style', 'title']
+        });
         document.getElementById('guideModal').classList.add('active');
     }
 
@@ -776,17 +869,30 @@ class JamfAssistant {
                 const found = this.search(query);
 
                 if (found.length === 0) {
-                    results.innerHTML = `<div class="no-results">No se encontraron resultados para "${query}"</div>`;
+                    // Security: Use textContent for user search query to prevent XSS
+                    const noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.textContent = `No se encontraron resultados para "${query}"`;
+                    results.innerHTML = '';
+                    results.appendChild(noResults);
                 } else {
-                    results.innerHTML = found.map(r => `
-                        <div class="search-result-item" data-type="${r.type}" data-id="${r.id}">
-                            <span class="search-result-icon">${r.icon}</span>
+                    // Security: Sanitize search results from knowledge base
+                    results.innerHTML = found.map(r => {
+                        const safeType = DOMPurify.sanitize(r.type);
+                        const safeId = DOMPurify.sanitize(r.id);
+                        const safeIcon = DOMPurify.sanitize(r.icon);
+                        const safeTitle = DOMPurify.sanitize(r.title);
+                        const safeCategory = DOMPurify.sanitize(r.category);
+                        return `
+                        <div class="search-result-item" data-type="${safeType}" data-id="${safeId}">
+                            <span class="search-result-icon">${safeIcon}</span>
                             <div class="search-result-content">
-                                <h4>${r.title}</h4>
-                                <p>${r.category}</p>
+                                <h4>${safeTitle}</h4>
+                                <p>${safeCategory}</p>
                             </div>
                         </div>
-                    `).join('');
+                    `;
+                    }).join('');
 
                     // Bind result clicks
                     results.querySelectorAll('.search-result-item').forEach(item => {
@@ -851,6 +957,193 @@ class JamfAssistant {
         });
 
         return results;
+    }
+
+    // ========================================
+    // MIS DATOS - ARCO Functions
+    // ========================================
+
+    viewMyData() {
+        // Collect all localStorage data
+        const allData = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            try {
+                const value = localStorage.getItem(key);
+                // Try to parse JSON, otherwise store as string
+                try {
+                    allData[key] = JSON.parse(value);
+                } catch {
+                    allData[key] = value;
+                }
+            } catch (e) {
+                allData[key] = '[Error al leer]';
+            }
+        }
+
+        const dataCount = Object.keys(allData).length;
+        const jsonFormatted = JSON.stringify(allData, null, 2);
+
+        const html = `
+            <h2><i class="ri-eye-line"></i> Mis Datos Almacenados</h2>
+            <div class="info-box">
+                <div class="info-icon"><i class="ri-database-2-line"></i></div>
+                <div class="info-content">
+                    <p><strong>${dataCount} elementos</strong> almacenados en localStorage</p>
+                    <p style="color: var(--text-muted); font-size: 14px; margin-top: 8px;">
+                        Estos datos solo existen en este navegador y no se han enviado a ningún servidor.
+                    </p>
+                </div>
+            </div>
+
+            <div class="code-block" style="background: var(--bg-input); border-radius: var(--radius-md); padding: 20px; margin: 20px 0; max-height: 500px; overflow-y: auto;">
+                <pre style="margin: 0; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; color: var(--text-primary);">${this.escapeHtml(jsonFormatted)}</pre>
+            </div>
+
+            <div class="info-box" style="background: var(--accent-bg); border-left-color: var(--accent-primary);">
+                <div class="info-icon" style="color: var(--accent-primary);"><i class="ri-information-line"></i></div>
+                <div class="info-content">
+                    <p><strong>¿Qué significa esto?</strong></p>
+                    <p style="font-size: 14px; margin-top: 8px;">Puedes exportar estos datos como archivo JSON o eliminarlos permanentemente usando las opciones de la sección "Mis Datos".</p>
+                </div>
+            </div>
+        `;
+
+        this.showModal(html);
+    }
+
+    exportMyData() {
+        // Collect all localStorage data
+        const allData = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            try {
+                const value = localStorage.getItem(key);
+                try {
+                    allData[key] = JSON.parse(value);
+                } catch {
+                    allData[key] = value;
+                }
+            } catch (e) {
+                allData[key] = '[Error al leer]';
+            }
+        }
+
+        // Add metadata
+        const exportData = {
+            exportDate: new Date().toISOString(),
+            application: 'Asistente Education',
+            dataCount: Object.keys(allData).length,
+            data: allData
+        };
+
+        // Create downloadable JSON file
+        const jsonString = JSON.stringify(exportData, null, 2);
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `mis-datos-asistente-education-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        // Show confirmation
+        const html = `
+            <h2><i class="ri-download-2-line"></i> Datos Exportados</h2>
+            <div class="info-box" style="background: var(--accent-bg); border-left-color: var(--success);">
+                <div class="info-icon" style="color: var(--success);"><i class="ri-checkbox-circle-line"></i></div>
+                <div class="info-content">
+                    <h4>Exportación completada</h4>
+                    <p>Tus datos se han descargado en formato JSON.</p>
+                    <p style="margin-top: 10px; font-size: 14px;"><strong>${Object.keys(allData).length} elementos</strong> exportados</p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-icon"><i class="ri-shield-check-line"></i></div>
+                <div class="info-content">
+                    <h4>Seguridad de tus datos</h4>
+                    <p>El archivo descargado contiene todos tus datos en formato JSON legible. Guárdalo en un lugar seguro si contiene información sensible como tu API Key.</p>
+                </div>
+            </div>
+        `;
+
+        this.showModal(html);
+    }
+
+    deleteAllMyData() {
+        // Show confirmation modal
+        const dataCount = localStorage.length;
+        const html = `
+            <h2><i class="ri-error-warning-line"></i> Confirmar Eliminación</h2>
+            <div class="info-box" style="background: hsl(8, 45%, 95%); border-left-color: var(--error);">
+                <div class="info-icon" style="color: var(--error);"><i class="ri-alert-line"></i></div>
+                <div class="info-content">
+                    <h4>Esta acción no se puede deshacer</h4>
+                    <p>Se eliminarán permanentemente <strong>${dataCount} elementos</strong> de localStorage:</p>
+                    <ul style="margin-top: 10px;">
+                        <li>API Key de Google Gemini</li>
+                        <li>Preferencias de tema</li>
+                        <li>Estado del sidebar</li>
+                        <li>Progreso de todas las checklists</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+                <button class="diagnostic-btn" id="confirmDelete" style="background: var(--error);">
+                    <i class="ri-delete-bin-line"></i> Sí, eliminar todos mis datos
+                </button>
+                <button class="diagnostic-btn" id="cancelDelete" style="background: var(--text-muted);">
+                    Cancelar
+                </button>
+            </div>
+        `;
+
+        this.showModal(html);
+
+        // Bind buttons
+        document.getElementById('confirmDelete')?.addEventListener('click', () => {
+            localStorage.clear();
+            this.showDeleteSuccessModal();
+        });
+
+        document.getElementById('cancelDelete')?.addEventListener('click', () => {
+            this.hideModal();
+        });
+    }
+
+    showDeleteSuccessModal() {
+        const html = `
+            <h2><i class="ri-checkbox-circle-line"></i> Datos Eliminados</h2>
+            <div class="info-box" style="background: var(--accent-bg); border-left-color: var(--success);">
+                <div class="info-icon" style="color: var(--success);"><i class="ri-check-line"></i></div>
+                <div class="info-content">
+                    <h4>Todos tus datos han sido eliminados</h4>
+                    <p>localStorage ha sido limpiado completamente. La página se recargará para aplicar los cambios.</p>
+                </div>
+            </div>
+        `;
+
+        this.showModal(html);
+
+        // Reload page after 2 seconds
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+    }
+
+    escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
     }
 }
 

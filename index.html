@@ -6,11 +6,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asistente Education - Centro Escolar</title>
     <meta name="description" content="Asistente de gestión del ecosistema educativo: ASM, Jamf School y App Aula">
+
+    <!-- Security Headers -->
+    <!-- Content Security Policy: Define trusted sources for content -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' https://cdn.jsdelivr.net;
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net;
+        font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net;
+        connect-src 'self' https://generativelanguage.googleapis.com;
+        img-src 'self' data:;
+        frame-ancestors 'none';
+        base-uri 'self';
+        form-action 'self';
+    ">
+    <!-- Prevent MIME type sniffing -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <!-- Control referrer information sent in requests -->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <!-- Permissions Policy: Restrict browser features -->
+    <meta http-equiv="Permissions-Policy" content="
+        geolocation=(),
+        microphone=(),
+        camera=(),
+        payment=(),
+        usb=(),
+        magnetometer=(),
+        gyroscope=(),
+        accelerometer=()
+    ">
+
     <link rel="stylesheet" href="css/styles.css">
-    <!-- Fonts: Outfit (Rounded Sans) -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Icons: Remixicon -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet" />
+
+    <!-- Fonts y iconos se cargan condicionalmente según consentimiento RGPD (ver js/consent.js) -->
+
+    <!-- Security: DOMPurify for XSS protection with Subresource Integrity -->
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.3.1/dist/purify.min.js"
+            integrity="sha384-80VlBZnyAwkkqtSfg5NhPyZff6nU4K/qniLBL8Jnm4KDv6jZhLiYtJbhglg/i9ww"
+            crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -76,6 +109,15 @@
             </ul>
         </div>
 
+        <div class="nav-section">
+            <span class="nav-label">Privacidad</span>
+            <ul class="nav-menu">
+                <li class="nav-item" data-section="mis-datos">
+                    <i class="ri-shield-user-line"></i> Mis Datos
+                </li>
+            </ul>
+        </div>
+
         <div class="sidebar-footer">
             <div class="theme-toggle-container">
                 <button id="themeToggle" class="theme-btn" title="Cambiar tema">
@@ -109,6 +151,21 @@
         <div class="content-wrapper" id="contentWrapper">
             <!-- Content loaded dynamically -->
         </div>
+
+        <!-- Footer Legal -->
+        <footer class="legal-footer">
+            <div class="legal-links">
+                <a href="aviso-legal.html" target="_blank" class="legal-link">
+                    <i class="ri-file-text-line"></i> Aviso Legal
+                </a>
+                <a href="politica-privacidad.html" target="_blank" class="legal-link">
+                    <i class="ri-shield-check-line"></i> Política de Privacidad
+                </a>
+            </div>
+            <div class="legal-info">
+                <span>Tus datos se almacenan solo en este navegador</span>
+            </div>
+        </footer>
     </main>
 
     <div class="search-overlay" id="searchOverlay">
@@ -188,28 +245,168 @@
                 </div>
 
                 <div class="api-input-group">
-                    <input type="password" id="apiKeyInput" class="api-key-input" placeholder="AIza...">
+                    <input type="password" id="apiKeyInput" class="api-key-input" placeholder="AIza..." autocomplete="off">
                     <button id="saveApiKey" class="save-api-btn">Guardar</button>
                 </div>
 
-                <label class="pin-checkbox">
-                    <input type="checkbox" id="pinApiKey">
-                    <span><i class="ri-pushpin-line"></i> Anclar API Key (guardar permanentemente)</span>
-                </label>
-                <p class="pin-info">Sin anclar, la key se borra automáticamente en 24 horas.</p>
+                <div class="api-validation-info" id="apiValidationInfo" style="margin-top: 8px; font-size: 0.9em; color: #666;"></div>
+
+                <div class="api-storage-options" style="margin-top: 16px;">
+                    <label class="storage-checkbox">
+                        <input type="checkbox" id="sessionApiKey">
+                        <span><i class="ri-time-line"></i> Usar solo en esta sesión (se borra al cerrar navegador)</span>
+                    </label>
+
+                    <label class="storage-checkbox">
+                        <input type="checkbox" id="pinApiKey">
+                        <span><i class="ri-pushpin-line"></i> Anclar API Key (guardar permanentemente)</span>
+                    </label>
+                </div>
+
+                <p class="pin-info">Si no marcas ninguna opción, la key se guardará cifrada por 24 horas.</p>
 
                 <div class="api-status" id="apiStatus"></div>
 
                 <div class="info-box" style="margin-top: 20px;">
-                    <div class="info-icon"><i class="ri-lock-line"></i></div>
+                    <div class="info-icon"><i class="ri-shield-check-line"></i></div>
                     <div class="info-content">
-                        <p>Tu API Key se guarda solo en tu navegador (localStorage). No se envía a ningún servidor.</p>
+                        <p><strong>Seguridad mejorada:</strong> Tu API Key se cifra con AES-256-GCM antes de guardarla en tu navegador. Solo se descifra cuando la necesitas. No se envía a ningún servidor externo.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- RGPD Consent Banner -->
+    <div class="consent-banner" id="consent-banner">
+        <div class="consent-header">
+            <div class="consent-icon">
+                <i class="ri-shield-check-line"></i>
+            </div>
+            <h3 class="consent-title">Respetamos tu privacidad</h3>
+        </div>
+        <div class="consent-body">
+            <p class="consent-description">
+                Usamos servicios externos para mejorar tu experiencia. Al aceptar, permites la carga de Google Fonts y Remixicon. Al usar el chatbot IA, aceptas el uso de Google Gemini API.
+            </p>
+            <p class="consent-services">
+                <strong>Servicios:</strong> Google Fonts, Remixicon (jsDelivr), Google Gemini API
+            </p>
+            <a href="politica-privacidad.html" class="consent-link" target="_blank">
+                <i class="ri-file-text-line"></i> Ver política de privacidad
+            </a>
+        </div>
+        <div class="consent-actions">
+            <button class="consent-btn consent-btn-primary" id="consent-accept-all">
+                <i class="ri-check-line"></i> Aceptar todo
+            </button>
+            <button class="consent-btn consent-btn-secondary" id="consent-essential">
+                Solo necesarias
+            </button>
+            <button class="consent-btn consent-btn-text" id="consent-settings">
+                <i class="ri-settings-3-line"></i> Configurar
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Configuración de Consentimiento -->
+    <div class="consent-settings-modal" id="consent-settings-modal">
+        <div class="consent-modal-content">
+            <div class="consent-modal-header">
+                <h2><i class="ri-settings-3-line"></i> Configuración de cookies</h2>
+                <button class="consent-modal-close" id="consent-modal-close">✕</button>
+            </div>
+            <div class="consent-modal-body">
+                <p class="consent-intro">
+                    Personaliza qué servicios externos quieres permitir. Puedes cambiar tus preferencias en cualquier momento desde la sección "Mis Datos" en el menú lateral.
+                </p>
+
+                <!-- Cookies Esenciales -->
+                <div class="consent-option">
+                    <div class="consent-option-header">
+                        <div class="consent-option-title">
+                            <i class="ri-lock-line"></i>
+                            Cookies esenciales
+                            <span class="consent-option-badge essential">Necesarias</span>
+                        </div>
+                        <label class="consent-toggle disabled">
+                            <input type="checkbox" checked disabled>
+                            <span class="consent-toggle-slider"></span>
+                        </label>
+                    </div>
+                    <p class="consent-option-description">
+                        Necesarias para el funcionamiento básico de la aplicación (localStorage, preferencias de tema).
+                    </p>
+                    <p class="consent-option-details">
+                        Estas cookies no se pueden desactivar ya que son imprescindibles para que la aplicación funcione correctamente.
+                    </p>
+                </div>
+
+                <!-- Google Fonts -->
+                <div class="consent-option">
+                    <div class="consent-option-header">
+                        <div class="consent-option-title">
+                            <i class="ri-font-size"></i>
+                            Google Fonts
+                            <span class="consent-option-badge optional">Opcional</span>
+                        </div>
+                        <label class="consent-toggle" id="toggle-fonts">
+                            <input type="checkbox" id="consent-fonts">
+                            <span class="consent-toggle-slider"></span>
+                        </label>
+                    </div>
+                    <p class="consent-option-description">
+                        Tipografía Outfit para una mejor experiencia visual. Si se desactiva, usaremos fuentes del sistema.
+                    </p>
+                    <p class="consent-option-details">
+                        Proveedor: Google LLC | Cookies: Ninguna | Datos compartidos: Dirección IP (anonimizada)
+                    </p>
+                </div>
+
+                <!-- Remixicon -->
+                <div class="consent-option">
+                    <div class="consent-option-header">
+                        <div class="consent-option-title">
+                            <i class="ri-emotion-line"></i>
+                            Remixicon (jsDelivr)
+                            <span class="consent-option-badge optional">Opcional</span>
+                        </div>
+                        <label class="consent-toggle" id="toggle-icons">
+                            <input type="checkbox" id="consent-icons">
+                            <span class="consent-toggle-slider"></span>
+                        </label>
+                    </div>
+                    <p class="consent-option-description">
+                        Biblioteca de iconos para una interfaz más clara y visual.
+                    </p>
+                    <p class="consent-option-details">
+                        Proveedor: jsDelivr CDN | Cookies: Ninguna | Datos compartidos: Dirección IP (anonimizada)
+                    </p>
+                </div>
+
+                <!-- Info Box -->
+                <div class="consent-info-box">
+                    <div class="consent-info-icon">
+                        <i class="ri-information-line"></i>
+                    </div>
+                    <div class="consent-info-text">
+                        <strong>Nota sobre el chatbot IA:</strong> Al usar el asistente con IA, aceptas que tus mensajes se envíen a Google Gemini API. Tu API Key se guarda solo en tu navegador (localStorage).
+                    </div>
+                </div>
+            </div>
+            <div class="consent-modal-footer">
+                <button class="consent-btn consent-btn-secondary" id="consent-modal-cancel" onclick="document.getElementById('consent-settings-modal').classList.remove('active')">
+                    Cancelar
+                </button>
+                <button class="consent-btn consent-btn-primary" id="consent-save-settings">
+                    <i class="ri-save-line"></i> Guardar preferencias
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts: El orden importa - consent.js debe cargarse primero -->
+    <script src="js/consent.js"></script>
     <script src="js/knowledge-base.js"></script>
     <script src="js/diagnostics.js"></script>
     <script src="js/chatbot.js"></script>

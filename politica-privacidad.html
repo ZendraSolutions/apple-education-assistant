@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Politica de Privacidad - Asistente Education</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .legal-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: #333;
+        }
+
+        .legal-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #4a7c59;
+        }
+
+        .legal-header h1 {
+            font-size: 2.5rem;
+            color: #2d4a3e;
+            margin-bottom: 10px;
+        }
+
+        .legal-header .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .update-badge {
+            display: inline-block;
+            background: #4a7c59;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .legal-section {
+            margin-bottom: 35px;
+        }
+
+        .legal-section h2 {
+            font-size: 1.5rem;
+            color: #4a7c59;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8f0e8;
+        }
+
+        .legal-section h3 {
+            font-size: 1.2rem;
+            color: #2d4a3e;
+            margin: 20px 0 10px;
+        }
+
+        .legal-section p {
+            margin-bottom: 12px;
+            text-align: justify;
+        }
+
+        .legal-section ul, .legal-section ol {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        .legal-section li {
+            margin-bottom: 8px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        .data-table th {
+            background: #4a7c59;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border: 1px solid #e0e8e0;
+            vertical-align: top;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #f8faf8;
+        }
+
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #f8faf8;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .info-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e8e0;
+        }
+
+        .info-table td:first-child {
+            font-weight: 600;
+            width: 250px;
+            background: #e8f0e8;
+            color: #2d4a3e;
+        }
+
+        .placeholder {
+            background-color: #fff3cd;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #856404;
+        }
+
+        .warning-box {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #17a2b8;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .rights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .right-card {
+            background: #f8faf8;
+            border: 1px solid #e0e8e0;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .right-card h4 {
+            color: #4a7c59;
+            margin: 0 0 8px 0;
+            font-size: 1rem;
+        }
+
+        .right-card p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .legal-footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e8f0e8;
+            text-align: center;
+            color: #666;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background: #4a7c59;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .back-link:hover {
+            background: #3d6a4a;
+        }
+
+        a {
+            color: #4a7c59;
+        }
+
+        .toc {
+            background: #f8faf8;
+            border: 1px solid #e0e8e0;
+            border-radius: 8px;
+            padding: 20px 30px;
+            margin: 30px 0;
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            color: #2d4a3e;
+        }
+
+        .toc ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .toc li {
+            margin: 5px 0;
+        }
+
+        .toc a {
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: #1a1a1a;
+            }
+            .legal-container {
+                color: #e0e0e0;
+            }
+            .legal-header h1, .legal-section h3 {
+                color: #a8d5a2;
+            }
+            .legal-section h2 {
+                color: #8bc587;
+                border-bottom-color: #3d4a3d;
+            }
+            .data-table th {
+                background: #3d6a4a;
+            }
+            .data-table td {
+                border-color: #3d4a3d;
+            }
+            .data-table tr:nth-child(even) {
+                background: #2a2a2a;
+            }
+            .info-table, .toc, .right-card {
+                background: #2a2a2a;
+                border-color: #3d4a3d;
+            }
+            .info-table td:first-child {
+                background: #3d4a3d;
+                color: #a8d5a2;
+            }
+            .warning-box {
+                background: #3d3a2a;
+            }
+            .info-box {
+                background: #2a3a3d;
+            }
+            .success-box {
+                background: #2a3d2a;
+            }
+            .legal-footer {
+                border-top-color: #3d4a3d;
+            }
+            a {
+                color: #8bc587;
+            }
+            .right-card h4 {
+                color: #8bc587;
+            }
+            .right-card p {
+                color: #b0b0b0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .legal-container {
+                padding: 20px 15px;
+            }
+            .legal-header h1 {
+                font-size: 2rem;
+            }
+            .data-table {
+                font-size: 0.85rem;
+            }
+            .data-table th, .data-table td {
+                padding: 8px;
+            }
+            .info-table td:first-child {
+                width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="legal-container">
+        <header class="legal-header">
+            <h1>Politica de Privacidad</h1>
+            <p class="subtitle">Asistente Education - Centro Escolar</p>
+            <span class="update-badge">Ultima actualizacion: <span class="placeholder">[FECHA]</span></span>
+        </header>
+
+        <div class="info-box">
+            <p><strong>Resumen:</strong> Esta aplicacion tiene un enfoque de <strong>privacidad por diseno</strong>. No recopilamos datos personales identificativos. Todos los datos se almacenan localmente en tu navegador y tu tienes el control total sobre ellos.</p>
+        </div>
+
+        <nav class="toc">
+            <h3>Indice de Contenidos</h3>
+            <ol>
+                <li><a href="#responsable">Responsable del Tratamiento</a></li>
+                <li><a href="#principios">Principios Aplicables</a></li>
+                <li><a href="#datos">Datos que Tratamos</a></li>
+                <li><a href="#finalidades">Finalidades y Base Legal</a></li>
+                <li><a href="#terceros">Servicios de Terceros</a></li>
+                <li><a href="#transferencias">Transferencias Internacionales</a></li>
+                <li><a href="#conservacion">Plazos de Conservacion</a></li>
+                <li><a href="#derechos">Tus Derechos</a></li>
+                <li><a href="#seguridad">Medidas de Seguridad</a></li>
+                <li><a href="#menores">Menores de Edad</a></li>
+                <li><a href="#cookies">Cookies y localStorage</a></li>
+                <li><a href="#modificaciones">Modificaciones</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ol>
+        </nav>
+
+        <section id="responsable" class="legal-section">
+            <h2>1. Responsable del Tratamiento</h2>
+            <p>En cumplimiento con el Reglamento (UE) 2016/679 (RGPD) y la Ley Organica 3/2018 (LOPD-GDD), te informamos:</p>
+
+            <table class="info-table">
+                <tr>
+                    <td>Identidad del Responsable</td>
+                    <td><span class="placeholder">[NOMBRE_TITULAR]</span></td>
+                </tr>
+                <tr>
+                    <td>NIF/CIF</td>
+                    <td><span class="placeholder">[NIF]</span></td>
+                </tr>
+                <tr>
+                    <td>Domicilio</td>
+                    <td><span class="placeholder">[DOMICILIO]</span></td>
+                </tr>
+                <tr>
+                    <td>Correo electronico</td>
+                    <td><span class="placeholder">[EMAIL_CONTACTO]</span></td>
+                </tr>
+                <tr>
+                    <td>Delegado de Proteccion de Datos</td>
+                    <td><span class="placeholder">[EMAIL_DPO]</span> (si aplica)</td>
+                </tr>
+            </table>
+        </section>
+
+        <section id="principios" class="legal-section">
+            <h2>2. Principios Aplicables</h2>
+            <p>El tratamiento de tus datos se rige por los principios del articulo 5 del RGPD:</p>
+            <ul>
+                <li><strong>Licitud, lealtad y transparencia:</strong> Informacion clara sobre como usamos tus datos.</li>
+                <li><strong>Limitacion de la finalidad:</strong> Solo usamos los datos para los fines especificados.</li>
+                <li><strong>Minimizacion de datos:</strong> Solo recopilamos lo estrictamente necesario.</li>
+                <li><strong>Exactitud:</strong> Los datos deben ser exactos y actualizados.</li>
+                <li><strong>Limitacion del plazo:</strong> No conservamos datos mas tiempo del necesario.</li>
+                <li><strong>Integridad y confidencialidad:</strong> Aplicamos medidas de seguridad adecuadas.</li>
+            </ul>
+        </section>
+
+        <section id="datos" class="legal-section">
+            <h2>3. Datos que Tratamos</h2>
+
+            <div class="success-box">
+                <strong>Buenas noticias:</strong> Esta aplicacion NO recopila datos personales identificativos (nombre, email, telefono, DNI, direccion, etc.). Todo se almacena localmente en tu navegador.
+            </div>
+
+            <h3>3.1. Datos Almacenados en tu Navegador</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Dato</th>
+                        <th>Descripcion</th>
+                        <th>Ubicacion</th>
+                        <th>Es dato personal?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>API Key de Google Gemini</td>
+                        <td>Clave de acceso proporcionada voluntariamente por ti</td>
+                        <td>localStorage</td>
+                        <td>Dato tecnico vinculado a tu cuenta Google</td>
+                    </tr>
+                    <tr>
+                        <td>Conversaciones del chatbot</td>
+                        <td>Mensajes intercambiados con el asistente IA</td>
+                        <td>Memoria temporal</td>
+                        <td>Puede contener info que tu introduzcas</td>
+                    </tr>
+                    <tr>
+                        <td>Preferencia de tema</td>
+                        <td>Modo claro u oscuro</td>
+                        <td>localStorage</td>
+                        <td>NO</td>
+                    </tr>
+                    <tr>
+                        <td>Estado del sidebar</td>
+                        <td>Colapsado o expandido</td>
+                        <td>localStorage</td>
+                        <td>NO</td>
+                    </tr>
+                    <tr>
+                        <td>Progreso de checklists</td>
+                        <td>Tareas marcadas como completadas</td>
+                        <td>localStorage</td>
+                        <td>NO</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>3.2. Datos que NO Recopilamos</h3>
+            <ul>
+                <li>Datos identificativos (nombre, apellidos, DNI/NIE)</li>
+                <li>Datos de contacto (email, telefono, direccion)</li>
+                <li>Datos de registro o autenticacion</li>
+                <li>Cookies de terceros con fines publicitarios</li>
+                <li>Herramientas de analitica (Google Analytics, etc.)</li>
+                <li>Datos de geolocalizacion</li>
+            </ul>
+        </section>
+
+        <section id="finalidades" class="legal-section">
+            <h2>4. Finalidades del Tratamiento y Base Legal</h2>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Finalidad</th>
+                        <th>Base Legal (Art. 6 RGPD)</th>
+                        <th>Datos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Proporcionar el asistente de IA</td>
+                        <td>Consentimiento (Art. 6.1.a) + Ejecucion del servicio (Art. 6.1.b)</td>
+                        <td>API Key, mensajes del chat</td>
+                    </tr>
+                    <tr>
+                        <td>Personalizar experiencia (tema)</td>
+                        <td>Interes legitimo (Art. 6.1.f)</td>
+                        <td>Preferencia de tema</td>
+                    </tr>
+                    <tr>
+                        <td>Guardar progreso de checklists</td>
+                        <td>Interes legitimo (Art. 6.1.f)</td>
+                        <td>Estado de tareas</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="info-box">
+                <strong>Consentimiento Informado:</strong> Al introducir tu API Key de Google Gemini, consientes expresamente el almacenamiento de dicha clave en tu navegador y el envio de tus consultas a Google. Puedes revocar este consentimiento eliminando la API Key.
+            </div>
+        </section>
+
+        <section id="terceros" class="legal-section">
+            <h2>5. Servicios de Terceros</h2>
+            <p>La aplicacion utiliza servicios de terceros para su funcionamiento:</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Proveedor</th>
+                        <th>Servicio</th>
+                        <th>Datos Comunicados</th>
+                        <th>Politica de Privacidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Google LLC</td>
+                        <td>Gemini API (IA)</td>
+                        <td>Mensajes del chat, API Key</td>
+                        <td><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Ver politica</a></td>
+                    </tr>
+                    <tr>
+                        <td>Google LLC</td>
+                        <td>Google Fonts</td>
+                        <td>Direccion IP (potencialmente)</td>
+                        <td><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Ver politica</a></td>
+                    </tr>
+                    <tr>
+                        <td>jsDelivr</td>
+                        <td>CDN para iconos</td>
+                        <td>Direccion IP (logs CDN)</td>
+                        <td><a href="https://www.jsdelivr.com/privacy-policy-jsdelivr-net" target="_blank" rel="noopener">Ver politica</a></td>
+                    </tr>
+                    <tr>
+                        <td>Microsoft (GitHub)</td>
+                        <td>Hosting (GitHub Pages)</td>
+                        <td>Direccion IP, logs de acceso</td>
+                        <td><a href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement" target="_blank" rel="noopener">Ver politica</a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <strong>Importante:</strong> Cuando usas el chatbot, tus mensajes se envian a los servidores de Google para ser procesados por la IA. Google es responsable del tratamiento de esos datos segun su propia politica de privacidad.
+            </div>
+        </section>
+
+        <section id="transferencias" class="legal-section">
+            <h2>6. Transferencias Internacionales de Datos</h2>
+            <p>Algunos servicios tienen servidores fuera del Espacio Economico Europeo (EEE):</p>
+
+            <h3>6.1. Transferencias a Estados Unidos</h3>
+            <p>Google LLC y Microsoft Corporation estan certificadas bajo el <strong>EU-U.S. Data Privacy Framework (DPF)</strong>, aprobado por la Comision Europea mediante Decision de Ejecucion (UE) 2023/1795.</p>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Proveedor</th>
+                        <th>Destino</th>
+                        <th>Garantias</th>
+                        <th>Verificacion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Google LLC</td>
+                        <td>Estados Unidos</td>
+                        <td>Data Privacy Framework + SCCs</td>
+                        <td><a href="https://www.dataprivacyframework.gov/s/participant-search/participant-detail?id=a2zt000000001L5AAI" target="_blank" rel="noopener">Verificar</a></td>
+                    </tr>
+                    <tr>
+                        <td>Microsoft</td>
+                        <td>Estados Unidos</td>
+                        <td>Data Privacy Framework + SCCs</td>
+                        <td><a href="https://www.dataprivacyframework.gov/s/participant-search/participant-detail?id=a2zt0000000KzNaAAK" target="_blank" rel="noopener">Verificar</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="conservacion" class="legal-section">
+            <h2>7. Plazos de Conservacion</h2>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Dato</th>
+                        <th>Plazo</th>
+                        <th>Criterio de Eliminacion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>API Key (sin anclar)</td>
+                        <td>24 horas</td>
+                        <td>Eliminacion automatica</td>
+                    </tr>
+                    <tr>
+                        <td>API Key (anclada)</td>
+                        <td>Hasta que la elimines</td>
+                        <td>Eliminacion manual</td>
+                    </tr>
+                    <tr>
+                        <td>Conversaciones del chat</td>
+                        <td>Durante la sesion</td>
+                        <td>Se elimina al cerrar la pestana</td>
+                    </tr>
+                    <tr>
+                        <td>Preferencias (tema, sidebar)</td>
+                        <td>Indefinido</td>
+                        <td>Limpieza del cache del navegador</td>
+                    </tr>
+                    <tr>
+                        <td>Progreso de checklists</td>
+                        <td>Indefinido</td>
+                        <td>Limpieza del cache del navegador</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="derechos" class="legal-section">
+            <h2>8. Tus Derechos (ARCO-POL)</h2>
+            <p>Tienes los siguientes derechos reconocidos por el RGPD:</p>
+
+            <div class="rights-grid">
+                <div class="right-card">
+                    <h4>Derecho de Acceso (Art. 15)</h4>
+                    <p>Saber que datos tenemos sobre ti. En esta app, puedes verlos directamente en las herramientas de desarrollador de tu navegador.</p>
+                </div>
+                <div class="right-card">
+                    <h4>Derecho de Rectificacion (Art. 16)</h4>
+                    <p>Corregir datos inexactos. Puedes modificar tu API Key en cualquier momento.</p>
+                </div>
+                <div class="right-card">
+                    <h4>Derecho de Supresion (Art. 17)</h4>
+                    <p>Eliminar tus datos. Puedes borrar todo desde la configuracion o limpiando el cache del navegador.</p>
+                </div>
+                <div class="right-card">
+                    <h4>Derecho de Oposicion (Art. 21)</h4>
+                    <p>Oponerte al tratamiento. Puedes dejar de usar la aplicacion en cualquier momento.</p>
+                </div>
+                <div class="right-card">
+                    <h4>Derecho de Portabilidad (Art. 20)</h4>
+                    <p>Recibir tus datos en formato estructurado. Puedes acceder al localStorage desde DevTools.</p>
+                </div>
+                <div class="right-card">
+                    <h4>Derecho de Limitacion (Art. 18)</h4>
+                    <p>Limitar el tratamiento. Puedes dejar de usar el chatbot sin eliminar otros datos.</p>
+                </div>
+            </div>
+
+            <h3>8.1. Como Ejercer tus Derechos</h3>
+            <ol>
+                <li><strong>Directamente:</strong> Elimina tu API Key y limpia los datos del navegador.</li>
+                <li><strong>Mediante comunicacion:</strong> Envia un email a <span class="placeholder">[EMAIL_CONTACTO]</span> con asunto "Ejercicio de Derechos RGPD".</li>
+            </ol>
+
+            <h3>8.2. Reclamar ante la AEPD</h3>
+            <p>Si consideras que vulneramos tus derechos, puedes reclamar ante la <strong>Agencia Espanola de Proteccion de Datos (AEPD)</strong>:</p>
+            <ul>
+                <li><strong>Web:</strong> <a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a></li>
+                <li><strong>Direccion:</strong> Calle Jorge Juan, 6, 28001 Madrid</li>
+                <li><strong>Telefono:</strong> 901 100 099 / 912 663 517</li>
+            </ul>
+        </section>
+
+        <section id="seguridad" class="legal-section">
+            <h2>9. Medidas de Seguridad</h2>
+
+            <h3>9.1. Medidas Tecnicas</h3>
+            <ul>
+                <li><strong>HTTPS:</strong> Todas las comunicaciones estan cifradas con TLS 1.2+.</li>
+                <li><strong>Almacenamiento local:</strong> Tus datos nunca salen de tu navegador (excepto las consultas al chatbot).</li>
+                <li><strong>Sin backend propio:</strong> No tenemos servidores que puedan ser vulnerados.</li>
+                <li><strong>Sin cookies de tracking:</strong> No usamos cookies de seguimiento.</li>
+            </ul>
+
+            <h3>9.2. Tu Responsabilidad</h3>
+            <div class="warning-box">
+                <ul>
+                    <li>Manten tu API Key segura y no la compartas.</li>
+                    <li>No introduzcas informacion sensible o datos personales de terceros en el chatbot.</li>
+                    <li>Si compartes el ordenador, no ancles la API Key o eliminala despues de usarla.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="menores" class="legal-section">
+            <h2>10. Menores de Edad</h2>
+            <p>Esta aplicacion esta dirigida a <strong>profesionales del ambito educativo</strong> (profesores, docentes, coordinadores TIC).</p>
+            <p>La aplicacion <strong>NO esta dirigida a menores de 14 anos</strong>. No solicitamos ni recopilamos conscientemente datos de menores.</p>
+            <p>Si un docente utiliza la aplicacion en contexto educativo con alumnos menores, sera responsabilidad del centro educativo obtener las autorizaciones necesarias.</p>
+        </section>
+
+        <section id="cookies" class="legal-section">
+            <h2>11. Cookies y localStorage</h2>
+
+            <h3>11.1. Esta aplicacion usa cookies?</h3>
+            <p><strong>NO</strong>, esta aplicacion no utiliza cookies HTTP tradicionales.</p>
+
+            <h3>11.2. Que es localStorage?</h3>
+            <p>Usamos <strong>localStorage</strong>, una tecnologia HTML5 que permite guardar datos en tu navegador. A efectos legales, se equipara a las cookies.</p>
+
+            <h3>11.3. Exencion de Consentimiento</h3>
+            <p>Segun las Directrices 05/2020 del EDPB, el uso de localStorage en esta aplicacion esta <strong>exento de consentimiento previo</strong> porque:</p>
+            <ul>
+                <li>Es tecnicamente necesario para el funcionamiento del servicio.</li>
+                <li>No tiene finalidades comerciales ni de seguimiento.</li>
+            </ul>
+
+            <h3>11.4. Como Eliminar los Datos</h3>
+            <p>Puedes eliminar los datos de localStorage:</p>
+            <ul>
+                <li><strong>Chrome:</strong> Configuracion > Privacidad > Borrar datos de navegacion</li>
+                <li><strong>Firefox:</strong> Opciones > Privacidad > Limpiar datos</li>
+                <li><strong>Safari:</strong> Preferencias > Privacidad > Gestionar datos</li>
+                <li><strong>Edge:</strong> Configuracion > Privacidad > Borrar datos</li>
+            </ul>
+
+            <p>Para mas informacion, consulta nuestra <a href="politica-cookies.html">Politica de Cookies</a>.</p>
+        </section>
+
+        <section id="modificaciones" class="legal-section">
+            <h2>12. Modificaciones de esta Politica</h2>
+            <p>Podemos modificar esta Politica de Privacidad para:</p>
+            <ul>
+                <li>Adaptarla a cambios legislativos.</li>
+                <li>Reflejar cambios en la aplicacion.</li>
+                <li>Mejorar la claridad de la informacion.</li>
+            </ul>
+            <p>Cuando haya cambios sustanciales, informaremos mediante un aviso destacado en la aplicacion y actualizaremos la fecha de ultima modificacion.</p>
+        </section>
+
+        <section id="contacto" class="legal-section">
+            <h2>13. Contacto</h2>
+            <p>Para cualquier consulta sobre privacidad:</p>
+
+            <table class="info-table">
+                <tr>
+                    <td>Correo electronico</td>
+                    <td><span class="placeholder">[EMAIL_CONTACTO]</span></td>
+                </tr>
+                <tr>
+                    <td>Direccion postal</td>
+                    <td><span class="placeholder">[DOMICILIO]</span></td>
+                </tr>
+            </table>
+        </section>
+
+        <section class="legal-section">
+            <h2>14. Normativa Aplicable</h2>
+            <ul>
+                <li><strong>RGPD:</strong> Reglamento (UE) 2016/679</li>
+                <li><strong>LOPD-GDD:</strong> Ley Organica 3/2018</li>
+                <li><strong>LSSI-CE:</strong> Ley 34/2002</li>
+            </ul>
+        </section>
+
+        <footer class="legal-footer">
+            <p><strong>Version:</strong> 1.0</p>
+            <p><strong>Ultima actualizacion:</strong> <span class="placeholder">[FECHA]</span></p>
+            <a href="index.html" class="back-link">Volver a la aplicacion</a>
+        </footer>
+    </div>
+</body>
+</html>

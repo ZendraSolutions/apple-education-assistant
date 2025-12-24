@@ -4,12 +4,55 @@
  * Flujo: Apple School Manager → Jamf School → Dispositivos
  */
 
+/**
+ * Rate Limiter - Protección contra abuso de API
+ * Limita el número de llamadas a la API en una ventana de tiempo
+ */
+class RateLimiter {
+    constructor(maxCalls = 10, windowMs = 60000) {
+        this.maxCalls = maxCalls;
+        this.windowMs = windowMs;
+        this.calls = [];
+    }
+
+    canMakeCall() {
+        const now = Date.now();
+        // Limpiar llamadas fuera de la ventana de tiempo
+        this.calls = this.calls.filter(time => now - time < this.windowMs);
+
+        if (this.calls.length >= this.maxCalls) {
+            // Calcular tiempo de espera hasta que expire la llamada más antigua
+            const oldestCall = Math.min(...this.calls);
+            const waitTime = Math.ceil((this.windowMs - (now - oldestCall)) / 1000);
+            return { allowed: false, waitTime };
+        }
+
+        // Registrar esta llamada
+        this.calls.push(now);
+        return { allowed: true };
+    }
+
+    getRemainingCalls() {
+        const now = Date.now();
+        this.calls = this.calls.filter(time => now - time < this.windowMs);
+        return Math.max(0, this.maxCalls - this.calls.length);
+    }
+
+    reset() {
+        this.calls = [];
+    }
+}
+
 class JamfChatbot {
     constructor() {
         this.loadApiKeySettings();
         this.isOpen = false;
         this.isProcessing = false;
         this.conversationHistory = [];
+
+        // Rate Limiter - Protección contra abuso de API
+        // 10 llamadas por minuto (configurable)
+        this.rateLimiter = new RateLimiter(10, 60000);
 
         // Documentación - se carga desde archivo externo
         this.jamfDocs = [];
@@ -59,7 +102,10 @@ class JamfChatbot {
     showDocsInfo() {
         const footer = document.createElement('div');
         footer.className = 'docs-info';
-        footer.innerHTML = `<i class="ri-book-open-line"></i> Docs: ${this.docsMetadata.lastUpdated} • ${this.jamfDocs.length} artículos`;
+        // Security: Sanitize metadata from external JSON
+        const sanitizedDate = DOMPurify.sanitize(this.docsMetadata.lastUpdated);
+        const articleCount = parseInt(this.jamfDocs.length) || 0;
+        footer.innerHTML = `<i class="ri-book-open-line"></i> Docs: ${sanitizedDate} • ${articleCount} artículos`;
 
         const panel = document.getElementById('chatbotPanel');
         if (panel && !panel.querySelector('.docs-info')) {
@@ -318,33 +364,262 @@ FRECUENCIA: Jamf sincroniza automáticamente cada pocas horas.`,
     }
 
     // ===============================
-    // API KEY MANAGEMENT
+    // API KEY MANAGEMENT CON CIFRADO
     // ===============================
 
-    loadApiKeySettings() {
-        const settings = JSON.parse(localStorage.getItem('jamf-api-settings') || '{}');
-        this.apiKey = settings.key || '';
-        this.isPinned = settings.pinned || false;
-        this.expiryTime = settings.expiry || 0;
+    async loadApiKeySettings() {
+        // Intentar cargar desde sessionStorage primero (solo sesión)
+        const sessionSettings = sessionStorage.getItem('jamf-api-settings');
+        if (sessionSettings) {
+            try {
+                const settings = JSON.parse(sessionSettings);
+                this.apiKey = await this.decryptApiKey(settings.key);
+                this.isPinned = false;
+                this.useSessionOnly = true;
+                this.expiryTime = 0;
+                return;
+            } catch (e) {
+                console.error('[API] Error descifrando desde sessionStorage:', e);
+                sessionStorage.removeItem('jamf-api-settings');
+            }
+        }
 
-        if (!this.isPinned && this.expiryTime && Date.now() > this.expiryTime) {
-            this.clearApiKey();
+        // Intentar cargar desde localStorage
+        const localSettings = localStorage.getItem('jamf-api-settings');
+        if (localSettings) {
+            try {
+                const settings = JSON.parse(localSettings);
+
+                // Migración: Si la key no está cifrada (legacy), cifrarla
+                if (settings.key && !settings.encrypted) {
+                    console.log('[API] Migrando API Key a formato cifrado...');
+                    await this.saveApiKeySettings(settings.key, settings.pinned || false, false);
+                    return;
+                }
+
+                // Descifrar la key
+                this.apiKey = await this.decryptApiKey(settings.key);
+                this.isPinned = settings.pinned || false;
+                this.useSessionOnly = false;
+                this.expiryTime = settings.expiry || 0;
+
+                // Verificar si ha expirado (24h)
+                if (!this.isPinned && this.expiryTime && Date.now() > this.expiryTime) {
+                    this.clearApiKey();
+                }
+            } catch (e) {
+                console.error('[API] Error descifrando API Key:', e);
+                this.clearApiKey();
+            }
         }
     }
 
-    saveApiKeySettings(key, pinned = false) {
+    async saveApiKeySettings(key, pinned = false, sessionOnly = false) {
+        const encryptedKey = await this.encryptApiKey(key);
         const expiry = pinned ? 0 : Date.now() + (24 * 60 * 60 * 1000);
-        localStorage.setItem('jamf-api-settings', JSON.stringify({ key, pinned, expiry }));
+
+        const settings = {
+            key: encryptedKey,
+            encrypted: true,
+            pinned: pinned,
+            expiry: expiry
+        };
+
+        if (sessionOnly) {
+            // Guardar solo en esta sesión (se borra al cerrar navegador)
+            sessionStorage.setItem('jamf-api-settings', JSON.stringify(settings));
+            localStorage.removeItem('jamf-api-settings');
+        } else {
+            // Guardar en localStorage (persistente o 24h)
+            localStorage.setItem('jamf-api-settings', JSON.stringify(settings));
+            sessionStorage.removeItem('jamf-api-settings');
+        }
+
         this.apiKey = key;
         this.isPinned = pinned;
+        this.useSessionOnly = sessionOnly;
         this.expiryTime = expiry;
     }
 
     clearApiKey() {
         localStorage.removeItem('jamf-api-settings');
+        sessionStorage.removeItem('jamf-api-settings');
         this.apiKey = '';
         this.isPinned = false;
+        this.useSessionOnly = false;
         this.expiryTime = 0;
+    }
+
+    // ===============================
+    // CIFRADO AES-GCM (Web Crypto API)
+    // ===============================
+
+    async encryptApiKey(plaintext) {
+        // Fallback si Web Crypto no está disponible
+        if (!window.crypto || !window.crypto.subtle) {
+            console.warn('[SECURITY] Web Crypto API no disponible, guardando sin cifrar');
+            return plaintext;
+        }
+
+        try {
+            const key = await this.deriveEncryptionKey();
+            const encoder = new TextEncoder();
+            const data = encoder.encode(plaintext);
+
+            // Generar IV aleatorio
+            const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+            // Cifrar con AES-GCM
+            const encrypted = await window.crypto.subtle.encrypt(
+                { name: 'AES-GCM', iv: iv },
+                key,
+                data
+            );
+
+            // Combinar IV + datos cifrados y convertir a base64
+            const combined = new Uint8Array(iv.length + encrypted.byteLength);
+            combined.set(iv, 0);
+            combined.set(new Uint8Array(encrypted), iv.length);
+
+            return btoa(String.fromCharCode(...combined));
+        } catch (e) {
+            console.error('[SECURITY] Error cifrando:', e);
+            throw new Error('Error al cifrar la API Key');
+        }
+    }
+
+    async decryptApiKey(encryptedBase64) {
+        // Fallback si Web Crypto no está disponible
+        if (!window.crypto || !window.crypto.subtle) {
+            return encryptedBase64;
+        }
+
+        try {
+            const key = await this.deriveEncryptionKey();
+
+            // Decodificar base64
+            const combined = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
+
+            // Separar IV y datos cifrados
+            const iv = combined.slice(0, 12);
+            const encrypted = combined.slice(12);
+
+            // Descifrar
+            const decrypted = await window.crypto.subtle.decrypt(
+                { name: 'AES-GCM', iv: iv },
+                key,
+                encrypted
+            );
+
+            const decoder = new TextDecoder();
+            return decoder.decode(decrypted);
+        } catch (e) {
+            console.error('[SECURITY] Error descifrando:', e);
+            throw new Error('Error al descifrar la API Key');
+        }
+    }
+
+    async deriveEncryptionKey() {
+        const encoder = new TextEncoder();
+
+        // Crear material de clave basado en características del navegador
+        const keyMaterial = await window.crypto.subtle.importKey(
+            'raw',
+            encoder.encode(window.location.origin + navigator.userAgent.substring(0, 50)),
+            { name: 'PBKDF2' },
+            false,
+            ['deriveBits', 'deriveKey']
+        );
+
+        // Derivar clave AES-256 con PBKDF2
+        return window.crypto.subtle.deriveKey(
+            {
+                name: 'PBKDF2',
+                salt: encoder.encode('jamf-assistant-education-v2'),
+                iterations: 100000,
+                hash: 'SHA-256'
+            },
+            keyMaterial,
+            { name: 'AES-GCM', length: 256 },
+            false,
+            ['encrypt', 'decrypt']
+        );
+    }
+
+    // ===============================
+    // VALIDACIÓN DE API KEY
+    // ===============================
+
+    validateApiKeyFormat(key) {
+        // Formato: AIza[A-Za-z0-9_-]{35}
+        const regex = /^AIza[A-Za-z0-9_-]{35}$/;
+
+        if (!key) {
+            return { valid: false, error: 'La API Key no puede estar vacía' };
+        }
+
+        if (key.length !== 39) {
+            return { valid: false, error: `Longitud incorrecta: ${key.length} caracteres (debe ser 39)` };
+        }
+
+        if (!key.startsWith('AIza')) {
+            return { valid: false, error: 'La API Key debe comenzar con "AIza"' };
+        }
+
+        if (!regex.test(key)) {
+            return { valid: false, error: 'Formato inválido. Contiene caracteres no permitidos' };
+        }
+
+        return { valid: true, strength: this.calculateKeyStrength(key) };
+    }
+
+    calculateKeyStrength(key) {
+        // Análisis de entropía simplificado
+        const uniqueChars = new Set(key.split('')).size;
+        const hasNumbers = /\d/.test(key);
+        const hasUpperCase = /[A-Z]/.test(key);
+        const hasLowerCase = /[a-z]/.test(key);
+        const hasSpecial = /[_-]/.test(key);
+
+        let strength = 0;
+        if (uniqueChars >= 20) strength++;
+        if (hasNumbers && hasUpperCase && hasLowerCase) strength++;
+        if (hasSpecial) strength++;
+
+        if (strength >= 3) return 'fuerte';
+        if (strength >= 2) return 'media';
+        return 'débil';
+    }
+
+    validateApiKeyInRealTime(value) {
+        const validationInfo = document.getElementById('apiValidationInfo');
+        if (!validationInfo) return;
+
+        const trimmedValue = value.trim();
+
+        if (!trimmedValue) {
+            validationInfo.innerHTML = '';
+            return;
+        }
+
+        const cleanKey = trimmedValue.replace(/[\s\n\r]/g, '');
+        const validation = this.validateApiKeyFormat(cleanKey);
+
+        if (validation.valid) {
+            const strengthEmoji = {
+                'fuerte': '🟢',
+                'media': '🟡',
+                'débil': '🟠'
+            }[validation.strength] || '🟢';
+
+            // Security: Sanitize validation messages
+            const safeStrength = DOMPurify.sanitize(validation.strength);
+            validationInfo.innerHTML = `${strengthEmoji} <span style="color: #16a34a;">Formato válido</span> • Fortaleza: <strong>${safeStrength}</strong>`;
+        } else {
+            // Security: Sanitize error messages
+            const safeError = DOMPurify.sanitize(validation.error);
+            validationInfo.innerHTML = `🔴 <span style="color: #dc2626;">${safeError}</span>`;
+        }
     }
 
     // ===============================
@@ -391,6 +666,24 @@ FRECUENCIA: Jamf sincroniza automáticamente cada pocas horas.`,
         document.getElementById('apiModal')?.addEventListener('click', (e) => {
             if (e.target.id === 'apiModal') this.closeApiModal();
         });
+
+        // Validación en tiempo real del formato de API Key
+        document.getElementById('apiKeyInput')?.addEventListener('input', (e) => {
+            this.validateApiKeyInRealTime(e.target.value);
+        });
+
+        // Lógica de checkboxes mutuamente excluyentes
+        document.getElementById('sessionApiKey')?.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                document.getElementById('pinApiKey').checked = false;
+            }
+        });
+
+        document.getElementById('pinApiKey')?.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                document.getElementById('sessionApiKey').checked = false;
+            }
+        });
     }
 
     toggleChat() {
@@ -423,13 +716,22 @@ FRECUENCIA: Jamf sincroniza automáticamente cada pocas horas.`,
     updateApiKeyUI() {
         const input = document.getElementById('apiKeyInput');
         const pinCheckbox = document.getElementById('pinApiKey');
+        const sessionCheckbox = document.getElementById('sessionApiKey');
 
         if (input && this.apiKey) input.value = this.apiKey;
         if (pinCheckbox) pinCheckbox.checked = this.isPinned;
+        if (sessionCheckbox) sessionCheckbox.checked = this.useSessionOnly || false;
 
         if (this.apiKey) {
-            const expiryText = this.isPinned ? 'Guardada permanentemente' :
-                `Expira en ${Math.round((this.expiryTime - Date.now()) / (1000 * 60 * 60))} horas`;
+            let expiryText = '';
+            if (this.useSessionOnly) {
+                expiryText = 'Solo en esta sesión (se borra al cerrar navegador)';
+            } else if (this.isPinned) {
+                expiryText = 'Guardada permanentemente (cifrada)';
+            } else {
+                const hoursRemaining = Math.round((this.expiryTime - Date.now()) / (1000 * 60 * 60));
+                expiryText = `Expira en ${hoursRemaining} hora${hoursRemaining !== 1 ? 's' : ''} (cifrada)`;
+            }
             this.updateApiStatus(`API Key configurada - ${expiryText}`, 'success');
         }
     }
@@ -437,8 +739,10 @@ FRECUENCIA: Jamf sincroniza automáticamente cada pocas horas.`,
     async saveApiKeyFromModal() {
         const input = document.getElementById('apiKeyInput');
         const pinCheckbox = document.getElementById('pinApiKey');
+        const sessionCheckbox = document.getElementById('sessionApiKey');
         const key = input.value.trim();
         const pinned = pinCheckbox?.checked || false;
+        const sessionOnly = sessionCheckbox?.checked || false;
 
         if (!key) {
             this.updateApiStatus('Introduce una API Key válida', 'error');
@@ -448,13 +752,31 @@ FRECUENCIA: Jamf sincroniza automáticamente cada pocas horas.`,
         // Limpiar espacios invisibles y saltos de línea
         const cleanKey = key.replace(/[\s\n\r]/g, '');
 
-        this.updateApiStatus('Verificando API Key...', '');
+        // Validación de formato (regex)
+        const formatValidation = this.validateApiKeyFormat(cleanKey);
+        if (!formatValidation.valid) {
+            this.updateApiStatus(formatValidation.error, 'error');
+            return;
+        }
 
+        // Mostrar indicador de fortaleza
+        this.updateApiStatus(`Validando formato... (Fortaleza: ${formatValidation.strength})`, '');
+
+        // Test con la API real de Google
         const result = await this.testApiKey(cleanKey);
 
         if (result.valid) {
-            this.saveApiKeySettings(cleanKey, pinned);
-            const msg = pinned ? 'API Key guardada permanentemente' : 'API Key guardada (24 horas)';
+            await this.saveApiKeySettings(cleanKey, pinned, sessionOnly);
+
+            let msg = '';
+            if (sessionOnly) {
+                msg = 'API Key guardada solo para esta sesión';
+            } else if (pinned) {
+                msg = 'API Key guardada permanentemente (cifrada)';
+            } else {
+                msg = 'API Key guardada por 24 horas (cifrada)';
+            }
+
             this.updateApiStatus(msg, 'success');
             setTimeout(() => this.closeApiModal(), 1500);
         } else {
@@ -526,6 +848,27 @@ FRECUENCIA: Jamf sincroniza automáticamente cada pocas horas.`,
 
         if (!message || this.isProcessing) return;
 
+        // Verificar rate limiting solo si hay API Key configurada
+        if (this.apiKey) {
+            const rateLimitCheck = this.rateLimiter.canMakeCall();
+            if (!rateLimitCheck.allowed) {
+                const waitMinutes = Math.floor(rateLimitCheck.waitTime / 60);
+                const waitSeconds = rateLimitCheck.waitTime % 60;
+                const timeText = waitMinutes > 0
+                    ? `${waitMinutes} minuto${waitMinutes > 1 ? 's' : ''} y ${waitSeconds} segundo${waitSeconds !== 1 ? 's' : ''}`
+                    : `${waitSeconds} segundo${waitSeconds !== 1 ? 's' : ''}`;
+
+                this.addUserMessage(message);
+                this.addBotMessage(
+                    `⏸️ **Límite de consultas alcanzado**\n\n` +
+                    `Para proteger tu cuota de API, he limitado las llamadas a ${this.rateLimiter.maxCalls} por minuto.\n\n` +
+                    `Por favor, espera **${timeText}** antes de hacer otra consulta.\n\n` +
+                    `_Esto protege tu API Key de Google de consumir toda su cuota gratuita._`
+                );
+                return;
+            }
+        }
+
         input.value = '';
         this.addUserMessage(message);
 
@@ -547,6 +890,14 @@ FRECUENCIA: Jamf sincroniza automáticamente cada pocas horas.`,
 
             if (relevantDocs.length > 0) {
                 this.showSources(relevantDocs);
+            }
+
+            // Mostrar indicador de llamadas restantes
+            if (this.apiKey) {
+                const remaining = this.rateLimiter.getRemainingCalls();
+                if (remaining <= 3) {
+                    this.showRateLimitWarning(remaining);
+                }
             }
         } catch (error) {
             this.hideTypingIndicator();
@@ -650,15 +1001,29 @@ ${context}`;
     }
 
     showSources(docs) {
-        const sourcesHtml = docs.slice(0, 2).map(doc =>
-            `<span class="source-tag" title="${doc.title}"><i class="ri-file-text-line"></i> ${doc.category}</span>`
-        ).join(' ');
+        // Security: Sanitize doc titles and categories before rendering
+        const sourcesHtml = docs.slice(0, 2).map(doc => {
+            const safeTitle = DOMPurify.sanitize(doc.title);
+            const safeCategory = DOMPurify.sanitize(doc.category);
+            return `<span class="source-tag" title="${safeTitle}"><i class="ri-file-text-line"></i> ${safeCategory}</span>`;
+        }).join(' ');
 
         const container = document.getElementById('chatbotMessages');
         const sources = document.createElement('div');
         sources.className = 'chat-sources';
-        sources.innerHTML = `<small>Fuentes: ${sourcesHtml}</small>`;
+        sources.innerHTML = DOMPurify.sanitize(`<small>Fuentes: ${sourcesHtml}</small>`);
         container.appendChild(sources);
+        this.scrollToBottom();
+    }
+
+    showRateLimitWarning(remaining) {
+        const container = document.getElementById('chatbotMessages');
+        const warning = document.createElement('div');
+        warning.className = 'chat-rate-limit-warning';
+        // Security: remaining is a number, safe to use directly
+        const safeRemaining = parseInt(remaining) || 0;
+        warning.innerHTML = `<small><i class="ri-time-line"></i> Te quedan ${safeRemaining} consulta${safeRemaining !== 1 ? 's' : ''} en este minuto</small>`;
+        container.appendChild(warning);
         this.scrollToBottom();
     }
 
@@ -670,7 +1035,15 @@ ${context}`;
         const container = document.getElementById('chatbotMessages');
         const msg = document.createElement('div');
         msg.className = 'chat-message user';
-        msg.innerHTML = `<div class="message-avatar"><i class="ri-user-line"></i></div><div class="message-content"><p>${this.escapeHtml(text)}</p></div>`;
+        // Security: Use textContent for user input (plain text only)
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'message-content';
+        const p = document.createElement('p');
+        p.textContent = text;
+        contentDiv.appendChild(p);
+
+        msg.innerHTML = '<div class="message-avatar"><i class="ri-user-line"></i></div>';
+        msg.appendChild(contentDiv);
         container.appendChild(msg);
         this.scrollToBottom();
     }
@@ -679,7 +1052,9 @@ ${context}`;
         const container = document.getElementById('chatbotMessages');
         const msg = document.createElement('div');
         msg.className = 'chat-message bot';
-        msg.innerHTML = `<div class="message-avatar"><i class="ri-robot-line"></i></div><div class="message-content">${this.formatMessage(text)}</div>`;
+        // Security: Sanitize AI-generated content before rendering
+        const formattedMessage = this.formatMessage(text);
+        msg.innerHTML = `<div class="message-avatar"><i class="ri-robot-line"></i></div><div class="message-content">${DOMPurify.sanitize(formattedMessage)}</div>`;
         container.appendChild(msg);
         this.scrollToBottom();
     }
@@ -689,7 +1064,8 @@ ${context}`;
         const indicator = document.createElement('div');
         indicator.className = 'chat-message bot';
         indicator.id = 'typingIndicator';
-        indicator.innerHTML = `<div class="message-avatar"><i class="ri-robot-line"></i></div><div class="message-content"><div class="typing-indicator"><span></span><span></span><span></span></div></div>`;
+        // Security: Static HTML, no user input - safe to use innerHTML
+        indicator.innerHTML = '<div class="message-avatar"><i class="ri-robot-line"></i></div><div class="message-content"><div class="typing-indicator"><span></span><span></span><span></span></div></div>';
         container.appendChild(indicator);
         this.scrollToBottom();
     }

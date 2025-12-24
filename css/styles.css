@@ -2202,8 +2202,255 @@ input:focus-visible {
     border-color: hsl(8, 35%, 45%);
 }
 
-/* --- Responsive Diagrams --- */
-@media (max-width: 768px) {
+/* ===========================================
+   12. RESPONSIVE SYSTEM - FULL COVERAGE
+   Mobile-first approach con breakpoints completos
+   =========================================== */
+
+/* --- BASE: Mobile First (< 480px) --- */
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+
+    .main-content {
+        padding: 16px;
+        margin-left: 0;
+    }
+
+    .section-header h1 {
+        font-size: 22px;
+    }
+
+    .section-subtitle {
+        font-size: 14px;
+    }
+
+    /* Cards en columna única */
+    .action-cards,
+    .guide-cards,
+    .diagnostic-cards,
+    .checklist-cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .quick-stats {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 16px;
+    }
+
+    /* Buscador más pequeño */
+    .search-wrapper {
+        width: 100%;
+    }
+
+    .search-input {
+        padding: 12px 14px 12px 42px;
+        font-size: 14px;
+    }
+
+    .search-icon-input {
+        left: 14px;
+        font-size: 16px;
+    }
+
+    /* Top bar vertical en móvil pequeño */
+    .top-bar {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+
+    /* Cards más compactas */
+    .action-card,
+    .guide-card,
+    .diagnostic-card,
+    .checklist-card {
+        padding: 18px;
+    }
+
+    .diagnostic-icon,
+    .guide-icon,
+    .action-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
+    }
+
+    /* Chatbot más pequeño */
+    .chatbot-fab {
+        width: 52px;
+        height: 52px;
+        bottom: 16px;
+        right: 16px;
+    }
+
+    .chatbot-fab .fab-icon {
+        font-size: 22px;
+    }
+
+    .chatbot-panel {
+        right: 8px;
+        left: 8px;
+        bottom: 80px;
+        max-height: 70vh;
+    }
+
+    /* Modal full screen en móvil */
+    .modal-content {
+        border-radius: 16px;
+        margin: 10px;
+        max-height: calc(100vh - 20px);
+    }
+
+    .modal-body {
+        padding: 24px;
+    }
+
+    /* Wizard options más compactas */
+    .wizard-option {
+        padding: 14px 16px;
+        font-size: 13px;
+    }
+
+    /* Steps más compactos */
+    .step {
+        gap: 14px;
+    }
+
+    .step-number {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    /* Welcome banner vertical */
+    .welcome-banner {
+        padding: 18px;
+        flex-direction: column;
+        text-align: center;
+        gap: 14px;
+    }
+
+    .welcome-banner .welcome-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
+    }
+
+    /* Quick actions scroll horizontal */
+    .quick-actions-bar {
+        padding: 12px;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        gap: 8px;
+    }
+
+    .quick-action-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+        flex-shrink: 0;
+    }
+
+    /* Diagramas verticales */
+    .flow-diagram {
+        flex-direction: column;
+        padding: 16px;
+    }
+
+    .flow-step {
+        min-width: 100%;
+    }
+
+    .flow-connector {
+        transform: rotate(90deg);
+    }
+
+    .ecosystem-diagram {
+        padding: 16px;
+    }
+
+    .diagram-box {
+        padding: 16px;
+        max-width: 100%;
+    }
+
+    .diagram-devices {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    /* Info boxes compactos */
+    .info-box {
+        padding: 14px;
+        gap: 12px;
+    }
+
+    .info-icon {
+        font-size: 20px;
+    }
+}
+
+/* --- MOBILE LARGE (481px - 768px) --- */
+@media (min-width: 481px) and (max-width: 768px) {
+    .main-content {
+        padding: 20px;
+        margin-left: 0;
+    }
+
+    .section-header h1 {
+        font-size: 24px;
+    }
+
+    /* Grid de 2 columnas para stats */
+    .quick-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    /* Cards en columna única */
+    .action-cards,
+    .guide-cards,
+    .diagnostic-cards,
+    .checklist-cards {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .search-wrapper {
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .chatbot-fab {
+        width: 56px;
+        height: 56px;
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .chatbot-panel {
+        right: 10px;
+        left: 10px;
+        bottom: 90px;
+        width: auto;
+    }
+
+    .welcome-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .welcome-banner .welcome-action {
+        margin-left: 0;
+        width: 100%;
+    }
+
     .flow-diagram {
         flex-direction: column;
     }
@@ -2219,5 +2466,272 @@ input:focus-visible {
 
     .diagram-box {
         max-width: 100%;
+    }
+}
+
+/* --- TABLET (769px - 1024px) --- */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .main-content {
+        margin-left: 0;
+        padding: 24px;
+    }
+
+    .sidebar {
+        transform: translateX(-110%);
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 280px;
+        height: 100%;
+        border-radius: 0 20px 20px 0;
+        z-index: 1000;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    /* Grid de 2 columnas */
+    .action-cards,
+    .guide-cards,
+    .diagnostic-cards,
+    .checklist-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .quick-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .search-wrapper {
+        width: 350px;
+    }
+
+    .search-overlay {
+        left: 20px;
+        right: 20px;
+        top: 80px;
+    }
+
+    .chatbot-panel {
+        width: 360px;
+        right: 20px;
+        left: auto;
+    }
+
+    .welcome-banner {
+        flex-direction: row;
+    }
+
+    .welcome-banner .welcome-action {
+        margin-left: auto;
+        width: auto;
+    }
+}
+
+/* --- DESKTOP (1025px - 1400px) --- */
+@media (min-width: 1025px) and (max-width: 1400px) {
+    .sidebar {
+        position: fixed;
+        width: 260px;
+        left: 16px;
+        top: 16px;
+        bottom: 16px;
+    }
+
+    .main-content {
+        margin-left: 292px;
+        padding: 32px;
+    }
+
+    .menu-toggle {
+        display: none;
+    }
+
+    .action-cards,
+    .guide-cards,
+    .diagnostic-cards,
+    .checklist-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .quick-stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .search-wrapper {
+        width: 400px;
+    }
+}
+
+/* --- DESKTOP LARGE (1401px+) --- */
+@media (min-width: 1401px) {
+    .sidebar {
+        position: fixed;
+        width: 280px;
+        left: 20px;
+        top: 20px;
+        bottom: 20px;
+    }
+
+    .main-content {
+        margin-left: 320px;
+        padding: 40px;
+        max-width: 1600px;
+    }
+
+    .menu-toggle {
+        display: none;
+    }
+
+    .action-cards,
+    .guide-cards,
+    .diagnostic-cards,
+    .checklist-cards {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .quick-stats {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .search-wrapper {
+        width: 450px;
+    }
+}
+
+/* --- SIDEBAR OVERLAY para tablet/móvil --- */
+@media (max-width: 1024px) {
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    .menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        color: var(--text-primary);
+        font-size: 22px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .menu-toggle:hover {
+        background: var(--accent-bg);
+        border-color: var(--accent-primary);
+        color: var(--accent-primary);
+    }
+}
+
+/* --- LANDSCAPE ORIENTATION para móviles --- */
+@media (max-height: 500px) and (orientation: landscape) {
+    .chatbot-panel {
+        max-height: 80vh;
+        bottom: 70px;
+    }
+
+    .chatbot-messages {
+        max-height: 200px;
+    }
+
+    .modal-content {
+        max-height: 95vh;
+    }
+
+    .sidebar {
+        padding: 16px;
+    }
+
+    .nav-item {
+        padding: 10px 14px;
+    }
+}
+
+/* --- PRINT STYLES --- */
+@media print {
+    .sidebar,
+    .chatbot-fab,
+    .chatbot-panel,
+    .menu-toggle,
+    .search-wrapper,
+    .theme-btn {
+        display: none !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 20px !important;
+    }
+
+    .action-cards,
+    .guide-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    .action-card,
+    .guide-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}
+
+/* --- REDUCED MOTION para accesibilidad --- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* --- HIGH CONTRAST MODE --- */
+@media (prefers-contrast: high) {
+    :root {
+        --border-subtle: hsl(0, 0%, 50%);
+        --border-medium: hsl(0, 0%, 40%);
+    }
+
+    .action-card,
+    .guide-card,
+    .diagnostic-card {
+        border: 2px solid var(--text-primary);
+    }
+
+    .diagnostic-btn {
+        border: 2px solid white;
     }
 }

@@ -119,23 +119,23 @@
     --border-subtle: hsl(30, 6%, 22%);
     --border-medium: hsl(30, 5%, 28%);
 
-    /* Accent - Verde salvia más luminoso para dark */
-    --accent-primary: hsl(145, 28%, 50%);
-    /* Salvia luminoso */
-    --accent-hover: hsl(145, 30%, 45%);
-    --accent-bg: hsl(145, 20%, 16%);
+    /* Accent - Verde salvia suave para dark */
+    --accent-primary: hsl(150, 18%, 45%);
+    /* Salvia apagado */
+    --accent-hover: hsl(150, 20%, 40%);
+    --accent-bg: hsl(150, 12%, 16%);
     /* Fondo verde oscuro */
-    --accent-light: hsl(145, 18%, 20%);
+    --accent-light: hsl(150, 10%, 20%);
 
-    /* Status colors - Más luminosos en dark */
-    --success: hsl(145, 30%, 48%);
-    /* Salvia */
-    --warning: hsl(32, 55%, 55%);
-    /* Ocre luminoso */
-    --error: hsl(8, 50%, 55%);
-    /* Terracota luminoso */
-    --info: hsl(200, 35%, 52%);
-    /* Azul piedra luminoso */
+    /* Status colors - Suaves en dark */
+    --success: hsl(150, 20%, 48%);
+    /* Salvia suave */
+    --warning: hsl(32, 40%, 52%);
+    /* Ocre suave */
+    --error: hsl(8, 38%, 52%);
+    /* Terracota suave */
+    --info: hsl(200, 25%, 50%);
+    /* Azul piedra suave */
 
     /* Highlight en dark */
     --highlight-bg: hsl(35, 25%, 15%);
@@ -145,7 +145,7 @@
     --shadow-sm: 0 1px 4px hsla(25, 30%, 5%, 0.4);
     --shadow-md: 0 4px 16px hsla(25, 30%, 5%, 0.5);
     --shadow-lg: 0 12px 36px hsla(25, 30%, 5%, 0.6);
-    --shadow-focus: 0 0 0 3px hsla(145, 28%, 50%, 0.25);
+    --shadow-focus: 0 0 0 3px hsla(150, 18%, 45%, 0.2);
 }
 
 /* --- 2. RESET & BASE --- */
@@ -510,15 +510,18 @@ p {
 }
 
 [data-theme="dark"] .diagnostic-severity.high {
-    background: hsl(8, 30%, 18%);
+    background: hsl(8, 20%, 20%);
+    color: hsl(8, 30%, 65%);
 }
 
 [data-theme="dark"] .diagnostic-severity.medium {
-    background: hsl(30, 30%, 18%);
+    background: hsl(30, 20%, 20%);
+    color: hsl(30, 35%, 62%);
 }
 
 [data-theme="dark"] .diagnostic-severity.low {
-    background: hsl(200, 25%, 18%);
+    background: hsl(200, 18%, 20%);
+    color: hsl(200, 25%, 60%);
 }
 
 /* Buttons */

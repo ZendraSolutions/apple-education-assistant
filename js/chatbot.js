@@ -1,22 +1,64 @@
 /**
- * ASISTENTE ECOSISTEMA APPLE EDUCACIÓN - Chatbot Module v4
+ * APPLE EDU ASSISTANT - Chatbot Module v4
  * Sistema RAG centrado en ASM + Jamf School + App Aula
+ * Colegio Huerta Santa Ana - Ginés, Sevilla
  * Flujo: Apple School Manager → Jamf School → Dispositivos
  */
 
 /**
  * Rate Limiter - Protección contra abuso de API
  * Limita el número de llamadas a la API en una ventana de tiempo
+ * SECURITY: Synchronized across tabs using BroadcastChannel to prevent bypass
  */
 class RateLimiter {
     constructor(maxCalls = 10, windowMs = 60000) {
         this.maxCalls = maxCalls;
         this.windowMs = windowMs;
         this.calls = [];
+        this.storageKey = 'jamf-rate-limiter-calls';
+
+        // Load existing calls from localStorage for persistence
+        this.loadFromStorage();
+
+        // SECURITY: Sync rate limiter across browser tabs
+        if (typeof BroadcastChannel !== 'undefined') {
+            this.channel = new BroadcastChannel('jamf-rate-limiter');
+            this.channel.onmessage = (event) => {
+                if (event.data.type === 'call') {
+                    // Another tab made a call, sync our state
+                    this.loadFromStorage();
+                }
+            };
+        }
+    }
+
+    loadFromStorage() {
+        try {
+            const stored = localStorage.getItem(this.storageKey);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                const now = Date.now();
+                // Only keep calls within the time window
+                this.calls = parsed.filter(time => now - time < this.windowMs);
+            }
+        } catch (e) {
+            this.calls = [];
+        }
+    }
+
+    saveToStorage() {
+        try {
+            localStorage.setItem(this.storageKey, JSON.stringify(this.calls));
+        } catch (e) {
+            // Storage might be full or disabled
+        }
     }
 
     canMakeCall() {
         const now = Date.now();
+        // Reload from storage to get updates from other tabs
+        this.loadFromStorage();
+
         // Limpiar llamadas fuera de la ventana de tiempo
         this.calls = this.calls.filter(time => now - time < this.windowMs);
 
@@ -29,23 +71,36 @@ class RateLimiter {
 
         // Registrar esta llamada
         this.calls.push(now);
+        this.saveToStorage();
+
+        // Notify other tabs
+        if (this.channel) {
+            this.channel.postMessage({ type: 'call', timestamp: now });
+        }
+
         return { allowed: true };
     }
 
     getRemainingCalls() {
         const now = Date.now();
+        this.loadFromStorage();
         this.calls = this.calls.filter(time => now - time < this.windowMs);
         return Math.max(0, this.maxCalls - this.calls.length);
     }
 
     reset() {
         this.calls = [];
+        this.saveToStorage();
     }
 }
 
 class JamfChatbot {
     constructor() {
-        this.loadApiKeySettings();
+        // Initialize all properties with default values to prevent undefined access
+        this.apiKey = '';
+        this.isPinned = false;
+        this.useSessionOnly = false;
+        this.expiryTime = 0;
         this.isOpen = false;
         this.isProcessing = false;
         this.conversationHistory = [];
@@ -62,6 +117,8 @@ class JamfChatbot {
             source: 'Manual'
         };
 
+        // Load API Key settings (will override defaults if found)
+        this.loadApiKeySettings();
         this.init();
     }
 
@@ -522,7 +579,17 @@ FRECUENCIA: Jamf sincroniza automáticamente cada pocas horas.`,
     async deriveEncryptionKey() {
         const encoder = new TextEncoder();
 
-        // Crear material de clave basado en características del navegador
+        // SECURITY: Generate or retrieve unique per-user salt
+        // This prevents the same key derivation across different users/sessions
+        let userSalt = localStorage.getItem('jamf-user-salt');
+        if (!userSalt) {
+            // Generate random 16-byte salt and store it
+            const randomSalt = window.crypto.getRandomValues(new Uint8Array(16));
+            userSalt = btoa(String.fromCharCode(...randomSalt));
+            localStorage.setItem('jamf-user-salt', userSalt);
+        }
+
+        // Crear material de clave basado en características del navegador + salt único
         const keyMaterial = await window.crypto.subtle.importKey(
             'raw',
             encoder.encode(window.location.origin + navigator.userAgent.substring(0, 50)),
@@ -531,11 +598,14 @@ FRECUENCIA: Jamf sincroniza automáticamente cada pocas horas.`,
             ['deriveBits', 'deriveKey']
         );
 
+        // SECURITY: Use unique user salt instead of hardcoded value
+        const saltBytes = encoder.encode('jamf-assistant-v3-' + userSalt);
+
         // Derivar clave AES-256 con PBKDF2
         return window.crypto.subtle.deriveKey(
             {
                 name: 'PBKDF2',
-                salt: encoder.encode('jamf-assistant-education-v2'),
+                salt: saltBytes,
                 iterations: 100000,
                 hash: 'SHA-256'
             },
@@ -786,9 +856,13 @@ FRECUENCIA: Jamf sincroniza automáticamente cada pocas horas.`,
 
     async testApiKey(key) {
         try {
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`, {
+            // SECURITY: API Key moved from URL to header to prevent exposure in logs
+            const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': key
+                },
                 body: JSON.stringify({
                     contents: [{ parts: [{ text: 'Responde solo: OK' }] }]
                 })
@@ -848,6 +922,10 @@ FRECUENCIA: Jamf sincroniza automáticamente cada pocas horas.`,
 
         if (!message || this.isProcessing) return;
 
+        // SECURITY: Set processing flag IMMEDIATELY to prevent race condition
+        // This must be set before any async operations or UI updates
+        this.isProcessing = true;
+
         // Verificar rate limiting solo si hay API Key configurada
         if (this.apiKey) {
             const rateLimitCheck = this.rateLimiter.canMakeCall();
@@ -865,14 +943,13 @@ FRECUENCIA: Jamf sincroniza automáticamente cada pocas horas.`,
                     `Por favor, espera **${timeText}** antes de hacer otra consulta.\n\n` +
                     `_Esto protege tu API Key de Google de consumir toda su cuota gratuita._`
                 );
+                this.isProcessing = false;
                 return;
             }
         }
 
         input.value = '';
         this.addUserMessage(message);
-
-        this.isProcessing = true;
         this.showTypingIndicator();
 
         try {
@@ -956,34 +1033,56 @@ ${context}`;
 
         this.conversationHistory.push({ role: 'user', parts: [{ text: userMessage }] });
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${this.apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [
-                    { role: 'user', parts: [{ text: systemPrompt }] },
-                    { role: 'model', parts: [{ text: 'Entendido.' }] },
-                    ...this.conversationHistory
-                ],
-                tools: [{ google_search: {} }],
-                generationConfig: { temperature: 0.3, maxOutputTokens: 1024 }
-            })
-        });
+        // SECURITY: API Key moved from URL to header to prevent exposure in logs
+        // Timeout of 30 seconds to prevent hanging requests
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-        if (!response.ok) {
-            const err = await response.json().catch(() => ({}));
-            throw new Error(err.error?.message || 'Error de API');
+        try {
+            const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-goog-api-key': this.apiKey
+                },
+                body: JSON.stringify({
+                    contents: [
+                        { role: 'user', parts: [{ text: systemPrompt }] },
+                        { role: 'model', parts: [{ text: 'Entendido.' }] },
+                        ...this.conversationHistory
+                    ],
+                    tools: [{ google_search: {} }],
+                    generationConfig: { temperature: 0.3, maxOutputTokens: 1024 }
+                }),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                const err = await response.json().catch(() => ({}));
+                throw new Error(err.error?.message || 'Error de API');
+            }
+
+            const data = await response.json();
+            const botResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+            if (!botResponse) {
+                throw new Error('Respuesta de API malformada');
+            }
+
+            this.conversationHistory.push({ role: 'model', parts: [{ text: botResponse }] });
+            if (this.conversationHistory.length > 16) {
+                this.conversationHistory = this.conversationHistory.slice(-16);
+            }
+
+            return botResponse;
+        } catch (error) {
+            clearTimeout(timeoutId);
+            if (error.name === 'AbortError') {
+                throw new Error('Timeout: La API tardó más de 30 segundos en responder');
+            }
+            throw error;
         }
-
-        const data = await response.json();
-        const botResponse = data.candidates[0].content.parts[0].text;
-
-        this.conversationHistory.push({ role: 'model', parts: [{ text: botResponse }] });
-        if (this.conversationHistory.length > 16) {
-            this.conversationHistory = this.conversationHistory.slice(-16);
-        }
-
-        return botResponse;
     }
 
     generateOfflineResponse(message, relevantDocs) {

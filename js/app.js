@@ -121,110 +121,173 @@ class JamfAssistant {
     }
 
     renderDashboard() {
+        const greeting = this.getGreeting();
+        const currentDate = this.getCurrentDate();
+        const tips = this.getDailyTip();
+
         return `
             <section class="content-section active">
-                <div class="section-header">
-                    <h1>Asistente Apple Education</h1>
-                    <p class="section-subtitle">Gestión de iPads, Macs y App Aula para tu centro escolar</p>
-                </div>
-
-                <!-- Barra de acciones rápidas - Above the fold -->
-                <div class="quick-actions-bar">
-                    <button class="quick-action-btn" data-section="aula">
-                        <i class="ri-group-line"></i> Problemas con Aula
-                    </button>
-                    <button class="quick-action-btn" data-diagnostic="aula-no-funciona">
-                        <i class="ri-error-warning-line"></i> No veo alumnos
-                    </button>
-                    <button class="quick-action-btn" data-diagnostic="apps-not-installing">
-                        <i class="ri-download-cloud-2-line"></i> Apps no instalan
-                    </button>
-                    <button class="quick-action-btn" data-section="ecosistema">
-                        <i class="ri-flow-chart"></i> ¿Cómo funciona?
-                    </button>
-                </div>
-
-                <!-- Secciones principales -->
-                <div class="quick-stats">
-                    <div class="stat-card" data-section="aula">
-                        <div class="stat-icon classroom"><i class="ri-group-line"></i></div>
-                        <div class="stat-info">
-                            <span class="stat-label">App Aula</span>
-                            <span class="stat-value">Control de clase</span>
+                <!-- Hero de Bienvenida -->
+                <div class="dashboard-hero">
+                    <div class="hero-content">
+                        <div class="hero-greeting">
+                            <i class="ri-sun-line hero-icon"></i>
+                            <h1>${greeting}</h1>
                         </div>
+                        <p class="hero-subtitle">Gestiona tu ecosistema educativo de forma eficiente</p>
+                        <p class="hero-date"><i class="ri-calendar-line"></i> ${currentDate}</p>
                     </div>
-                    <div class="stat-card" data-section="ipads">
-                        <div class="stat-icon ipads"><i class="ri-tablet-line"></i></div>
-                        <div class="stat-info">
-                            <span class="stat-label">iPads Alumnado</span>
-                            <span class="stat-value">Gestión y apps</span>
-                        </div>
-                    </div>
-                    <div class="stat-card" data-section="macs">
-                        <div class="stat-icon macs"><i class="ri-macbook-line"></i></div>
-                        <div class="stat-info">
-                            <span class="stat-label">Macs Profesorado</span>
-                            <span class="stat-value">Configuración</span>
-                        </div>
-                    </div>
-                    <div class="stat-card" data-section="ecosistema">
-                        <div class="stat-icon"><i class="ri-flow-chart"></i></div>
-                        <div class="stat-info">
-                            <span class="stat-label">Ecosistema</span>
-                            <span class="stat-value">ASM + Jamf</span>
-                        </div>
+                    <div class="hero-illustration">
+                        <i class="ri-graduation-cap-fill"></i>
                     </div>
                 </div>
 
-                <h2 class="content-title"><i class="ri-error-warning-line"></i> Solucionar Problemas</h2>
+                <!-- Accesos Rápidos -->
+                <h2 class="content-title"><i class="ri-flashlight-line"></i> Accesos Rápidos</h2>
+                <div class="quick-access-grid">
+                    <div class="quick-access-card asm-card" data-section="ecosistema">
+                        <div class="qa-icon">
+                            <i class="ri-cloud-line"></i>
+                        </div>
+                        <div class="qa-content">
+                            <h3>ASM</h3>
+                            <p>Gestionar identidades</p>
+                        </div>
+                        <i class="ri-arrow-right-line qa-arrow"></i>
+                    </div>
+
+                    <div class="quick-access-card jamf-card" data-section="ipads">
+                        <div class="qa-icon">
+                            <i class="ri-settings-3-line"></i>
+                        </div>
+                        <div class="qa-content">
+                            <h3>Jamf School</h3>
+                            <p>Administrar dispositivos</p>
+                        </div>
+                        <i class="ri-arrow-right-line qa-arrow"></i>
+                    </div>
+
+                    <div class="quick-access-card aula-card" data-section="aula">
+                        <div class="qa-icon">
+                            <i class="ri-group-line"></i>
+                        </div>
+                        <div class="qa-content">
+                            <h3>App Aula</h3>
+                            <p>Control de clase</p>
+                        </div>
+                        <i class="ri-arrow-right-line qa-arrow"></i>
+                    </div>
+
+                    <div class="quick-access-card chatbot-card" id="openChatbot">
+                        <div class="qa-icon">
+                            <i class="ri-robot-line"></i>
+                        </div>
+                        <div class="qa-content">
+                            <h3>Chatbot IA</h3>
+                            <p>Preguntar al asistente</p>
+                        </div>
+                        <i class="ri-arrow-right-line qa-arrow"></i>
+                    </div>
+                </div>
+
+                <!-- Estado del Sistema -->
+                <h2 class="content-title"><i class="ri-dashboard-3-line"></i> Estado del Sistema</h2>
+                <div class="system-status-grid">
+                    <div class="status-mini-card">
+                        <div class="status-icon sync">
+                            <i class="ri-refresh-line"></i>
+                        </div>
+                        <div class="status-info">
+                            <span class="status-label">Última sincronización</span>
+                            <span class="status-value">Hace 2 horas</span>
+                        </div>
+                    </div>
+
+                    <div class="status-mini-card">
+                        <div class="status-icon devices">
+                            <i class="ri-tablet-line"></i>
+                        </div>
+                        <div class="status-info">
+                            <span class="status-label">Dispositivos activos</span>
+                            <span class="status-value">124 iPads</span>
+                        </div>
+                    </div>
+
+                    <div class="status-mini-card">
+                        <div class="status-icon tasks">
+                            <i class="ri-task-line"></i>
+                        </div>
+                        <div class="status-info">
+                            <span class="status-label">Tareas pendientes</span>
+                            <span class="status-value">3 checklists</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tip del Día -->
+                <div class="tip-of-day">
+                    <div class="tip-icon">
+                        <i class="ri-lightbulb-flash-line"></i>
+                    </div>
+                    <div class="tip-content">
+                        <h3>Consejo del día</h3>
+                        <p>${tips.text}</p>
+                    </div>
+                </div>
+
+                <!-- Acciones Frecuentes -->
+                <h2 class="content-title"><i class="ri-fire-line"></i> Acciones Frecuentes</h2>
                 <div class="action-cards">
                     <div class="action-card" data-diagnostic="aula-no-funciona">
-                        <div class="action-icon"><i class="ri-graduation-cap-line"></i></div>
-                        <h3>La app Aula no funciona</h3>
-                        <p>No veo alumnos, pantallas en gris, no detecta iPads</p>
-                    </div>
-                    <div class="action-card" data-diagnostic="aula-funciones-avanzadas">
-                        <div class="action-icon"><i class="ri-rocket-line"></i></div>
-                        <h3>Funciones avanzadas de Aula</h3>
-                        <p>AirDrop, AirPlay, restablecer contraseñas</p>
-                    </div>
-                    <div class="action-card" data-diagnostic="aula-remoto">
-                        <div class="action-icon"><i class="ri-global-line"></i></div>
-                        <h3>Clases remotas no funcionan</h3>
-                        <p>Alumnos en casa no reciben invitación</p>
+                        <div class="action-icon"><i class="ri-error-warning-line"></i></div>
+                        <h3>App Aula no funciona</h3>
+                        <p>No veo alumnos o pantallas en gris</p>
                     </div>
                     <div class="action-card" data-diagnostic="apps-not-installing">
                         <div class="action-icon"><i class="ri-download-cloud-2-line"></i></div>
-                        <h3>Las apps no se instalan</h3>
-                        <p>Diagnóstico guiado paso a paso</p>
+                        <h3>Apps no se instalan</h3>
+                        <p>Diagnóstico paso a paso</p>
                     </div>
-                </div>
-
-                <h2 class="content-title"><i class="ri-book-read-line"></i> Guías Rápidas</h2>
-                <div class="action-cards">
-                    <div class="action-card" data-guide="aula-setup">
-                        <div class="action-icon"><i class="ri-building-line"></i></div>
-                        <h3>Configurar App Aula</h3>
-                        <p>Requisitos y pasos iniciales</p>
+                    <div class="action-card" data-section="checklists">
+                        <div class="action-icon"><i class="ri-task-line"></i></div>
+                        <h3>Ver Checklists</h3>
+                        <p>Procesos y tareas pendientes</p>
                     </div>
                     <div class="action-card" data-guide="aula-howto">
                         <div class="action-icon"><i class="ri-play-circle-line"></i></div>
-                        <h3>Usar Aula en clase</h3>
-                        <p>Ver pantallas, bloquear, abrir apps</p>
-                    </div>
-                    <div class="action-card" data-guide="teacher-setup">
-                        <div class="action-icon"><i class="ri-install-line"></i></div>
-                        <h3>Jamf Teacher</h3>
-                        <p>Instalar apps como profesor</p>
-                    </div>
-                    <div class="action-card" data-guide="ipad-apps">
-                        <div class="action-icon"><i class="ri-app-store-line"></i></div>
-                        <h3>Distribuir Apps</h3>
-                        <p>Instalación masiva desde Jamf</p>
+                        <h3>Usar App Aula</h3>
+                        <p>Guía rápida de uso diario</p>
                     </div>
                 </div>
             </section>
         `;
+    }
+
+    getGreeting() {
+        const hour = new Date().getHours();
+        if (hour >= 6 && hour < 12) return 'Buenos días';
+        if (hour >= 12 && hour < 20) return 'Buenas tardes';
+        return 'Buenas noches';
+    }
+
+    getCurrentDate() {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date().toLocaleDateString('es-ES', options);
+    }
+
+    getDailyTip() {
+        const tips = [
+            { text: 'La App Aula requiere que el Mac y los iPads estén en la misma red WiFi para funcionar correctamente.' },
+            { text: 'Puedes usar AirDrop desde la App Aula para enviar archivos rápidamente a tus estudiantes.' },
+            { text: 'Las clases creadas en ASM tardan hasta 24 horas en sincronizarse con Jamf School y la App Aula.' },
+            { text: 'Si los iPads no aparecen en Aula, verifica que tengan la supervisión activada desde Jamf School.' },
+            { text: 'Jamf Teacher permite a los profesores instalar apps educativas sin necesidad de contactar con IT.' },
+            { text: 'Puedes bloquear todos los iPads en una app específica usando la función "Bloquear en app" de Aula.' },
+            { text: 'Las restricciones aplicadas en Jamf School se sincronizan automáticamente con los dispositivos cada hora.' }
+        ];
+
+        const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+        return tips[dayOfYear % tips.length];
     }
 
     renderIpads() {
@@ -578,6 +641,21 @@ class JamfAssistant {
 
     // Section events
     bindSectionEvents() {
+        // Quick access cards (new dashboard)
+        document.querySelectorAll('.quick-access-card[data-section]').forEach(card => {
+            card.addEventListener('click', () => {
+                this.navigateTo(card.dataset.section);
+            });
+        });
+
+        // Open chatbot button
+        const openChatbotBtn = document.getElementById('openChatbot');
+        if (openChatbotBtn) {
+            openChatbotBtn.addEventListener('click', () => {
+                document.getElementById('chatbotPanel')?.classList.add('active');
+            });
+        }
+
         // Stat cards navigation
         document.querySelectorAll('.stat-card[data-section]').forEach(card => {
             card.addEventListener('click', () => {
@@ -701,21 +779,7 @@ class JamfAssistant {
         `;
 
         this.showModal(html);
-
-        // Bind options
-        document.querySelectorAll('.wizard-option').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const next = btn.dataset.next;
-                const solution = btn.dataset.solution;
-
-                if (solution) {
-                    this.showDiagnosticSolution(solution);
-                } else if (next !== '') {
-                    this.currentStep = parseInt(next);
-                    this.renderDiagnosticStep();
-                }
-            });
-        });
+        // Event delegation handles clicks (see bindModal)
     }
 
     showDiagnosticSolution(solutionKey) {
@@ -744,12 +808,15 @@ class JamfAssistant {
         const checklist = KnowledgeBase.checklists[checklistId];
         if (!checklist) return;
 
+        // Store current checklist ID for event delegation
+        this.currentChecklistId = checklistId;
+
         // Load saved state from localStorage
         const savedState = JSON.parse(localStorage.getItem(`checklist-${checklistId}`) || '[]');
 
         let html = `
             <h2>${checklist.icon} ${checklist.title}</h2>
-            <div class="checklist-items">
+            <div class="checklist-items" data-checklist-id="${checklistId}">
                 ${checklist.items.map((item, idx) => `
                     <label class="checklist-item">
                         <input type="checkbox" data-idx="${idx}" ${savedState[idx] ? 'checked' : ''}>
@@ -760,15 +827,7 @@ class JamfAssistant {
         `;
 
         this.showModal(html);
-
-        // Bind checkboxes
-        document.querySelectorAll('.checklist-item input').forEach(cb => {
-            cb.addEventListener('change', () => {
-                const idx = parseInt(cb.dataset.idx);
-                savedState[idx] = cb.checked;
-                localStorage.setItem(`checklist-${checklistId}`, JSON.stringify(savedState));
-            });
-        });
+        // Event delegation handles checkbox changes (see bindModal)
     }
 
     // Modal
@@ -780,6 +839,36 @@ class JamfAssistant {
         document.getElementById('guideModal').addEventListener('click', (e) => {
             if (e.target.id === 'guideModal') {
                 this.hideModal();
+            }
+        });
+
+        // SECURITY: Event delegation for dynamic modal content (prevents memory leaks)
+        const modalBody = document.getElementById('modalBody');
+
+        // Handle wizard option clicks
+        modalBody.addEventListener('click', (e) => {
+            const wizardOption = e.target.closest('.wizard-option');
+            if (wizardOption) {
+                const next = wizardOption.dataset.next;
+                const solution = wizardOption.dataset.solution;
+
+                if (solution) {
+                    this.showDiagnosticSolution(solution);
+                } else if (next !== '' && next !== undefined) {
+                    this.currentStep = parseInt(next);
+                    this.renderDiagnosticStep();
+                }
+            }
+        });
+
+        // Handle checklist checkbox changes (needs 'change' event, not 'click')
+        modalBody.addEventListener('change', (e) => {
+            const checkbox = e.target.closest('.checklist-item input[type="checkbox"]');
+            if (checkbox && this.currentChecklistId) {
+                const idx = parseInt(checkbox.dataset.idx);
+                const savedState = JSON.parse(localStorage.getItem(`checklist-${this.currentChecklistId}`) || '[]');
+                savedState[idx] = checkbox.checked;
+                localStorage.setItem(`checklist-${this.currentChecklistId}`, JSON.stringify(savedState));
             }
         });
     }
@@ -856,6 +945,24 @@ class JamfAssistant {
         const overlay = document.getElementById('searchOverlay');
         const results = document.getElementById('searchResults');
 
+        // SECURITY: Use event delegation to prevent memory leaks
+        // Single listener on container instead of per-item listeners
+        results.addEventListener('click', (e) => {
+            const item = e.target.closest('.search-result-item');
+            if (!item) return;
+
+            const type = item.dataset.type;
+            const id = item.dataset.id;
+            overlay.classList.remove('active');
+            input.value = '';
+
+            if (type === 'guide') {
+                this.openGuide(id);
+            } else if (type === 'diagnostic') {
+                this.openDiagnostic(id);
+            }
+        });
+
         input.addEventListener('input', () => {
             clearTimeout(this.searchTimeout);
             const query = input.value.trim().toLowerCase();
@@ -893,22 +1000,7 @@ class JamfAssistant {
                         </div>
                     `;
                     }).join('');
-
-                    // Bind result clicks
-                    results.querySelectorAll('.search-result-item').forEach(item => {
-                        item.addEventListener('click', () => {
-                            const type = item.dataset.type;
-                            const id = item.dataset.id;
-                            overlay.classList.remove('active');
-                            input.value = '';
-
-                            if (type === 'guide') {
-                                this.openGuide(id);
-                            } else if (type === 'diagnostic') {
-                                this.openDiagnostic(id);
-                            }
-                        });
-                    });
+                    // Event delegation handles clicks (see above)
                 }
 
                 overlay.classList.add('active');
@@ -1032,7 +1124,7 @@ class JamfAssistant {
         // Add metadata
         const exportData = {
             exportDate: new Date().toISOString(),
-            application: 'Asistente Education',
+            application: 'Apple Edu Assistant',
             dataCount: Object.keys(allData).length,
             data: allData
         };
@@ -1043,7 +1135,7 @@ class JamfAssistant {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `mis-datos-asistente-education-${new Date().toISOString().split('T')[0]}.json`;
+        a.download = `mis-datos-apple-edu-assistant-${new Date().toISOString().split('T')[0]}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

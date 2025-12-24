@@ -265,60 +265,61 @@ class JamfAssistant {
                     <div class="info-icon"><i class="ri-information-line"></i></div>
                     <div class="info-content">
                         <h4>El ecosistema educativo de Apple</h4>
-                        <p>Tres piezas trabajando juntas para gestionar los dispositivos del centro educativo.</p>
+                        <p>Tres piezas trabajando juntas: <strong>ASM</strong> (centro del sistema) → <strong>Jamf School</strong> (gestión) → <strong>App Aula</strong> (uso diario).</p>
                     </div>
                 </div>
 
+                <!-- Diagrama Visual del Ecosistema -->
+                <h2 class="content-title"><i class="ri-organization-chart"></i> Diagrama del Ecosistema</h2>
+                ${KnowledgeBase.diagrams.ecosystem.html}
+
+                <!-- Flujo de App Aula -->
+                <h2 class="content-title"><i class="ri-route-line"></i> ¿Cómo llega la clase a la App Aula?</h2>
+                ${KnowledgeBase.diagrams.aulaFlow.html}
+
+                <!-- Tarjetas resumen -->
+                <h2 class="content-title"><i class="ri-layout-grid-line"></i> Componentes del Sistema</h2>
                 <div class="guide-cards">
-                    <div class="guide-card">
+                    <div class="guide-card" data-guide="ecosistema-asm">
                         <div class="guide-header">
                             <span class="guide-icon"><i class="ri-cloud-line"></i></span>
-                            <span class="guide-tag">Paso 1</span>
+                            <span class="guide-tag">Centro</span>
                         </div>
-                        <h3>Apple School Manager (ASM)</h3>
-                        <p>Portal de Apple donde se registran todos los dispositivos del centro. Aquí se crean las cuentas de profesores y alumnos (Apple IDs gestionados).</p>
+                        <h3>Apple School Manager</h3>
+                        <p>Portal de Apple donde se crean usuarios, clases y se asignan dispositivos. Todo empieza aquí.</p>
                         <div class="guide-meta">
-                            <span><i class="ri-key-line"></i> Gestión de identidades</span>
+                            <span><i class="ri-link"></i> school.apple.com</span>
                         </div>
                     </div>
 
-                    <div class="guide-card">
+                    <div class="guide-card" data-guide="ecosistema-jamf">
                         <div class="guide-header">
                             <span class="guide-icon"><i class="ri-settings-3-line"></i></span>
-                            <span class="guide-tag">Paso 2</span>
+                            <span class="guide-tag">Gestión</span>
                         </div>
-                        <h3>Jamf School (MDM)</h3>
-                        <p>Sistema de gestión de dispositivos móviles. Conectado con ASM, permite configurar restricciones, instalar apps, crear perfiles y organizar los dispositivos por grupos.</p>
+                        <h3>Jamf School</h3>
+                        <p>MDM que recibe datos de ASM. Aquí se configuran restricciones, se instalan apps y se organizan grupos.</p>
                         <div class="guide-meta">
                             <span><i class="ri-smartphone-line"></i> Configuración remota</span>
                         </div>
                     </div>
 
-                    <div class="guide-card">
+                    <div class="guide-card highlight-card" data-guide="aula-overview">
                         <div class="guide-header">
                             <span class="guide-icon"><i class="ri-group-line"></i></span>
-                            <span class="guide-tag">Paso 3</span>
+                            <span class="guide-tag hot-tag">Uso diario</span>
                         </div>
-                        <h3>App Aula (Classroom)</h3>
-                        <p>Aplicación que usan los profesores en sus Macs para controlar los iPads del alumnado durante la clase: ver pantallas, abrir apps, bloquear dispositivos y guiar actividades.</p>
+                        <h3>App Aula</h3>
+                        <p>App que usan los profesores para controlar iPads en clase: ver pantallas, abrir apps, bloquear dispositivos.</p>
                         <div class="guide-meta">
                             <span><i class="ri-eye-line"></i> Control en tiempo real</span>
                         </div>
                     </div>
                 </div>
 
-                <h2 class="content-title"><i class="ri-arrow-right-line"></i> Flujo de trabajo completo</h2>
-                <div class="info-box" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                    <div class="info-content">
-                        <h4 style="color: white; margin-top: 0;">ASM → Jamf School → Dispositivos → App Aula</h4>
-                        <ol style="margin: 15px 0 0 20px; line-height: 1.8;">
-                            <li><strong>En ASM:</strong> Se registran los dispositivos y se crean las cuentas</li>
-                            <li><strong>En Jamf School:</strong> Se configuran restricciones, apps y clases</li>
-                            <li><strong>Los dispositivos:</strong> Reciben automáticamente la configuración</li>
-                            <li><strong>En App Aula:</strong> Los profesores controlan la clase en tiempo real</li>
-                        </ol>
-                    </div>
-                </div>
+                <!-- Troubleshooting Order -->
+                <h2 class="content-title"><i class="ri-bug-line"></i> Cuando algo no funciona</h2>
+                ${KnowledgeBase.diagrams.troubleshootFlow.html}
 
                 <h2 class="content-title"><i class="ri-question-line"></i> ¿Por qué esta estructura?</h2>
                 <div class="action-cards">
@@ -428,6 +429,14 @@ class JamfAssistant {
     }
 
     renderChecklists() {
+        // Group checklists by category
+        const categories = {};
+        Object.entries(KnowledgeBase.checklists).forEach(([key, cl]) => {
+            const cat = cl.category || 'General';
+            if (!categories[cat]) categories[cat] = [];
+            categories[cat].push({ key, ...cl });
+        });
+
         return `
             <section class="content-section active">
                 <div class="section-header">
@@ -435,25 +444,52 @@ class JamfAssistant {
                     <p class="section-subtitle">Listas de verificación para procesos comunes</p>
                 </div>
 
-                <div class="checklist-cards">
-                    ${Object.entries(KnowledgeBase.checklists).map(([key, cl]) => `
-                        <div class="checklist-card" data-checklist="${key}">
-                            <div class="checklist-header">
-                                <span class="checklist-icon">${cl.icon}</span>
-                                <h3>${cl.title}</h3>
-                            </div>
-                            <p>${cl.items.length} tareas a completar</p>
-                            <div class="checklist-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 0%"></div>
-                                </div>
-                                <span class="progress-text">0/${cl.items.length} completado</span>
-                            </div>
-                        </div>
-                    `).join('')}
+                <div class="info-box">
+                    <div class="info-icon"><i class="ri-checkbox-circle-line"></i></div>
+                    <div class="info-content">
+                        <h4>Progreso guardado localmente</h4>
+                        <p>Tu progreso en cada checklist se guarda en tu navegador. Puedes cerrar y volver cuando quieras.</p>
+                    </div>
                 </div>
+
+                ${Object.entries(categories).map(([category, items]) => `
+                    <h2 class="content-title"><i class="${this.getCategoryIcon(category)}"></i> ${category}</h2>
+                    <div class="checklist-cards">
+                        ${items.map(cl => `
+                            <div class="checklist-card" data-checklist="${cl.key}">
+                                <div class="checklist-header">
+                                    <span class="checklist-icon">${cl.icon}</span>
+                                    <div class="checklist-badges">
+                                        <span class="category-badge">${cl.category || 'General'}</span>
+                                        ${cl.estimatedTime ? `<span class="time-badge"><i class="ri-time-line"></i> ${cl.estimatedTime}</span>` : ''}
+                                    </div>
+                                </div>
+                                <h3>${cl.title}</h3>
+                                <p class="checklist-count">${cl.items.length} tareas a completar</p>
+                                <div class="checklist-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 0%"></div>
+                                    </div>
+                                    <span class="progress-text">0/${cl.items.length}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('')}
             </section>
         `;
+    }
+
+    getCategoryIcon(category) {
+        const icons = {
+            'Dispositivos': 'ri-smartphone-line',
+            'Procesos Anuales': 'ri-calendar-line',
+            'Troubleshooting': 'ri-bug-line',
+            'Mantenimiento IT': 'ri-tools-line',
+            'Profesores': 'ri-user-line',
+            'General': 'ri-checkbox-circle-line'
+        };
+        return icons[category] || 'ri-checkbox-circle-line';
     }
 
     renderGuideCard(id, guide) {

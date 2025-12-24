@@ -1,7 +1,8 @@
 {
-    "version": "2.0.0",
-    "lastUpdated": "2025-12-23",
-    "lastAutoCheck": "2025-12-23",
+    "version": "2.1.0",
+    "lastUpdated": "2025-12-24",
+    "lastAutoCheck": "2025-12-24",
+    "articleCount": 36,
     "source": "Ecosistema Apple Education: ASM + Jamf School + App Aula",
     "updateFrequency": "Manual - Actualizar cuando cambie la documentación oficial",
     "nextUpdateCheck": "2025-03-01",
@@ -385,6 +386,190 @@
                 "seleccionar",
                 "parcial",
                 "aula"
+            ]
+        },
+        {
+            "id": "ipad-no-enciende",
+            "title": "iPad no enciende o pantalla negra",
+            "category": "Troubleshooting",
+            "officialDocUrl": "https://support.apple.com/es-es/102609",
+            "content": "Si un iPad no enciende o tiene la pantalla negra, sigue estos pasos:\n\nPASO 1 - CARGAR:\n- Conecta el cargador ORIGINAL de Apple (no uno genérico)\n- Espera 15-30 minutos\n- Busca el icono de batería en pantalla\n- Si no aparece nada, prueba otro cable/cargador\n\nPASO 2 - REINICIO FORZADO:\niPad con Face ID (sin botón Home):\n- Pulsa y suelta rápido Subir Volumen\n- Pulsa y suelta rápido Bajar Volumen\n- Mantén pulsado el botón superior hasta ver el logo Apple\n\niPad con botón Home:\n- Mantén pulsados Home + botón superior\n- Espera 10-15 segundos hasta ver logo Apple\n- Suelta los botones\n\nPASO 3 - SI SIGUE SIN RESPONDER:\n- Conectar a un Mac con Finder (o PC con iTunes)\n- Poner iPad en modo recuperación (DFU)\n- Restaurar el dispositivo\n\nCUÁNDO ES PROBLEMA DE HARDWARE:\n- El iPad se calienta mucho al cargar\n- La batería se hincha (carcasa se abre)\n- Daño visible por líquidos o golpes\n- En estos casos: contactar con AppleCare o SAT autorizado",
+            "keywords": [
+                "no enciende",
+                "pantalla negra",
+                "bateria",
+                "cargar",
+                "reinicio",
+                "forzado",
+                "ipad"
+            ]
+        },
+        {
+            "id": "alumno-nuevo",
+            "title": "Añadir alumno nuevo al sistema",
+            "category": "Procesos",
+            "officialDocUrl": "https://support.apple.com/es-es/guide/apple-school-manager/axm93fe95691/web",
+            "content": "Cuando llega un alumno nuevo al centro, sigue estos pasos en orden:\n\nEN ASM (school.apple.com):\n1. Ir a Personas → Alumnos\n2. Click en + para añadir alumno\n3. Rellenar: nombre, apellidos, curso, email del centro\n4. Se crea automáticamente un Apple ID gestionado\n5. Apuntar la contraseña temporal\n6. Añadir al alumno a sus clases correspondientes\n\nEN JAMF SCHOOL:\n7. Ir a Organización → ASM → Sincronizar ahora\n8. El alumno aparecerá en pocos minutos\n9. Verificar que está en los grupos correctos\n\nASIGNAR iPAD:\n10. Elegir un iPad libre del inventario\n11. En Jamf: Dispositivos → buscar iPad → Asignar usuario\n12. O en el propio iPad: Ajustes → usar Apple ID del alumno\n\nENTREGAR AL ALUMNO:\n13. Dar el iPad al alumno\n14. Comunicar su Apple ID y contraseña temporal\n15. El alumno deberá cambiar la contraseña en el primer uso\n16. Comprobar que aparece en la app Aula del profesor\n\nDOCUMENTAR:\n- Registrar: alumno, iPad asignado, fecha, curso\n- Firmar documento de entrega si existe",
+            "keywords": [
+                "alumno nuevo",
+                "nuevo estudiante",
+                "alta",
+                "añadir",
+                "matricula",
+                "incorporacion"
+            ]
+        },
+        {
+            "id": "alumno-deja-centro",
+            "title": "Alumno deja el centro (baja)",
+            "category": "Procesos",
+            "officialDocUrl": "https://support.apple.com/es-es/guide/apple-school-manager/axm96f94c3c6/web",
+            "content": "Cuando un alumno deja el centro, hay que recuperar el iPad y limpiar su cuenta:\n\nPASO 1 - RECOGER EL iPAD:\n- Recoger el iPad físicamente\n- Verificar estado (golpes, funda, cargador)\n- Documentar cualquier daño\n\nPASO 2 - BORRAR EL iPAD (desde Jamf):\n1. En Jamf School: Dispositivos → buscar el iPad\n2. Acciones → Borrar dispositivo\n3. Confirmar el borrado\n4. Esperar a que se complete (puede tardar minutos)\n5. El iPad volverá a pantalla de configuración inicial\n\nPASO 3 - DESASIGNAR USUARIO:\n1. En Jamf: Dispositivos → iPad → quitar asignación de usuario\n2. El iPad queda disponible para otro alumno\n\nPASO 4 - GESTIONAR CUENTA (en ASM):\n1. En ASM: Personas → buscar alumno\n2. Opciones:\n   - Archivar: la cuenta se desactiva pero se guarda\n   - Eliminar: se borra completamente (no recomendado si puede volver)\n3. Quitar de todas las clases\n\nIMPORTANTE:\n- Los datos del alumno en iCloud se mantienen 30 días\n- Si el alumno vuelve, se puede restaurar la cuenta archivada\n- Documentar la devolución con fecha y firma\n\nNOTA: Si el alumno no devuelve el iPad, se puede poner en Modo Perdido desde Jamf.",
+            "keywords": [
+                "baja",
+                "alumno se va",
+                "devolver ipad",
+                "recoger",
+                "borrar",
+                "traslado"
+            ]
+        },
+        {
+            "id": "inicio-curso",
+            "title": "Inicio de curso: Preparación de iPads",
+            "category": "Procesos Anuales",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/Getting_Started.html",
+            "content": "Checklist para preparar los iPads antes del inicio de curso:\n\nANTES DE QUE LLEGUEN LOS ALUMNOS:\n\n1. VERIFICAR INVENTARIO:\n- Contar iPads físicamente\n- Comprobar que todos encienden y cargan\n- Identificar dispositivos dañados para reparar\n- Actualizar hoja de inventario\n\n2. ACTUALIZAR iOS:\n- Verificar versión de iOS de todos los iPads\n- Actualizar a la última versión estable\n- Hacer en lotes pequeños (no todos a la vez)\n- Programar para noche/fin de semana\n\n3. REVISAR PERFILES Y APPS:\n- Verificar que los perfiles de restricción siguen correctos\n- Actualizar apps si hay nuevas versiones\n- Añadir nuevas apps del curso si las hay\n- Quitar apps que ya no se usan\n\n4. PREPARAR CLASES EN ASM:\n- Crear nuevas clases para el curso\n- Asignar profesores a sus clases\n- Los alumnos se añadirán cuando se matriculen\n- Sincronizar con Jamf\n\n5. PREPARAR PARA ENTREGA:\n- Cargar todos los iPads al 100%\n- Limpiar pantallas y fundas\n- Verificar que tienen funda y cargador\n- Preparar etiquetas si se reasignan\n\n6. DOCUMENTACIÓN:\n- Preparar hojas de entrega para firmar\n- Actualizar guía de uso para familias\n- Preparar sesión informativa para profesores nuevos",
+            "keywords": [
+                "inicio curso",
+                "preparar",
+                "septiembre",
+                "nuevo curso",
+                "checklist",
+                "ipads"
+            ]
+        },
+        {
+            "id": "fin-curso",
+            "title": "Fin de curso: Recogida de iPads",
+            "category": "Procesos Anuales",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/Getting_Started.html",
+            "content": "Proceso para recoger y preparar iPads al final del curso:\n\nSEMANA ANTES DE RECOGER:\n1. Avisar a profesores y familias de la fecha de recogida\n2. Pedir que los alumnos hagan backup de sus trabajos\n3. Preparar el espacio donde se recogerán\n4. Imprimir listado de alumnos con iPads asignados\n\nDÍA DE RECOGIDA:\n1. Verificar iPad por número de serie/inventario\n2. Comprobar que trae funda y cargador\n3. Anotar daños visibles\n4. Marcar en lista que se ha recogido\n5. Firmar recepción si hay documento\n\nDESPUÉS DE RECOGER TODOS:\n\n1. BORRAR iPADS:\n- En Jamf: Dispositivos → Seleccionar todos → Borrar\n- Esto elimina datos de alumnos\n- El iPad queda limpio para septiembre\n\n2. DESASIGNAR USUARIOS:\n- Quitar asignación de usuario en Jamf\n- Así quedan disponibles para reasignar\n\n3. ARCHIVAR CLASES:\n- En ASM: Archivar las clases del curso que termina\n- No eliminar, por si se necesitan datos\n- Crear nuevas clases para el próximo curso\n\n4. GUARDAR iPADS:\n- Cargar todos al 50-60% (ideal para almacenamiento)\n- Guardar en lugar seco y fresco\n- NO dejarlos al 0% ni al 100% meses sin uso\n\n5. INVENTARIO FINAL:\n- Actualizar hoja de inventario\n- Anotar iPads que necesitan reparación\n- Planificar reposición si hay bajas",
+            "keywords": [
+                "fin curso",
+                "recoger",
+                "junio",
+                "devolver",
+                "almacenar",
+                "vacaciones"
+            ]
+        },
+        {
+            "id": "wifi-problemas",
+            "title": "Problemas de conexión WiFi en iPads",
+            "category": "Troubleshooting",
+            "officialDocUrl": "https://support.apple.com/es-es/102422",
+            "content": "Si un iPad no conecta al WiFi del centro:\n\nVERIFICACIONES BÁSICAS:\n1. ¿Está el WiFi activado? Ajustes → WiFi → ON\n2. ¿Aparece la red del centro? Si no aparece, puede estar fuera de rango\n3. ¿Hay símbolo de WiFi arriba? Si tiene exclamación, hay problema\n\nSOLUCIONES PASO A PASO:\n\n1. OLVIDAR Y RECONECTAR:\n- Ajustes → WiFi → pulsar (i) en la red\n- 'Olvidar esta red'\n- Volver a conectar introduciendo contraseña\n\n2. REINICIAR CONFIGURACIÓN DE RED:\n- Ajustes → General → Transferir o Restablecer\n- Restablecer → Restablecer ajustes de red\n- Se borran todas las redes guardadas\n- Hay que volver a conectar\n\n3. VERIFICAR RESTRICCIONES:\n- Si el WiFi está bloqueado en Jamf, el usuario no puede cambiar\n- Verificar en Jamf que no hay restricción de WiFi\n\n4. PROBLEMAS DE RED (para IT):\n- ¿Hay muchos dispositivos en el mismo AP?\n- ¿Está el 'Client Isolation' activado? (bloquea Aula)\n- ¿El DHCP tiene IPs disponibles?\n- ¿Hay filtrado MAC que bloquee el iPad?\n\nSI ES UN PROBLEMA GENERALIZADO:\n- Reiniciar el punto de acceso/router\n- Verificar que el servidor DHCP funciona\n- Comprobar conexión a Internet del centro",
+            "keywords": [
+                "wifi",
+                "red",
+                "conexion",
+                "no conecta",
+                "internet",
+                "wireless"
+            ]
+        },
+        {
+            "id": "apps-no-instalan",
+            "title": "Apps que no se instalan",
+            "category": "Troubleshooting",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/Apps.html",
+            "content": "Si una app no se instala en los iPads:\n\nVERIFICAR EN JAMF:\n1. ¿La app está correctamente configurada?\n   - Apps → buscar la app → ver configuración\n   - ¿Tiene licencias VPP asignadas?\n   - ¿Está asignada al grupo/dispositivo correcto?\n\n2. ¿El dispositivo está en el scope correcto?\n   - Dispositivos → buscar iPad → ver grupos\n   - ¿Pertenece al Smart Group que recibe la app?\n\nVERIFICAR EN EL iPAD:\n3. ¿Hay espacio suficiente?\n   - Ajustes → General → Almacenamiento\n   - Si está lleno, liberar espacio primero\n\n4. ¿Hay conexión a Internet?\n   - Las apps se descargan de Internet\n   - Probar abrir Safari para verificar\n\n5. ¿El iPad recibe comandos de Jamf?\n   - En Jamf: Dispositivos → iPad → Enviar comando 'Actualizar inventario'\n   - Si no responde, puede haber problema de conectividad\n\nSOLUCIONES:\n\n1. REINSTALAR APP DESDE JAMF:\n- Dispositivos → iPad → Apps\n- Desinstalar la app\n- Volver a asignar e instalar\n\n2. FORZAR SINCRONIZACIÓN:\n- Dispositivos → iPad → Acciones → Actualizar inventario\n- Esperar 5 minutos\n- Verificar si la app aparece\n\n3. VERIFICAR LICENCIAS VPP:\n- En ASM: Apps y Libros → buscar app\n- ¿Hay licencias disponibles?\n- Si no hay, comprar más o liberar de otros dispositivos",
+            "keywords": [
+                "app",
+                "instalar",
+                "no instala",
+                "falla",
+                "aplicacion",
+                "vpp"
+            ]
+        },
+        {
+            "id": "modo-perdido",
+            "title": "Modo Perdido: iPad perdido o robado",
+            "category": "Seguridad",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/Lost_Mode.html",
+            "content": "Si un iPad se pierde o es robado, usa el Modo Perdido:\n\nACTIVAR MODO PERDIDO:\n1. En Jamf School: Dispositivos → buscar el iPad\n2. Acciones → Activar Modo Perdido\n3. Escribir mensaje que aparecerá en pantalla\n   Ejemplo: 'Este iPad pertenece a [Centro]. Contactar: [teléfono]'\n4. Introducir número de teléfono de contacto\n5. Confirmar activación\n\nQUÉ PASA EN EL iPAD:\n- La pantalla se bloquea completamente\n- Muestra el mensaje que escribiste\n- Muestra botón para llamar al teléfono\n- El iPad no se puede usar\n- Se registra la ubicación (si tiene GPS/datos)\n\nVER UBICACIÓN:\n- En Jamf: Dispositivos → iPad → Ubicación\n- Se muestra la última ubicación conocida\n- Requiere que el iPad tenga conexión\n\nDESACTIVAR MODO PERDIDO:\n- Solo desde Jamf School\n- Dispositivos → iPad → Acciones → Desactivar Modo Perdido\n- El iPad vuelve a funcionar normalmente\n\nSI NO APARECE:\n- El modo perdido solo funciona si el iPad tiene conexión\n- Si está apagado o sin WiFi/datos, no reporta ubicación\n- El mensaje aparecerá cuando conecte\n\nIMPORTANTE:\n- Documentar la pérdida/robo\n- Si es robo confirmado, considerar denuncia policial\n- Como último recurso: Borrar dispositivo remotamente",
+            "keywords": [
+                "perdido",
+                "robado",
+                "robo",
+                "localizar",
+                "ubicacion",
+                "modo perdido",
+                "encontrar"
+            ]
+        },
+        {
+            "id": "preparar-examen",
+            "title": "Preparar iPads para un examen",
+            "category": "Aula",
+            "officialDocUrl": "https://support.apple.com/es-es/guide/classroom/clasm50eaaf6/ipados",
+            "content": "Para hacer un examen con los iPads controlados:\n\nOPCIÓN 1 - BLOQUEAR EN APP (desde App Aula):\n1. Antes del examen, abre la app Aula\n2. Selecciona toda la clase\n3. Toca 'Abrir' y elige la app del examen\n4. Activa 'Bloquear en app' (Lock in App)\n5. Los alumnos SOLO pueden usar esa app\n6. No pueden salir, cambiar de app ni ver notificaciones\n\nAl terminar:\n7. Selecciona la clase en Aula\n8. Toca 'Desbloquear' para quitar la restricción\n\nOPCIÓN 2 - BLOQUEAR PANTALLA (para examen en papel):\n1. En Aula, selecciona toda la clase\n2. Toca 'Bloquear'\n3. Todas las pantallas quedan negras\n4. Los alumnos no pueden usar el iPad\n5. Desbloquear cuando termine el examen\n\nOPCIÓN 3 - MODO EVALUACIÓN (Assessment Mode):\nPara exámenes estandarizados que requieren modo seguro:\n1. En Jamf: Perfiles → crear perfil de Evaluación\n2. Configurar apps permitidas durante evaluación\n3. Asignar a los iPads del examen\n4. Activar antes del examen\n5. Desactivar después\n\nCONSEJOS:\n- Probar ANTES del día del examen\n- Avisar a los alumnos que los iPads estarán bloqueados\n- Tener plan B por si falla la tecnología\n- Verificar que todos los iPads tienen batería suficiente",
+            "keywords": [
+                "examen",
+                "bloquear",
+                "evaluacion",
+                "assessment",
+                "test",
+                "control",
+                "aula"
+            ]
+        },
+        {
+            "id": "mac-profesor-nuevo",
+            "title": "Configurar Mac para profesor nuevo",
+            "category": "Procesos",
+            "officialDocUrl": "https://learn.jamf.com/bundle/jamf-school-documentation/page/Computers.html",
+            "content": "Cuando un profesor nuevo necesita un Mac:\n\nPASO 1 - EN ASM:\n1. Crear cuenta del profesor en Personas → Profesores\n2. Se genera Apple ID gestionado automáticamente\n3. Asignar a las clases que impartirá\n4. Apuntar Apple ID y contraseña temporal\n\nPASO 2 - PREPARAR EL MAC:\n1. Si es nuevo: encenderlo, conectar WiFi, seguir asistente\n2. El perfil de Jamf se instala automáticamente (si está en ASM)\n3. Si es reutilizado: borrar y reinstalar macOS primero\n\nPASO 3 - CREAR CUENTA LOCAL:\n1. Crear cuenta de administrador local (para IT)\n2. Crear cuenta estándar para el profesor\n3. O usar la cuenta del Apple ID gestionado\n\nPASO 4 - VERIFICAR EN JAMF:\n1. El Mac debe aparecer como 'Managed'\n2. Verificar que tiene los perfiles correctos\n3. Instalar apps que necesite el profesor\n\nPASO 5 - CONFIGURAR APP AULA:\n1. Abrir la App Aula en el Mac\n2. Iniciar sesión con el Apple ID del profesor\n3. Deben aparecer sus clases (las de ASM)\n4. Si no aparecen: verificar sincronización ASM-Jamf\n\nPASO 6 - ENTREGAR AL PROFESOR:\n1. Dar credenciales (usuario Mac + Apple ID)\n2. Explicar uso básico de Aula y Jamf Teacher\n3. Indicar a quién contactar para soporte\n4. Documentar la asignación del Mac",
+            "keywords": [
+                "mac",
+                "profesor",
+                "nuevo",
+                "configurar",
+                "preparar",
+                "alta"
+            ]
+        },
+        {
+            "id": "problemas-bluetooth",
+            "title": "Problemas de Bluetooth con App Aula",
+            "category": "Troubleshooting",
+            "officialDocUrl": "https://support.apple.com/es-es/guide/classroom/welcome/ipados",
+            "content": "Si App Aula no detecta los iPads de los alumnos, puede ser problema de Bluetooth:\n\nVERIFICACIONES EN EL iPAD DEL PROFESOR:\n1. ¿Bluetooth activado?\n   - Ajustes → Bluetooth → ON\n   - O desde Centro de Control (icono Bluetooth azul)\n\n2. ¿Hay dispositivos cerca interfiriendo?\n   - Otros iPads de otras clases\n   - Altavoces Bluetooth\n   - Auriculares conectados\n\nVERIFICACIONES EN LOS iPADs DE ALUMNOS:\n3. ¿Todos tienen Bluetooth activado?\n   - Pedir a los alumnos que verifiquen\n   - Debería estar ON por defecto si no hay restricción\n\n4. ¿Hay restricción de Bluetooth en Jamf?\n   - En Jamf: Perfiles → ver si hay restricción\n   - Si Bluetooth está restringido, Aula no funciona\n\nSOLUCIONES:\n\n1. DESACTIVAR/ACTIVAR BLUETOOTH:\n- Apagar Bluetooth en todos los dispositivos\n- Esperar 10 segundos\n- Encender Bluetooth en todos\n- Volver a abrir Aula\n\n2. REINICIAR AULA:\n- Cerrar completamente la app (deslizar hacia arriba)\n- Volver a abrirla\n- Seleccionar la clase de nuevo\n\n3. REINICIAR DISPOSITIVOS:\n- Si sigue fallando, reiniciar el iPad del profesor\n- Y reiniciar los iPads de los alumnos problemáticos\n\nDISTANCIA IMPORTANTE:\n- Bluetooth tiene alcance de unos 10-15 metros\n- Si los alumnos están muy lejos, no se detectan\n- Funciona mejor si todos están en la misma aula física",
+            "keywords": [
+                "bluetooth",
+                "no detecta",
+                "aula",
+                "conexion",
+                "dispositivos",
+                "cerca"
+            ]
+        },
+        {
+            "id": "backup-datos-alumno",
+            "title": "Backup de datos de alumno",
+            "category": "Procesos",
+            "officialDocUrl": "https://support.apple.com/es-es/108344",
+            "content": "Los datos de los alumnos en iPad se pueden respaldar de varias formas:\n\nOPCIÓN 1 - iCLOUD (automático):\nSi los alumnos tienen Apple ID gestionado con iCloud:\n- Los datos se guardan automáticamente\n- Documentos, fotos, trabajos en apps compatibles\n- Se recuperan al iniciar sesión en otro iPad\n\nVerificar en iPad:\n- Ajustes → [nombre del alumno] → iCloud\n- Ver qué apps hacen backup\n\nOPCIÓN 2 - AIRDROP (manual):\nPara archivos específicos:\n1. El alumno abre la app con el archivo\n2. Toca Compartir → AirDrop\n3. Envía al Mac del profesor o a otro dispositivo\n4. El profesor guarda el archivo\n\nOPCIÓN 3 - APPS DE NUBE:\nSi usan Google Drive, OneDrive, etc.:\n- Los archivos ya están en la nube\n- Accesibles desde cualquier dispositivo\n- No se pierden al borrar el iPad\n\nOPCIÓN 4 - BACKUP COMPLETO (para IT):\nEn Finder (Mac) o iTunes (PC):\n1. Conectar iPad con cable\n2. Seleccionar iPad en Finder/iTunes\n3. Click en 'Realizar copia de seguridad ahora'\n4. El backup se guarda en el ordenador\n5. Se puede restaurar en otro iPad\n\nIMPORTANTE:\n- Avisar a los alumnos ANTES de borrar iPads\n- Dar tiempo para que guarden sus trabajos\n- El backup de iCloud depende del espacio disponible",
+            "keywords": [
+                "backup",
+                "copia",
+                "seguridad",
+                "guardar",
+                "datos",
+                "trabajos",
+                "alumno"
             ]
         }
     ]

@@ -1679,3 +1679,513 @@ input:focus-visible {
         bottom: 20px;
     }
 }
+
+/* ===========================================
+   11. VISUAL DIAGRAMS & INFOGRAPHICS
+   Diagramas interactivos para comprensión visual
+   =========================================== */
+
+/* --- Ecosystem Diagram --- */
+.ecosystem-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 24px;
+    background: linear-gradient(180deg, var(--bg-card) 0%, var(--bg-page) 100%);
+    border-radius: var(--radius-lg);
+    margin: 24px 0;
+}
+
+.diagram-tier {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.diagram-box {
+    background: var(--bg-card);
+    border: 2px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    text-align: center;
+    transition: all 0.3s ease;
+    max-width: 360px;
+}
+
+.diagram-box:hover {
+    border-color: var(--accent-primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.box-asm {
+    border-color: var(--accent-primary);
+    background: linear-gradient(135deg, var(--accent-bg) 0%, var(--bg-card) 100%);
+}
+
+.box-asm .box-title {
+    color: var(--accent-primary);
+}
+
+.box-jamf {
+    border-color: var(--info);
+}
+
+.box-jamf .box-icon {
+    color: var(--info);
+}
+
+.box-device {
+    background: var(--bg-sidebar);
+    padding: 16px 20px;
+}
+
+.box-aula {
+    border-color: var(--warning);
+}
+
+.box-aula .box-icon {
+    color: var(--warning);
+}
+
+.box-icon {
+    font-size: 32px;
+    color: var(--accent-primary);
+    margin-bottom: 8px;
+}
+
+.box-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.box-url {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: monospace;
+    margin-bottom: 8px;
+}
+
+.box-subtitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.box-features {
+    list-style: none;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+}
+
+.box-features li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.box-features li i {
+    color: var(--accent-primary);
+    font-size: 14px;
+}
+
+.diagram-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    color: var(--text-muted);
+}
+
+.diagram-arrow i {
+    font-size: 24px;
+    color: var(--accent-primary);
+}
+
+.diagram-arrow span {
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.diagram-devices {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.diagram-badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    background: var(--bg-sidebar);
+    color: var(--text-secondary);
+    margin-top: 8px;
+}
+
+.diagram-badge.highlight {
+    background: var(--warning);
+    color: white;
+}
+
+/* --- Flow Diagram (Horizontal Steps) --- */
+.flow-diagram {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 24px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    overflow-x: auto;
+    margin: 24px 0;
+}
+
+.flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: var(--bg-sidebar);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    min-width: 180px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.flow-step:hover {
+    border-color: var(--accent-primary);
+}
+
+.flow-step.highlight {
+    background: var(--accent-bg);
+    border-color: var(--accent-primary);
+}
+
+.flow-step .step-number {
+    width: 32px;
+    height: 32px;
+    background: var(--accent-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.flow-step .step-content {
+    flex: 1;
+}
+
+.flow-step .step-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.flow-step .step-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.flow-connector {
+    color: var(--accent-primary);
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+/* --- Troubleshoot Diagram (Vertical) --- */
+.troubleshoot-diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    margin: 24px 0;
+}
+
+.ts-level {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ts-box {
+    width: 100%;
+    max-width: 400px;
+    background: var(--bg-sidebar);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    border-left: 4px solid var(--border-subtle);
+    transition: all 0.2s ease;
+}
+
+.ts-box:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.ts-asm {
+    border-left-color: var(--accent-primary);
+}
+
+.ts-jamf {
+    border-left-color: var(--info);
+}
+
+.ts-device {
+    border-left-color: var(--warning);
+}
+
+.ts-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.ts-asm .ts-icon {
+    color: var(--accent-primary);
+}
+
+.ts-jamf .ts-icon {
+    color: var(--info);
+}
+
+.ts-device .ts-icon {
+    color: var(--warning);
+}
+
+.ts-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.ts-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ts-box li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 4px 0;
+    padding-left: 16px;
+    position: relative;
+}
+
+.ts-box li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--text-muted);
+}
+
+.ts-arrow {
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ts-arrow i {
+    color: var(--accent-primary);
+}
+
+/* --- Checklist Cards Enhanced --- */
+.checklist-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.checklist-card:hover {
+    border-color: var(--accent-primary);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.checklist-meta {
+    display: flex;
+    gap: 16px;
+    margin: 8px 0 12px 0;
+}
+
+.checklist-meta span {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.checklist-meta i {
+    font-size: 14px;
+}
+
+/* --- Category Badges --- */
+.category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.category-badge.dispositivos {
+    background: hsl(210, 50%, 95%);
+    color: hsl(210, 55%, 45%);
+}
+
+.category-badge.curso-escolar {
+    background: hsl(152, 40%, 95%);
+    color: hsl(152, 45%, 35%);
+}
+
+.category-badge.personal {
+    background: hsl(280, 50%, 95%);
+    color: hsl(280, 45%, 45%);
+}
+
+.category-badge.soporte {
+    background: hsl(38, 80%, 95%);
+    color: hsl(38, 70%, 40%);
+}
+
+.category-badge.aula-cat {
+    background: hsl(0, 60%, 95%);
+    color: hsl(0, 55%, 45%);
+}
+
+[data-theme="dark"] .category-badge.dispositivos {
+    background: hsl(210, 50%, 20%);
+}
+
+[data-theme="dark"] .category-badge.curso-escolar {
+    background: hsl(152, 40%, 18%);
+}
+
+[data-theme="dark"] .category-badge.personal {
+    background: hsl(280, 50%, 20%);
+}
+
+[data-theme="dark"] .category-badge.soporte {
+    background: hsl(38, 50%, 18%);
+}
+
+[data-theme="dark"] .category-badge.aula-cat {
+    background: hsl(0, 50%, 20%);
+}
+
+/* Checklist enhanced styles */
+.checklist-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.time-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: var(--bg-tertiary, hsl(220, 10%, 92%));
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 12px;
+}
+
+.time-badge i {
+    font-size: 0.8rem;
+}
+
+[data-theme="dark"] .time-badge {
+    background: hsl(220, 10%, 20%);
+}
+
+.checklist-count {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 8px 0 12px;
+}
+
+.checklist-card h3 {
+    margin-top: 12px;
+}
+
+/* Enhanced checklist header */
+.checklist-card .checklist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Highlight card for Aula */
+.guide-card.highlight-card {
+    border: 2px solid var(--accent-aula, hsl(340, 70%, 55%));
+    background: linear-gradient(135deg,
+        hsla(340, 70%, 55%, 0.05) 0%,
+        var(--bg-card) 100%);
+}
+
+.guide-card.highlight-card:hover {
+    border-color: var(--accent-aula, hsl(340, 70%, 55%));
+    box-shadow: 0 8px 25px hsla(340, 70%, 55%, 0.15);
+}
+
+.hot-tag {
+    background: var(--accent-aula, hsl(340, 70%, 55%)) !important;
+    color: white !important;
+}
+
+[data-theme="dark"] .guide-card.highlight-card {
+    background: linear-gradient(135deg,
+        hsla(340, 70%, 55%, 0.1) 0%,
+        var(--bg-card) 100%);
+}
+
+/* --- Responsive Diagrams --- */
+@media (max-width: 768px) {
+    .flow-diagram {
+        flex-direction: column;
+    }
+
+    .flow-connector {
+        transform: rotate(90deg);
+    }
+
+    .diagram-devices {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .diagram-box {
+        max-width: 100%;
+    }
+}

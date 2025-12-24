@@ -1894,6 +1894,8 @@ const KnowledgeBase = {
         newIpad: {
             title: 'Nuevo iPad',
             icon: '<i class="ri-smartphone-line"></i>',
+            category: 'Dispositivos',
+            estimatedTime: '15-20 min',
             items: [
                 { text: 'Verificar número de serie en Apple School Manager (school.apple.com)', done: false },
                 { text: 'Comprobar asignación al servidor Jamf en ASM', done: false },
@@ -1909,6 +1911,8 @@ const KnowledgeBase = {
         newMac: {
             title: 'Nuevo Mac',
             icon: '<i class="ri-macbook-line"></i>',
+            category: 'Dispositivos',
+            estimatedTime: '30-45 min',
             items: [
                 { text: 'Verificar en Apple School Manager (school.apple.com)', done: false },
                 { text: 'Comprobar asignación al servidor Jamf en ASM', done: false },
@@ -1927,6 +1931,8 @@ const KnowledgeBase = {
         startYear: {
             title: 'Inicio de Curso',
             icon: '<i class="ri-calendar-event-line"></i>',
+            category: 'Curso Escolar',
+            estimatedTime: '2-3 días',
             items: [
                 { text: 'Inventario completo de todos los dispositivos (iPads y Macs)', done: false },
                 { text: 'Verificar estado de baterías de todos los iPads', done: false },
@@ -1948,6 +1954,290 @@ const KnowledgeBase = {
                 { text: 'Backup de configuraciones actuales de Jamf', done: false },
                 { text: 'Actualizar base de conocimiento con cambios del nuevo curso', done: false }
             ]
+        },
+        endYear: {
+            title: 'Fin de Curso',
+            icon: '<i class="ri-calendar-check-line"></i>',
+            category: 'Curso Escolar',
+            estimatedTime: '1-2 días',
+            items: [
+                { text: 'Recoger todos los iPads de los alumnos', done: false },
+                { text: 'Verificar estado físico de cada dispositivo (pantalla, carcasa)', done: false },
+                { text: 'Documentar dispositivos dañados para reparación', done: false },
+                { text: 'Verificar que todos los iPads están en el inventario de Jamf', done: false },
+                { text: 'Cerrar sesión de iCloud en iPads personalizados', done: false },
+                { text: 'Borrar contenido de usuarios en iPads compartidos (Shared iPad)', done: false },
+                { text: 'Actualizar iPadOS a última versión antes de guardar', done: false },
+                { text: 'Cargar todos los dispositivos al 50-80% para almacenamiento', done: false },
+                { text: 'Guardar dispositivos en lugar seguro y climatizado', done: false },
+                { text: 'Desactivar alumnos que se van en Apple School Manager', done: false },
+                { text: 'Archivar clases del curso actual en ASM', done: false },
+                { text: 'Documentar lecciones aprendidas del curso', done: false },
+                { text: 'Planificar compras o renovaciones para el próximo curso', done: false },
+                { text: 'Backup completo de configuración de Jamf School', done: false }
+            ]
+        },
+        newTeacher: {
+            title: 'Profesor Nuevo',
+            icon: '<i class="ri-user-add-line"></i>',
+            category: 'Personal',
+            estimatedTime: '30-45 min',
+            items: [
+                { text: 'Crear usuario en Apple School Manager (school.apple.com)', done: false },
+                { text: 'Asignar rol de "Profesor" en ASM', done: false },
+                { text: 'Asignar a las clases correspondientes en ASM', done: false },
+                { text: 'Verificar sincronización del usuario con Jamf School', done: false },
+                { text: 'Asignar Mac del centro (si corresponde)', done: false },
+                { text: 'Crear cuenta de usuario en el Mac', done: false },
+                { text: 'Instalar app Aula en su iPad personal o del centro', done: false },
+                { text: 'Verificar que ve sus clases en la app Aula', done: false },
+                { text: 'Instalar app Jamf Teacher (si se usa)', done: false },
+                { text: 'Formación básica: Cómo usar la app Aula', done: false },
+                { text: 'Formación: Cómo bloquear/desbloquear iPads de alumnos', done: false },
+                { text: 'Formación: Cómo ver pantallas de alumnos', done: false },
+                { text: 'Formación: Cómo abrir una app en todos los iPads', done: false },
+                { text: 'Entregar guía rápida de referencia (física o digital)', done: false },
+                { text: 'Añadir a canal de soporte técnico (email, chat, etc.)', done: false }
+            ]
+        },
+        studentLeaves: {
+            title: 'Alumno Devuelve iPad',
+            icon: '<i class="ri-user-unfollow-line"></i>',
+            category: 'Dispositivos',
+            estimatedTime: '10-15 min',
+            items: [
+                { text: 'Verificar número de serie del dispositivo', done: false },
+                { text: 'Comprobar estado físico (pantalla, carcasa, botones)', done: false },
+                { text: 'Documentar daños si los hay (con fotos)', done: false },
+                { text: 'Verificar que incluye cargador y cable original', done: false },
+                { text: 'Cerrar sesión de iCloud en el dispositivo', done: false },
+                { text: 'Borrar contenido y ajustes (Ajustes → General → Restablecer)', done: false },
+                { text: 'En Jamf: Reasignar dispositivo o dejar sin usuario', done: false },
+                { text: 'Actualizar inventario: marcar como "Disponible"', done: false },
+                { text: 'Guardar en armario de dispositivos de reserva', done: false },
+                { text: 'Actualizar registro del alumno (dispositivo devuelto)', done: false }
+            ]
+        },
+        aulaNotWorking: {
+            title: 'Troubleshooting Aula',
+            icon: '<i class="ri-error-warning-line"></i>',
+            category: 'Soporte',
+            estimatedTime: '10-20 min',
+            items: [
+                { text: 'Verificar Bluetooth activado en iPad del PROFESOR', done: false },
+                { text: 'Verificar Bluetooth activado en iPads de ALUMNOS', done: false },
+                { text: 'Verificar que todos están en la MISMA red WiFi', done: false },
+                { text: 'Preguntar a IT si hay "Client Isolation" en la WiFi', done: false },
+                { text: 'Verificar que la clase existe en Apple School Manager', done: false },
+                { text: 'Verificar que el profesor está asignado a la clase en ASM', done: false },
+                { text: 'Verificar sincronización de la clase en Jamf School', done: false },
+                { text: 'Enviar "Blank Push" a dispositivos desde Jamf', done: false },
+                { text: 'Cerrar completamente la app Aula y volver a abrirla', done: false },
+                { text: 'Reiniciar iPad del profesor', done: false },
+                { text: 'Reiniciar iPads de alumnos problemáticos', done: false },
+                { text: 'Verificar que iPads son supervisados (Ajustes → General → Info)', done: false },
+                { text: 'Si nada funciona: contactar soporte Jamf', done: false }
+            ]
+        },
+        dailyCheck: {
+            title: 'Verificación Diaria IT',
+            icon: '<i class="ri-checkbox-circle-line"></i>',
+            category: 'Soporte',
+            estimatedTime: '5-10 min',
+            items: [
+                { text: 'Revisar alertas en consola de Jamf School', done: false },
+                { text: 'Verificar estado de conexión de dispositivos críticos', done: false },
+                { text: 'Revisar tickets de soporte pendientes', done: false },
+                { text: 'Comprobar que no hay actualizaciones pendientes críticas', done: false },
+                { text: 'Verificar que la sincronización con ASM está funcionando', done: false },
+                { text: 'Revisar dispositivos que no han conectado en 7+ días', done: false }
+            ]
+        },
+        weeklyMaintenance: {
+            title: 'Mantenimiento Semanal',
+            icon: '<i class="ri-calendar-2-line"></i>',
+            category: 'Soporte',
+            estimatedTime: '1-2 horas',
+            items: [
+                { text: 'Revisar informe de dispositivos con batería baja', done: false },
+                { text: 'Verificar dispositivos con almacenamiento casi lleno', done: false },
+                { text: 'Revisar apps que necesitan actualización', done: false },
+                { text: 'Comprobar caducidad de perfiles y certificados', done: false },
+                { text: 'Revisar logs de errores en Jamf School', done: false },
+                { text: 'Actualizar documentación si hubo cambios', done: false },
+                { text: 'Backup de configuración de Jamf (si es manual)', done: false },
+                { text: 'Revisar estadísticas de uso de apps', done: false },
+                { text: 'Preparar resumen semanal para dirección (opcional)', done: false }
+            ]
+        },
+        prepareExam: {
+            title: 'Preparar Examen Digital',
+            icon: '<i class="ri-file-list-3-line"></i>',
+            category: 'Aula',
+            estimatedTime: '15-20 min',
+            items: [
+                { text: 'Crear perfil de restricción específico para examen en Jamf', done: false },
+                { text: 'Bloquear acceso a Safari y navegadores', done: false },
+                { text: 'Bloquear acceso a AirDrop durante el examen', done: false },
+                { text: 'Bloquear acceso a mensajes y comunicación', done: false },
+                { text: 'Permitir solo la app de examen (si es específica)', done: false },
+                { text: 'Crear Smart Group temporal para los iPads del examen', done: false },
+                { text: 'Asignar perfil de examen al Smart Group', done: false },
+                { text: 'Verificar que la restricción se aplica (probar en 1 iPad)', done: false },
+                { text: 'Informar al profesor de cómo usar Aula durante el examen', done: false },
+                { text: 'DESPUÉS: Retirar el perfil de examen del Smart Group', done: false },
+                { text: 'DESPUÉS: Verificar que los iPads vuelven a la normalidad', done: false }
+            ]
+        }
+    },
+
+    // Diagramas visuales del ecosistema (HTML/CSS inline)
+    diagrams: {
+        ecosystem: {
+            title: 'Flujo del Ecosistema Apple Education',
+            html: `
+                <div class="ecosystem-diagram">
+                    <div class="diagram-tier tier-1">
+                        <div class="diagram-box box-asm">
+                            <div class="box-icon"><i class="ri-cloud-line"></i></div>
+                            <div class="box-title">Apple School Manager</div>
+                            <div class="box-url">school.apple.com</div>
+                            <div class="box-subtitle">ES EL CENTRO DE TODO</div>
+                            <ul class="box-features">
+                                <li><i class="ri-user-add-line"></i> Crear usuarios</li>
+                                <li><i class="ri-group-line"></i> Crear clases</li>
+                                <li><i class="ri-device-line"></i> Asignar dispositivos</li>
+                                <li><i class="ri-apps-line"></i> Comprar apps (VPP)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="diagram-arrow">
+                        <i class="ri-arrow-down-line"></i>
+                        <span>sincroniza automáticamente</span>
+                    </div>
+
+                    <div class="diagram-tier tier-2">
+                        <div class="diagram-box box-jamf">
+                            <div class="box-icon"><i class="ri-settings-3-line"></i></div>
+                            <div class="box-title">Jamf School</div>
+                            <div class="box-subtitle">MDM - Gestión de dispositivos</div>
+                            <ul class="box-features">
+                                <li><i class="ri-download-line"></i> Recibe usuarios desde ASM</li>
+                                <li><i class="ri-shield-check-line"></i> Aplica restricciones</li>
+                                <li><i class="ri-install-line"></i> Distribuye apps</li>
+                                <li><i class="ri-pie-chart-line"></i> Monitoriza dispositivos</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="diagram-arrow">
+                        <i class="ri-arrow-down-line"></i>
+                        <span>configura</span>
+                    </div>
+
+                    <div class="diagram-tier tier-3">
+                        <div class="diagram-devices">
+                            <div class="diagram-box box-device">
+                                <div class="box-icon"><i class="ri-tablet-line"></i></div>
+                                <div class="box-title">iPads Alumnos</div>
+                                <span class="badge">Supervisados</span>
+                            </div>
+                            <div class="diagram-box box-device">
+                                <div class="box-icon"><i class="ri-macbook-line"></i></div>
+                                <div class="box-title">Macs Profes</div>
+                                <span class="badge">Gestionados</span>
+                            </div>
+                            <div class="diagram-box box-device box-aula">
+                                <div class="box-icon"><i class="ri-group-line"></i></div>
+                                <div class="box-title">App Aula</div>
+                                <span class="badge highlight">Uso diario</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `
+        },
+        aulaFlow: {
+            title: 'Flujo de Funcionamiento de la App Aula',
+            html: `
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Clase creada en ASM</div>
+                            <div class="step-desc">Admin crea la clase en school.apple.com con profesor y alumnos</div>
+                        </div>
+                    </div>
+                    <div class="flow-connector"><i class="ri-arrow-right-line"></i></div>
+                    <div class="flow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Jamf sincroniza</div>
+                            <div class="step-desc">La clase aparece en Jamf School automáticamente</div>
+                        </div>
+                    </div>
+                    <div class="flow-connector"><i class="ri-arrow-right-line"></i></div>
+                    <div class="flow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Perfiles se aplican</div>
+                            <div class="step-desc">iPads de alumnos reciben configuración de Classroom</div>
+                        </div>
+                    </div>
+                    <div class="flow-connector"><i class="ri-arrow-right-line"></i></div>
+                    <div class="flow-step highlight">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Profesor abre Aula</div>
+                            <div class="step-desc">Ve su clase y puede gestionar los iPads en tiempo real</div>
+                        </div>
+                    </div>
+                </div>
+            `
+        },
+        troubleshootFlow: {
+            title: 'Orden de Verificación cuando algo no funciona',
+            html: `
+                <div class="troubleshoot-diagram">
+                    <div class="ts-level">
+                        <div class="ts-box ts-asm">
+                            <div class="ts-icon"><i class="ri-cloud-line"></i></div>
+                            <div class="ts-title">1. Verificar en ASM</div>
+                            <ul>
+                                <li>¿Existe el usuario/clase?</li>
+                                <li>¿Está asignado correctamente?</li>
+                                <li>¿El dispositivo está vinculado?</li>
+                            </ul>
+                        </div>
+                        <div class="ts-arrow"><i class="ri-arrow-down-line"></i> Si está OK</div>
+                    </div>
+                    <div class="ts-level">
+                        <div class="ts-box ts-jamf">
+                            <div class="ts-icon"><i class="ri-settings-3-line"></i></div>
+                            <div class="ts-title">2. Verificar en Jamf School</div>
+                            <ul>
+                                <li>¿Se ha sincronizado desde ASM?</li>
+                                <li>¿El perfil está asignado?</li>
+                                <li>¿El dispositivo está "Managed"?</li>
+                            </ul>
+                        </div>
+                        <div class="ts-arrow"><i class="ri-arrow-down-line"></i> Si está OK</div>
+                    </div>
+                    <div class="ts-level">
+                        <div class="ts-box ts-device">
+                            <div class="ts-icon"><i class="ri-tablet-line"></i></div>
+                            <div class="ts-title">3. Verificar en el Dispositivo</div>
+                            <ul>
+                                <li>¿Bluetooth activado?</li>
+                                <li>¿WiFi conectado?</li>
+                                <li>¿App actualizada?</li>
+                                <li>¿Reiniciar resuelve?</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `
         }
     }
 };

@@ -14,6 +14,8 @@
  * - Per-user unique salt stored locally
  */
 
+import { logger } from '../utils/Logger.js';
+
 /**
  * Custom error class for encryption failures
  * @class EncryptionError
@@ -67,6 +69,12 @@ export class EncryptionService {
     /** @private @type {string} Storage key for user salt */
     #saltStorageKey = 'jamf-user-salt';
 
+    /** @private @type {string} Storage key for installation entropy */
+    #entropyStorageKey = 'jamf-install-entropy';
+
+    /** @private @type {string} Storage key for first use timestamp */
+    #timestampStorageKey = 'jamf-first-use-ts';
+
     /** @private @type {CryptoKey|null} Cached derived key */
     #cachedKey = null;
 
@@ -111,7 +119,7 @@ export class EncryptionService {
      */
     async encrypt(plaintext) {
         if (!this.#checkCryptoSupport()) {
-            console.warn('[SECURITY] Web Crypto API not available, returning plaintext');
+            logger.warn('[SECURITY] Web Crypto API not available, returning plaintext');
             return plaintext;
         }
 
@@ -142,7 +150,7 @@ export class EncryptionService {
             // Convert to base64
             return btoa(String.fromCharCode(...combined));
         } catch (error) {
-            console.error('[SECURITY] Encryption error:', error);
+            logger.error('[SECURITY] Encryption error:', error);
             throw new EncryptionError('Failed to encrypt data', error);
         }
     }
@@ -196,7 +204,7 @@ export class EncryptionService {
             const decoder = new TextDecoder();
             return decoder.decode(decrypted);
         } catch (error) {
-            console.error('[SECURITY] Decryption error:', error);
+            logger.error('[SECURITY] Decryption error:', error);
             throw new DecryptionError('Failed to decrypt data', error);
         }
     }
@@ -218,10 +226,22 @@ export class EncryptionService {
         // Get or generate unique per-user salt
         const userSalt = this.#getOrCreateUserSalt();
 
-        // Create key material from browser characteristics
+        // Get additional entropy sources for stronger key derivation
+        const installEntropy = this.#getOrCreateInstallEntropy();
+        const firstUseTimestamp = this.#getOrCreateFirstUseTimestamp();
+
+        // Create key material from multiple entropy sources
+        // Combines: origin, userAgent (limited), install-time random, first-use timestamp
+        const keySource = [
+            window.location.origin,
+            navigator.userAgent.substring(0, 50),
+            installEntropy,
+            firstUseTimestamp
+        ].join('::');
+
         const keyMaterial = await window.crypto.subtle.importKey(
             'raw',
-            encoder.encode(window.location.origin + navigator.userAgent.substring(0, 50)),
+            encoder.encode(keySource),
             { name: 'PBKDF2' },
             false,
             ['deriveBits', 'deriveKey']
@@ -264,6 +284,45 @@ export class EncryptionService {
         }
 
         return userSalt;
+    }
+
+    /**
+     * Gets existing installation entropy or creates a new one
+     * This random value is generated once per installation and persists
+     *
+     * @private
+     * @returns {string} Base64-encoded installation entropy
+     */
+    #getOrCreateInstallEntropy() {
+        let entropy = localStorage.getItem(this.#entropyStorageKey);
+
+        if (!entropy) {
+            // Generate random 32-byte entropy at first installation
+            const randomEntropy = window.crypto.getRandomValues(new Uint8Array(32));
+            entropy = btoa(String.fromCharCode(...randomEntropy));
+            localStorage.setItem(this.#entropyStorageKey, entropy);
+        }
+
+        return entropy;
+    }
+
+    /**
+     * Gets existing first-use timestamp or creates a new one
+     * This timestamp marks the first use of the application
+     *
+     * @private
+     * @returns {string} First-use timestamp in ISO format
+     */
+    #getOrCreateFirstUseTimestamp() {
+        let timestamp = localStorage.getItem(this.#timestampStorageKey);
+
+        if (!timestamp) {
+            // Record first use timestamp
+            timestamp = new Date().toISOString();
+            localStorage.setItem(this.#timestampStorageKey, timestamp);
+        }
+
+        return timestamp;
     }
 
     /**

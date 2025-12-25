@@ -88,7 +88,21 @@ npx jest --testNamePattern="Container"
 npx jest --verbose
 ```
 
-### Salida Esperada
+### Estado Actual de los Tests
+
+**⚠️ IMPORTANTE: Los tests están creados pero actualmente en estado de PLANIFICACIÓN.**
+
+Los siguientes archivos de test existen en el proyecto:
+- ✅ `__tests__/core/Container.test.js` (90+ tests escritos)
+- ✅ `__tests__/patterns/ValidatorChain.test.js` (40+ tests escritos)
+- ✅ `__tests__/patterns/SectionRegistry.test.js` (35+ tests escritos)
+- ✅ `__tests__/chatbot/EncryptionService.test.js` (40+ tests escritos)
+- ✅ `__tests__/chatbot/RateLimiter.test.js` (35+ tests escritos)
+- ✅ `__tests__/utils/EventBus.test.js` (45+ tests escritos)
+
+**Estado:** Requieren configuración de Jest para ES6 Modules antes de ejecutarse.
+
+**Salida Esperada (una vez configurado):**
 
 ```
 PASS  __tests__/core/Container.test.js
@@ -103,6 +117,20 @@ Tests:       150+ passed, 150+ total
 Snapshots:   0 total
 Time:        5.432s
 ```
+
+### Configuración Pendiente
+
+Para ejecutar los tests, se requiere:
+
+1. **Configurar Jest para ES6 Modules**: Actualizar `jest.config.js` con soporte para `import/export`
+2. **Babel Transform**: Instalar `@babel/preset-env` para transformar módulos ES6
+3. **JSDOM configurado**: Ya instalado (`jest-environment-jsdom`)
+
+**Roadmap de Testing:**
+- ✅ **Fase 1 (Completada)**: Escribir todos los tests (150+ tests)
+- 🔄 **Fase 2 (En progreso)**: Configurar entorno de ejecución Jest
+- ⏳ **Fase 3 (Planificada)**: Ejecutar y validar cobertura > 80%
+- ⏳ **Fase 4 (Planificada)**: Integración con CI/CD
 
 ---
 

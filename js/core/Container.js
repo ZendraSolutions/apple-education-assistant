@@ -46,6 +46,9 @@
 import { ServiceNotFoundError } from './errors/ServiceNotFoundError.js';
 import { CircularDependencyError } from './errors/CircularDependencyError.js';
 
+// Re-export ContainerInspector for convenience
+export { ContainerInspector } from './ContainerInspector.js';
+
 /**
  * @typedef {'singleton'|'transient'|'scoped'} Lifecycle
  * @description
@@ -73,6 +76,12 @@ import { CircularDependencyError } from './errors/CircularDependencyError.js';
  * IoC Container for managing application dependencies.
  * Provides dependency injection, lifecycle management, and automatic resolution.
  *
+ * SOLID Compliance - Interface Segregation Principle (ISP):
+ * Core methods: register, registerInstance, resolve, has
+ * Utility methods: tryResolve, resolveMany, clearInstances, reset
+ * Debug/Inspection methods: Use ContainerInspector class for debug capabilities
+ *   (createScope, getRegistrationInfo, listRegistered, size)
+ *
  * @class Container
  *
  * @example
@@ -89,6 +98,12 @@ import { CircularDependencyError } from './errors/CircularDependencyError.js';
  *
  * // Resolve services (dependencies auto-injected)
  * const state = container.resolve('stateManager');
+ *
+ * @example
+ * // Use ContainerInspector for debugging
+ * import { ContainerInspector } from './ContainerInspector.js';
+ * const inspector = new ContainerInspector(container);
+ * console.log(inspector.getRegistrationInfo('eventBus'));
  */
 export class Container {
     /**
@@ -336,11 +351,16 @@ export class Container {
     /**
      * Lists all registered service names
      *
+     * NOTE: This is a debug/inspection method. For production use,
+     * prefer using ContainerInspector class for better interface segregation.
+     *
      * @returns {string[]} Array of service names
      *
      * @example
-     * const services = container.listRegistered();
-     * console.log('Available services:', services);
+     * // Prefer ContainerInspector for debugging
+     * import { ContainerInspector } from './ContainerInspector.js';
+     * const inspector = new ContainerInspector(container);
+     * const services = inspector.listRegistered();
      */
     listRegistered() {
         const local = [...this.#registrations.keys()];
@@ -356,13 +376,17 @@ export class Container {
      * Child inherits parent's registrations but can override with local instances
      * Useful for request-scoped services or testing
      *
+     * NOTE: This is a debug/testing method. For production use,
+     * prefer using ContainerInspector class for better interface segregation.
+     *
      * @returns {Container} New child container
      *
      * @example
-     * // Create isolated scope for testing
-     * const testScope = container.createScope();
+     * // Prefer ContainerInspector for scoping
+     * import { ContainerInspector } from './ContainerInspector.js';
+     * const inspector = new ContainerInspector(container);
+     * const testScope = inspector.createScope();
      * testScope.registerInstance('eventBus', mockEventBus);
-     * const manager = testScope.resolve('themeManager');
      */
     createScope() {
         const scope = new Container({ debug: this.#debug });
@@ -471,8 +495,17 @@ export class Container {
     /**
      * Gets debug information about a registration
      *
+     * NOTE: This is a debug/inspection method. For production use,
+     * prefer using ContainerInspector class for better interface segregation.
+     *
      * @param {string} name - Service identifier
      * @returns {Object|null} Registration info or null if not found
+     *
+     * @example
+     * // Prefer ContainerInspector for debugging
+     * import { ContainerInspector } from './ContainerInspector.js';
+     * const inspector = new ContainerInspector(container);
+     * const info = inspector.getRegistrationInfo('eventBus');
      */
     getRegistrationInfo(name) {
         const reg = this.#registrations.get(name);

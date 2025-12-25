@@ -86,11 +86,15 @@ The ValidatorChain uses the Chain of Responsibility pattern. Add validators with
 ### Option 1: Add to Existing Chain
 
 ```javascript
-import { sectionRegistry } from './patterns/SectionRegistry.js';
 import { ApiKeyManager } from './chatbot/ApiKeyManager.js';
+import { EncryptionService } from './chatbot/EncryptionService.js';
+import { createGeminiValidator } from './patterns/ValidatorChain.js';
 
-// Get the manager instance
-const manager = new ApiKeyManager();
+// Create the manager instance with required dependencies (SOLID DI pattern)
+const manager = new ApiKeyManager({
+    encryptionService: new EncryptionService(),
+    validatorChain: createGeminiValidator()
+});
 
 // Add a custom validator to the existing chain
 manager.validatorChain.addValidator(new MyCustomValidator());
@@ -154,13 +158,15 @@ export function createHuggingFaceValidator() {
 ### Step 2: Inject into ApiKeyManager
 
 ```javascript
+import { ApiKeyManager } from '../chatbot/ApiKeyManager.js';
+import { EncryptionService } from '../chatbot/EncryptionService.js';
 import { createHuggingFaceValidator } from '../patterns/ValidatorChain.js';
 
-// Create manager with custom validator
-const manager = new ApiKeyManager(
-    new EncryptionService(),
-    createHuggingFaceValidator()
-);
+// Create manager with custom validator (SOLID DI pattern)
+const manager = new ApiKeyManager({
+    encryptionService: new EncryptionService(),
+    validatorChain: createHuggingFaceValidator()
+});
 
 // Or switch at runtime
 manager.setValidatorChain(createHuggingFaceValidator());

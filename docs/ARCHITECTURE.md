@@ -74,6 +74,32 @@ const themeManager = container.resolve('themeManager');
 
 ### High-Level Architecture Diagram
 
+```mermaid
+graph TD
+    A[MAIN.JS<br/>Entry Point] --> B[IoC CONTAINER<br/>bootstrap.js]
+    B --> C[JAMF ASSISTANT<br/>app.js]
+
+    B --> D[Utils Layer<br/>EventBus, ToastMgr]
+    B --> E[Core Layer<br/>StateManager, ThemeMgr, NavMgr]
+    B --> F[Features Layer<br/>SearchEngine, GuideManager, DiagMgr]
+    B --> G[Chatbot Layer<br/>ChatbotCore, ApiKeyMgr, RAGEngine]
+
+    C --> H[VIEWS<br/>Registry Pattern]
+    C --> I[FEATURES<br/>Managers]
+    C --> J[CORE<br/>Services]
+    C --> K[CHATBOT<br/>AI Chat]
+
+    style A fill:#e1f5ff
+    style B fill:#fff3cd
+    style C fill:#d4edda
+    style D fill:#f8d7da
+    style E fill:#f8d7da
+    style F fill:#f8d7da
+    style G fill:#f8d7da
+```
+
+**ASCII Version (fallback):**
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                         MAIN.JS (Entry Point)                    │
@@ -541,6 +567,32 @@ container.resolve('A'); // ❌ Throws: Circular dependency: A -> B -> A
 
 ### 1. Navigation Flow
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant NavMgr as NavigationManager
+    participant EventBus
+    participant App as App.js
+    participant Registry as SectionRegistry
+    participant View
+
+    User->>NavMgr: Click nav item
+    NavMgr->>EventBus: emit(NAVIGATION_BEFORE_CHANGE)
+    EventBus->>App: Notify listeners
+    App->>App: Validate navigation
+    App->>EventBus: emit(NAVIGATION_CHANGED)
+    EventBus->>App: Notify listeners
+    App->>Registry: get(section)
+    Registry->>View: Create instance via factory
+    View->>View: render()
+    View-->>App: Return HTML
+    App->>App: Update contentWrapper.innerHTML
+    App->>App: Bind events on new content
+    App-->>User: Display new section
+```
+
+**ASCII Version (fallback):**
+
 ```
 User clicks nav item
     │
@@ -604,6 +656,35 @@ App.js opens guide or diagnostic
 ```
 
 ### 3. Chatbot Message Flow
+
+```mermaid
+flowchart TD
+    A[User sends message] --> B[ChatbotCore.handleSendMessage]
+    B --> C{RateLimiter.canMakeCall?}
+    C -->|Allowed| D[ChatUI.addUserMessage]
+    C -->|Blocked| E[Show rate limit message]
+    E --> Z[End]
+
+    D --> F[ChatUI.showTyping]
+    F --> G[RAGEngine.search message]
+    G --> H[Search documentation]
+    H --> I[Return relevant chunks]
+    I --> J[RAGEngine.buildContext]
+    J --> K[GeminiClient.sendMessage]
+    K --> L[Send to Google Gemini API]
+    L --> M[Receive AI response]
+    M --> N[ChatUI.hideTyping]
+    N --> O[ChatUI.addBotMessage]
+    O --> P[ChatUI.showSources]
+    P --> Q[EventBus.emit MESSAGE_RECEIVED]
+    Q --> Z
+
+    style C fill:#fff3cd
+    style E fill:#f8d7da
+    style K fill:#d4edda
+```
+
+**ASCII Version (fallback):**
 
 ```
 User sends message

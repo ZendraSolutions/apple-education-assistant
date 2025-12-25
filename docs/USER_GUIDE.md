@@ -200,6 +200,212 @@ El chatbot es muy útil, pero tiene límites:
 
 ---
 
+## Características de Interfaz y UX
+
+La aplicación incluye múltiples elementos de interfaz diseñados para mejorar tu experiencia de uso.
+
+### Sistema de Tooltips
+
+Los **tooltips** (pequeñas ventanas emergentes) aparecen cuando pasas el cursor sobre ciertos elementos, proporcionando ayuda contextual.
+
+**Dónde encontrarlos:**
+- **Iconos de secciones**: Pasa el cursor sobre cualquier icono del menú lateral para ver el nombre completo de la sección
+- **Botones de acción**: Los botones de configuración, búsqueda y chatbot muestran su función al pasar el cursor
+- **Elementos interactivos**: Tarjetas de guías y checklists muestran información adicional
+
+**Características:**
+- ✅ **Aparición automática**: Se muestran después de 500ms al pasar el cursor
+- ✅ **Accesibilidad**: Compatible con lectores de pantalla
+- ✅ **Diseño adaptable**: Posición inteligente para no salirse de la pantalla
+- ✅ **Tema coherente**: Se adaptan al tema oscuro/claro
+
+**Ejemplo de uso:**
+```
+[Icono de configuración ⚙️]
+   ↓ (pasa el cursor)
+┌──────────────────┐
+│ Configuración    │
+│ del chatbot      │
+└──────────────────┘
+```
+
+### Notificaciones Toast
+
+Las **notificaciones toast** son mensajes temporales que aparecen en la esquina de la pantalla para informarte de acciones completadas o errores.
+
+**Tipos de notificaciones:**
+
+1. **Éxito (verde)** ✅
+   - "API Key guardada correctamente"
+   - "Checklist completada"
+   - "Datos exportados con éxito"
+
+2. **Error (rojo)** ❌
+   - "API Key inválida"
+   - "Error al conectar con el servidor"
+   - "Formato de archivo no soportado"
+
+3. **Advertencia (amarillo)** ⚠️
+   - "Límite de llamadas alcanzado"
+   - "Conexión inestable"
+   - "Actualización disponible"
+
+4. **Información (azul)** ℹ️
+   - "Modo offline activado"
+   - "Nueva versión instalada"
+   - "Configuración actualizada"
+
+**Características:**
+- ✅ **Duración ajustable**: Desaparecen automáticamente (3-5 segundos)
+- ✅ **Cierre manual**: Click en la X para cerrar antes
+- ✅ **No intrusivas**: Posicionadas en esquina superior derecha
+- ✅ **Múltiples notificaciones**: Se apilan si hay varias a la vez
+- ✅ **Animaciones suaves**: Entrada/salida con transiciones elegantes
+
+**Cuándo aparecen:**
+- Al guardar configuraciones
+- Al completar checklists
+- En errores de red o API
+- Al exportar/eliminar datos
+- Durante actualizaciones de la app
+
+### Indicador de Estado de Conexión
+
+El **indicador de conexión** te muestra si estás conectado a internet en tiempo real.
+
+**Estados posibles:**
+
+1. **Online (conectado)** 🟢
+   - Icono verde en la esquina superior
+   - Tooltip: "Conectado a internet"
+   - Todas las funciones disponibles
+
+2. **Offline (sin conexión)** 🔴
+   - Icono rojo en la esquina superior
+   - Tooltip: "Sin conexión a internet"
+   - Funcionalidades limitadas
+
+3. **Conexión inestable** 🟡
+   - Icono amarillo parpadeante
+   - Tooltip: "Conexión inestable"
+   - Posibles fallos en chatbot
+
+**Qué puedes hacer sin conexión:**
+- ✅ Navegar por secciones guardadas
+- ✅ Ver guías previamente abiertas
+- ✅ Consultar checklists
+- ✅ Usar diagnósticos offline
+- ❌ Chatbot IA (requiere internet)
+- ❌ Buscar en documentación online
+- ❌ Actualizar contenido
+
+**Ventajas del PWA offline:**
+- El **Service Worker** cachea contenido automáticamente
+- Las páginas visitadas quedan disponibles sin conexión
+- La app se recarga automáticamente cuando vuelve la conexión
+- Los datos se sincronizan cuando hay internet
+
+**Cómo interpretar el indicador:**
+```
+┌─────────────────────────────┐
+│  [🟢] Estado de conexión:   │
+│  • Verde: Todo OK           │
+│  • Amarillo: Inestable      │
+│  • Rojo: Sin internet       │
+└─────────────────────────────┘
+```
+
+### Tour de Bienvenida (Onboarding)
+
+La **primera vez que accedes**, verás un tour interactivo que te guía por las funcionalidades principales.
+
+**Pasos del tour:**
+
+1. **Bienvenida**
+   - Introducción a Jamf Assistant
+   - Botón "Comenzar tour"
+
+2. **Navegación**
+   - Cómo usar el menú lateral
+   - Secciones disponibles
+
+3. **Búsqueda**
+   - Dónde está la barra de búsqueda
+   - Cómo buscar soluciones
+
+4. **Chatbot IA**
+   - Presentación del asistente virtual
+   - Cómo configurar API Key
+
+5. **Configuración**
+   - Tema oscuro/claro
+   - Opciones de privacidad
+
+**Características:**
+- ✅ **Opcional**: Puedes saltarlo si ya conoces la app
+- ✅ **No se repite**: Solo se muestra la primera vez (guardado en localStorage)
+- ✅ **Reiniciable**: Puedes volver a verlo desde Configuración
+- ✅ **Progreso visual**: Indicadores de paso 1/5, 2/5, etc.
+- ✅ **Accesible**: Compatible con teclado (Enter/Escape)
+
+**Cómo reiniciar el tour:**
+1. Ve a "Mis Datos" en el menú lateral
+2. Scroll hasta "Configuración avanzada"
+3. Click en "Reiniciar tour de bienvenida"
+
+### Focus Trap (Accesibilidad)
+
+El **Focus Trap** mantiene el foco del teclado dentro de los modales y ventanas emergentes para mejorar la accesibilidad.
+
+**Qué hace:**
+- Cuando abres un modal, el foco queda "atrapado" dentro
+- Presionar **Tab** navega solo entre elementos del modal
+- Presionar **Escape** cierra el modal
+- Al cerrar, el foco vuelve al elemento que lo abrió
+
+**Beneficios:**
+- ✅ **Navegación por teclado**: Usuarios sin ratón pueden usar la app
+- ✅ **Lectores de pantalla**: Mejor experiencia para usuarios con discapacidad visual
+- ✅ **Estándar WCAG 2.1**: Cumple con pautas de accesibilidad nivel AA
+- ✅ **UX coherente**: Comportamiento predecible
+
+**Ejemplo de flujo:**
+```
+Usuario presiona Tab en modal:
+[Botón Cerrar] → [Campo de texto] → [Botón Guardar] → [Botón Cerrar] (ciclo)
+
+Usuario presiona Escape:
+Modal se cierra → Foco vuelve al botón que abrió el modal
+```
+
+### Animaciones y Transiciones
+
+La app usa **animaciones sutiles** para mejorar la experiencia visual:
+
+**Tipos de animaciones:**
+
+1. **Fade In/Out** (entrada/salida)
+   - Modales aparecen/desaparecen suavemente
+   - Notificaciones toast se desvanecen
+
+2. **Slide** (deslizamiento)
+   - Menú lateral se desliza desde la izquierda
+   - Tarjetas se deslizan al cambiar de sección
+
+3. **Scale** (escala)
+   - Botones crecen ligeramente al pasar el cursor (hover)
+   - Iconos se agrandan al ser seleccionados
+
+4. **Skeleton Loaders** (carga)
+   - Rectángulos pulsantes mientras carga contenido
+   - Feedback visual de que algo está pasando
+
+**Preferencias de movimiento reducido:**
+- Si tienes **"Reducir movimiento"** activado en tu sistema operativo, las animaciones se simplifican automáticamente
+- Respeta la configuración de accesibilidad del usuario
+
+---
+
 ## Consejos y Trucos
 
 ### Atajos de teclado

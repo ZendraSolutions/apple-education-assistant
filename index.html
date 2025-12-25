@@ -26,7 +26,7 @@
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
         script-src 'self' https://cdn.jsdelivr.net;
-        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net;
+        style-src 'self' https://fonts.googleapis.com https://cdn.jsdelivr.net;
         font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net;
         connect-src 'self' https://generativelanguage.googleapis.com;
         img-src 'self' data:;
@@ -346,9 +346,9 @@
                     <button id="saveApiKey" class="save-api-btn" data-tooltip="Guardar y cifrar API Key" data-tooltip-placement="top">Guardar</button>
                 </div>
 
-                <div class="api-validation-info" id="apiValidationInfo" style="margin-top: 8px; font-size: 0.9em; color: #666;"></div>
+                <div class="api-validation-info" id="apiValidationInfo"></div>
 
-                <div class="api-storage-options" style="margin-top: 16px;">
+                <div class="api-storage-options">
                     <label class="storage-checkbox">
                         <input type="checkbox" id="sessionApiKey">
                         <span><i class="ri-time-line"></i> Usar solo en esta sesión (se borra al cerrar navegador)</span>
@@ -364,7 +364,7 @@
 
                 <div class="api-status" id="apiStatus"></div>
 
-                <div class="info-box" style="margin-top: 20px;">
+                <div class="info-box">
                     <div class="info-icon"><i class="ri-shield-check-line"></i></div>
                     <div class="info-content">
                         <p><strong>Seguridad mejorada:</strong> Tu API Key se cifra con AES-256-GCM antes de guardarla en tu navegador. Solo se descifra cuando la necesitas. No se envía a ningún servidor externo.</p>

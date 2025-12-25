@@ -98,34 +98,21 @@ export class ApiKeyManager {
     /**
      * Creates a new ApiKeyManager instance
      *
-     * @param {ApiKeyManagerDependencies|import('./EncryptionService.js').EncryptionService} deps - Dependencies object or legacy encryptionService
-     * @param {import('../patterns/ValidatorChain.js').ApiKeyValidatorChain} [legacyValidatorChain] - Legacy: validator chain
+     * @param {ApiKeyManagerDependencies} deps - Dependencies object with named properties
      * @throws {Error} If required dependencies are missing
      */
-    constructor(deps, legacyValidatorChain) {
-        // Support both new object-based DI and legacy positional arguments
-        if (deps && typeof deps === 'object' && 'encryptionService' in deps) {
-            // New SOLID-compliant API: object with named dependencies
-            if (!deps.encryptionService) {
-                throw new Error('ApiKeyManager requires encryptionService dependency');
-            }
-            if (!deps.validatorChain) {
-                throw new Error('ApiKeyManager requires validatorChain dependency');
-            }
-            this.#encryptionService = deps.encryptionService;
-            this.#validatorChain = deps.validatorChain;
-        } else {
-            // Legacy API: positional arguments (for backward compatibility)
-            // Still requires dependencies to be provided
-            if (!deps) {
-                throw new Error('ApiKeyManager requires encryptionService dependency');
-            }
-            if (!legacyValidatorChain) {
-                throw new Error('ApiKeyManager requires validatorChain dependency');
-            }
-            this.#encryptionService = deps;
-            this.#validatorChain = legacyValidatorChain;
+    constructor(deps) {
+        if (!deps || typeof deps !== 'object') {
+            throw new Error('ApiKeyManager requires a dependencies object');
         }
+        if (!deps.encryptionService) {
+            throw new Error('ApiKeyManager requires encryptionService dependency');
+        }
+        if (!deps.validatorChain) {
+            throw new Error('ApiKeyManager requires validatorChain dependency');
+        }
+        this.#encryptionService = deps.encryptionService;
+        this.#validatorChain = deps.validatorChain;
     }
 
     /**

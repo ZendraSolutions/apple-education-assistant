@@ -31,6 +31,7 @@
  */
 
 import { AppEvents } from './utils/EventBus.js';
+import { logger } from './utils/Logger.js';
 
 /**
  * Main application orchestrator.
@@ -234,7 +235,7 @@ export class JamfAssistant {
             wrapper.innerHTML = view.render();
             this.#bindSectionEvents();
         } else if (wrapper && !view) {
-            console.warn(`[JamfAssistant] Section "${section}" not found in registry`);
+            logger.warn(`[JamfAssistant] Section "${section}" not found in registry`);
         }
     }
 
@@ -341,8 +342,16 @@ export class JamfAssistant {
 
         if (updateEl && knowledgeBase && knowledgeBase._metadata) {
             const meta = knowledgeBase._metadata;
-            const version = DOMPurify.sanitize(meta.version);
-            const lastUpdated = DOMPurify.sanitize(meta.lastUpdated);
+
+            // Safety check for DOMPurify - prevents crash if CDN fails
+            const sanitize = typeof DOMPurify !== 'undefined'
+                ? (s) => DOMPurify.sanitize(s)
+                : (s) => String(s).replace(/[<>"'&]/g, (c) => ({
+                    '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;', '&': '&amp;'
+                })[c]);
+
+            const version = sanitize(meta.version);
+            const lastUpdated = sanitize(meta.lastUpdated);
             const articleCount = parseInt(meta.articleCount) || 0;
 
             updateEl.innerHTML = `
@@ -385,7 +394,7 @@ if (typeof window !== 'undefined') {
         // Check if main.js has initialized the app
         setTimeout(() => {
             if (!window.app && !window.__container__) {
-                console.warn(
+                logger.warn(
                     '[JamfAssistant] Legacy loading detected. ' +
                     'For IoC container support, load main.js instead of app.js directly.'
                 );

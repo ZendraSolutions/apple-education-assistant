@@ -32,6 +32,9 @@
 // RE-EXPORT MODULAR COMPONENTS
 // ============================================================================
 
+// Import logger for conditional logging
+import { logger } from './utils/Logger.js';
+
 // Re-export all modular components for direct usage
 export { RateLimiter } from './chatbot/RateLimiter.js';
 export { EncryptionService, EncryptionError, DecryptionError } from './chatbot/EncryptionService.js';
@@ -247,7 +250,7 @@ class JamfChatbot {
         } catch (error) {
             this.#chatUI.hideTyping();
             this.#chatUI.addBotMessage('Error al procesar. ' + (error.message || 'Verifica tu conexion.'));
-            console.error('Chat error:', error);
+            logger.error('Chat error:', error);
         } finally {
             this.#isProcessing = false;
         }
@@ -479,7 +482,7 @@ if (typeof window !== 'undefined') {
     // Provide a proxy that creates the chatbot on first use
     window.JamfChatbot = class LegacyJamfChatbot {
         constructor() {
-            console.warn(
+            logger.warn(
                 '[JamfChatbot] Direct instantiation is deprecated. ' +
                 'Use createChatbot() for SOLID-compliant dependency injection.'
             );

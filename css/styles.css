@@ -1280,6 +1280,7 @@ button,
     background: var(--bg-sidebar);
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-subtle);
+    margin-top: 16px;
 }
 
 .pin-info {
@@ -1296,6 +1297,9 @@ button,
     border: 1px solid var(--border-subtle);
     font-size: 13px;
     transition: all 0.2s;
+    margin-top: 8px;
+    font-size: 0.9em;
+    color: #666;
 }
 
 .api-validation-info:empty {
@@ -1486,6 +1490,7 @@ button,
     margin-bottom: 24px;
     box-shadow: var(--shadow-sm);
     transition: all 0.2s ease;
+    margin-top: 20px;
 }
 
 .info-box:hover {

@@ -1,0 +1,250 @@
+/* ===========================================
+   TOOLTIP SYSTEM - Apple Edu Assistant
+   Lightweight custom tooltips with intelligent positioning
+   =========================================== */
+
+/* --- Base Tooltip Styling --- */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+/* Tooltip container (hidden by default) */
+.tooltip {
+    position: absolute;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+    transform: translateY(-4px);
+}
+
+.tooltip.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Tooltip content box */
+.tooltip-content {
+    background: var(--tooltip-bg, hsl(218, 30%, 18%));
+    color: var(--tooltip-text, hsl(0, 0%, 100%));
+    padding: 6px 12px;
+    border-radius: var(--radius-sm, 8px);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+    white-space: nowrap;
+    max-width: 280px;
+    box-shadow: var(--shadow-md, 0 4px 12px hsla(218, 30%, 20%, 0.15));
+    letter-spacing: 0.01em;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .tooltip-content {
+    background: var(--tooltip-bg-dark, hsl(218, 15%, 25%));
+    color: var(--tooltip-text-dark, hsl(0, 0%, 95%));
+    box-shadow: 0 4px 16px hsla(0, 0%, 0%, 0.4), 0 0 0 1px hsla(0, 0%, 100%, 0.1);
+}
+
+/* Tooltip arrow */
+.tooltip-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+/* Arrow positioning based on tooltip placement */
+.tooltip[data-placement="top"] .tooltip-arrow {
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px 5px 0 5px;
+    border-color: var(--tooltip-bg, hsl(218, 30%, 18%)) transparent transparent transparent;
+}
+
+[data-theme="dark"] .tooltip[data-placement="top"] .tooltip-arrow {
+    border-color: var(--tooltip-bg-dark, hsl(218, 15%, 25%)) transparent transparent transparent;
+}
+
+.tooltip[data-placement="bottom"] .tooltip-arrow {
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0 5px 5px 5px;
+    border-color: transparent transparent var(--tooltip-bg, hsl(218, 30%, 18%)) transparent;
+}
+
+[data-theme="dark"] .tooltip[data-placement="bottom"] .tooltip-arrow {
+    border-color: transparent transparent var(--tooltip-bg-dark, hsl(218, 15%, 25%)) transparent;
+}
+
+.tooltip[data-placement="left"] .tooltip-arrow {
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 5px 0 5px 5px;
+    border-color: transparent transparent transparent var(--tooltip-bg, hsl(218, 30%, 18%));
+}
+
+[data-theme="dark"] .tooltip[data-placement="left"] .tooltip-arrow {
+    border-color: transparent transparent transparent var(--tooltip-bg-dark, hsl(218, 15%, 25%));
+}
+
+.tooltip[data-placement="right"] .tooltip-arrow {
+    left: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-width: 5px 5px 5px 0;
+    border-color: transparent var(--tooltip-bg, hsl(218, 30%, 18%)) transparent transparent;
+}
+
+[data-theme="dark"] .tooltip[data-placement="right"] .tooltip-arrow {
+    border-color: transparent var(--tooltip-bg-dark, hsl(218, 15%, 25%)) transparent transparent;
+}
+
+/* --- Special Tooltip Variants --- */
+
+/* Success tooltip (green) */
+.tooltip.tooltip-success .tooltip-content {
+    background: var(--success, hsl(145, 45%, 40%));
+    color: white;
+}
+
+.tooltip.tooltip-success[data-placement="top"] .tooltip-arrow {
+    border-color: var(--success, hsl(145, 45%, 40%)) transparent transparent transparent;
+}
+
+.tooltip.tooltip-success[data-placement="bottom"] .tooltip-arrow {
+    border-color: transparent transparent var(--success, hsl(145, 45%, 40%)) transparent;
+}
+
+.tooltip.tooltip-success[data-placement="left"] .tooltip-arrow {
+    border-color: transparent transparent transparent var(--success, hsl(145, 45%, 40%));
+}
+
+.tooltip.tooltip-success[data-placement="right"] .tooltip-arrow {
+    border-color: transparent var(--success, hsl(145, 45%, 40%)) transparent transparent;
+}
+
+/* Warning tooltip (orange) */
+.tooltip.tooltip-warning .tooltip-content {
+    background: var(--warning, hsl(27, 90%, 50%));
+    color: white;
+}
+
+.tooltip.tooltip-warning[data-placement="top"] .tooltip-arrow {
+    border-color: var(--warning, hsl(27, 90%, 50%)) transparent transparent transparent;
+}
+
+.tooltip.tooltip-warning[data-placement="bottom"] .tooltip-arrow {
+    border-color: transparent transparent var(--warning, hsl(27, 90%, 50%)) transparent;
+}
+
+.tooltip.tooltip-warning[data-placement="left"] .tooltip-arrow {
+    border-color: transparent transparent transparent var(--warning, hsl(27, 90%, 50%));
+}
+
+.tooltip.tooltip-warning[data-placement="right"] .tooltip-arrow {
+    border-color: transparent var(--warning, hsl(27, 90%, 50%)) transparent transparent;
+}
+
+/* Error tooltip (red) */
+.tooltip.tooltip-error .tooltip-content {
+    background: var(--error, hsl(0, 65%, 50%));
+    color: white;
+}
+
+.tooltip.tooltip-error[data-placement="top"] .tooltip-arrow {
+    border-color: var(--error, hsl(0, 65%, 50%)) transparent transparent transparent;
+}
+
+.tooltip.tooltip-error[data-placement="bottom"] .tooltip-arrow {
+    border-color: transparent transparent var(--error, hsl(0, 65%, 50%)) transparent;
+}
+
+.tooltip.tooltip-error[data-placement="left"] .tooltip-arrow {
+    border-color: transparent transparent transparent var(--error, hsl(0, 65%, 50%));
+}
+
+.tooltip.tooltip-error[data-placement="right"] .tooltip-arrow {
+    border-color: transparent var(--error, hsl(0, 65%, 50%)) transparent transparent;
+}
+
+/* --- Animation delays --- */
+.tooltip.delay-short {
+    transition-delay: 150ms;
+}
+
+.tooltip.delay-normal {
+    transition-delay: 300ms;
+}
+
+.tooltip.delay-long {
+    transition-delay: 500ms;
+}
+
+/* --- Accessibility --- */
+.tooltip[role="tooltip"] {
+    /* Ensure tooltip is announced to screen readers */
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .tooltip {
+        transition: opacity 0.1s ease-in-out;
+        transform: none;
+    }
+
+    .tooltip.show {
+        transform: none;
+    }
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    .tooltip-content {
+        font-size: 0.8125rem;
+        padding: 5px 10px;
+        max-width: 200px;
+    }
+
+    /* On mobile, tooltips appear on tap and are easier to dismiss */
+    .tooltip {
+        pointer-events: auto;
+    }
+}
+
+/* --- Keyboard Focus Indicators --- */
+[data-tooltip]:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+}
+
+/* --- Hover states for tooltip triggers --- */
+[data-tooltip]:hover {
+    /* Subtle indication that element has tooltip */
+}
+
+/* Special handling for disabled elements */
+[data-tooltip][disabled],
+[data-tooltip]:disabled {
+    cursor: not-allowed;
+}
+
+/* --- Multiline tooltips --- */
+.tooltip-content.multiline {
+    white-space: normal;
+    max-width: 280px;
+}
+
+/* --- Tooltip with icon --- */
+.tooltip-content-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tooltip-content-with-icon i {
+    font-size: 1rem;
+}

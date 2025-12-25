@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Cifrado AES-GCM - API Key</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .test-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .test-section h2 {
+            font-size: 18px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: monospace;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button.secondary {
+            background: #6c757d;
+        }
+
+        button.secondary:hover {
+            background: #5a6268;
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 13px;
+            word-wrap: break-word;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .status.valid {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.invalid {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Test de Cifrado AES-256-GCM para API Keys</h1>
+
+        <!-- Test 1: Validación de Formato -->
+        <div class="test-section">
+            <h2>Test 1: Validación de Formato</h2>
+            <input type="text" id="testKey" placeholder="Pega una API Key de Google Gemini (AIza...)">
+            <button onclick="testValidation()">Validar Formato</button>
+            <div id="validationResult"></div>
+        </div>
+
+        <!-- Test 2: Cifrado/Descifrado -->
+        <div class="test-section">
+            <h2>Test 2: Cifrado y Descifrado</h2>
+            <input type="text" id="encryptKey" placeholder="Texto a cifrar (ej: AIza...)">
+            <button onclick="testEncryption()">Cifrar</button>
+            <button class="secondary" onclick="testDecryption()">Descifrar</button>
+            <div id="encryptionResult"></div>
+        </div>
+
+        <!-- Test 3: Almacenamiento -->
+        <div class="test-section">
+            <h2>Test 3: Almacenamiento en localStorage</h2>
+            <input type="text" id="storageKey" placeholder="API Key para guardar">
+            <button onclick="testSave()">Guardar (cifrada)</button>
+            <button class="secondary" onclick="testLoad()">Cargar</button>
+            <button class="secondary" onclick="testClear()">Limpiar</button>
+            <div id="storageResult"></div>
+        </div>
+
+        <!-- Test 4: Migración -->
+        <div class="test-section">
+            <h2>Test 4: Migración Automática</h2>
+            <p style="margin-bottom: 10px; font-size: 14px; color: #666;">
+                Simula una API Key guardada en formato legacy (sin cifrar) y verifica la migración automática.
+            </p>
+            <button onclick="testMigration()">Simular Key Legacy</button>
+            <button class="secondary" onclick="testLoadMigration()">Cargar y Migrar</button>
+            <div id="migrationResult"></div>
+        </div>
+
+        <div class="info-box">
+            <strong>ℹ️ Información:</strong> Este test utiliza Web Crypto API (disponible en HTTPS y localhost).
+            Verifica que tu navegador sea compatible. El cifrado usa AES-256-GCM con derivación PBKDF2 (100,000 iteraciones).
+        </div>
+    </div>
+
+    <script>
+        // Clase SecureStorage simplificada para testing
+        class SecureStorageTest {
+            async deriveEncryptionKey() {
+                const encoder = new TextEncoder();
+                const keyMaterial = await crypto.subtle.importKey(
+                    'raw',
+                    encoder.encode(window.location.origin + navigator.userAgent.substring(0, 50)),
+                    { name: 'PBKDF2' },
+                    false,
+                    ['deriveBits', 'deriveKey']
+                );
+
+                return crypto.subtle.deriveKey(
+                    {
+                        name: 'PBKDF2',
+                        salt: encoder.encode('jamf-assistant-education-v2'),
+                        iterations: 100000,
+                        hash: 'SHA-256'
+                    },
+                    keyMaterial,
+                    { name: 'AES-GCM', length: 256 },
+                    false,
+                    ['encrypt', 'decrypt']
+                );
+            }
+
+            async encrypt(plaintext) {
+                const key = await this.deriveEncryptionKey();
+                const encoder = new TextEncoder();
+                const data = encoder.encode(plaintext);
+                const iv = window.crypto.getRandomValues(new Uint8Array(12));
+
+                const encrypted = await window.crypto.subtle.encrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    data
+                );
+
+                const combined = new Uint8Array(iv.length + encrypted.byteLength);
+                combined.set(iv, 0);
+                combined.set(new Uint8Array(encrypted), iv.length);
+
+                return btoa(String.fromCharCode(...combined));
+            }
+
+            async decrypt(encryptedBase64) {
+                const key = await this.deriveEncryptionKey();
+                const combined = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
+                const iv = combined.slice(0, 12);
+                const encrypted = combined.slice(12);
+
+                const decrypted = await window.crypto.subtle.decrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    encrypted
+                );
+
+                const decoder = new TextDecoder();
+                return decoder.decode(decrypted);
+            }
+
+            validateApiKeyFormat(key) {
+                const regex = /^AIza[A-Za-z0-9_-]{35}$/;
+
+                if (!key) return { valid: false, error: 'La API Key no puede estar vacía' };
+                if (key.length !== 39) return { valid: false, error: `Longitud incorrecta: ${key.length} (debe ser 39)` };
+                if (!key.startsWith('AIza')) return { valid: false, error: 'Debe comenzar con "AIza"' };
+                if (!regex.test(key)) return { valid: false, error: 'Contiene caracteres no permitidos' };
+
+                return { valid: true, strength: this.calculateKeyStrength(key) };
+            }
+
+            calculateKeyStrength(key) {
+                const uniqueChars = new Set(key.split('')).size;
+                const hasNumbers = /\d/.test(key);
+                const hasUpperCase = /[A-Z]/.test(key);
+                const hasLowerCase = /[a-z]/.test(key);
+                const hasSpecial = /[_-]/.test(key);
+
+                let strength = 0;
+                if (uniqueChars >= 20) strength++;
+                if (hasNumbers && hasUpperCase && hasLowerCase) strength++;
+                if (hasSpecial) strength++;
+
+                if (strength >= 3) return 'fuerte';
+                if (strength >= 2) return 'media';
+                return 'débil';
+            }
+        }
+
+        const storage = new SecureStorageTest();
+        let lastEncrypted = '';
+
+        function testValidation() {
+            const key = document.getElementById('testKey').value.trim();
+            const result = storage.validateApiKeyFormat(key);
+
+            const resultDiv = document.getElementById('validationResult');
+            if (result.valid) {
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `
+                    ✅ <strong>Formato válido</strong>
+                    <span class="status valid">Fortaleza: ${result.strength}</span><br>
+                    Longitud: ${key.length} caracteres<br>
+                    Prefijo: ${key.substring(0, 4)}...<br>
+                    Últimos 4: ...${key.substring(key.length - 4)}
+                `;
+            } else {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    ❌ <strong>Formato inválido</strong>
+                    <span class="status invalid">${result.error}</span>
+                `;
+            }
+        }
+
+        async function testEncryption() {
+            const key = document.getElementById('encryptKey').value.trim();
+            if (!key) {
+                alert('Introduce un texto para cifrar');
+                return;
+            }
+
+            try {
+                const encrypted = await storage.encrypt(key);
+                lastEncrypted = encrypted;
+
+                const resultDiv = document.getElementById('encryptionResult');
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `
+                    🔒 <strong>Cifrado exitoso</strong><br>
+                    Texto original: <code>${key.substring(0, 20)}...</code><br>
+                    Cifrado (base64): <code>${encrypted.substring(0, 40)}...</code><br>
+                    Longitud cifrada: ${encrypted.length} caracteres
+                `;
+            } catch (e) {
+                document.getElementById('encryptionResult').className = 'result error';
+                document.getElementById('encryptionResult').innerHTML = `❌ Error: ${e.message}`;
+            }
+        }
+
+        async function testDecryption() {
+            if (!lastEncrypted) {
+                alert('Primero cifra algo usando el botón "Cifrar"');
+                return;
+            }
+
+            try {
+                const decrypted = await storage.decrypt(lastEncrypted);
+
+                const resultDiv = document.getElementById('encryptionResult');
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `
+                    🔓 <strong>Descifrado exitoso</strong><br>
+                    Texto descifrado: <code>${decrypted}</code><br>
+                    ✅ El cifrado es reversible correctamente
+                `;
+            } catch (e) {
+                document.getElementById('encryptionResult').className = 'result error';
+                document.getElementById('encryptionResult').innerHTML = `❌ Error al descifrar: ${e.message}`;
+            }
+        }
+
+        async function testSave() {
+            const key = document.getElementById('storageKey').value.trim();
+            if (!key) {
+                alert('Introduce una API Key para guardar');
+                return;
+            }
+
+            try {
+                const encrypted = await storage.encrypt(key);
+                const settings = {
+                    key: encrypted,
+                    encrypted: true,
+                    pinned: false,
+                    expiry: Date.now() + (24 * 60 * 60 * 1000)
+                };
+
+                localStorage.setItem('test-api-settings', JSON.stringify(settings));
+
+                const resultDiv = document.getElementById('storageResult');
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `
+                    💾 <strong>Guardado en localStorage</strong><br>
+                    Key cifrada: <code>${encrypted.substring(0, 40)}...</code><br>
+                    Formato: JSON con metadata (encrypted=true, expiry=24h)
+                `;
+            } catch (e) {
+                document.getElementById('storageResult').className = 'result error';
+                document.getElementById('storageResult').innerHTML = `❌ Error: ${e.message}`;
+            }
+        }
+
+        async function testLoad() {
+            const stored = localStorage.getItem('test-api-settings');
+            if (!stored) {
+                document.getElementById('storageResult').className = 'result error';
+                document.getElementById('storageResult').innerHTML = `❌ No hay API Key guardada. Guarda una primero.`;
+                return;
+            }
+
+            try {
+                const settings = JSON.parse(stored);
+                const decrypted = await storage.decrypt(settings.key);
+                const hoursRemaining = Math.round((settings.expiry - Date.now()) / (1000 * 60 * 60));
+
+                const resultDiv = document.getElementById('storageResult');
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `
+                    📂 <strong>Cargado desde localStorage</strong><br>
+                    API Key descifrada: <code>${decrypted.substring(0, 20)}...</code><br>
+                    Cifrada: ${settings.encrypted ? '✅ Sí' : '❌ No'}<br>
+                    Expira en: ${hoursRemaining} horas
+                `;
+            } catch (e) {
+                document.getElementById('storageResult').className = 'result error';
+                document.getElementById('storageResult').innerHTML = `❌ Error al cargar: ${e.message}`;
+            }
+        }
+
+        function testClear() {
+            localStorage.removeItem('test-api-settings');
+            document.getElementById('storageResult').className = 'result info';
+            document.getElementById('storageResult').innerHTML = `🗑️ localStorage limpiado`;
+        }
+
+        function testMigration() {
+            // Simular API Key legacy (sin cifrar)
+            const legacyKey = 'AIzaSyD1234567890abcdefghijklmnopqrstuvw';
+            const legacySettings = {
+                key: legacyKey,
+                pinned: false,
+                expiry: Date.now() + (24 * 60 * 60 * 1000)
+                // Nota: NO tiene campo 'encrypted'
+            };
+
+            localStorage.setItem('test-api-settings', JSON.stringify(legacySettings));
+
+            const resultDiv = document.getElementById('migrationResult');
+            resultDiv.className = 'result info';
+            resultDiv.innerHTML = `
+                📦 <strong>API Key legacy creada</strong><br>
+                Key sin cifrar: <code>${legacyKey.substring(0, 20)}...</code><br>
+                Campo 'encrypted': ❌ No existe (formato antiguo)<br>
+                Ahora haz clic en "Cargar y Migrar" para simular la migración automática
+            `;
+        }
+
+        async function testLoadMigration() {
+            const stored = localStorage.getItem('test-api-settings');
+            if (!stored) {
+                document.getElementById('migrationResult').className = 'result error';
+                document.getElementById('migrationResult').innerHTML = `❌ No hay key legacy. Primero simula una.`;
+                return;
+            }
+
+            try {
+                const settings = JSON.parse(stored);
+
+                // Detectar si es legacy (sin campo 'encrypted')
+                if (!settings.encrypted) {
+                    const resultDiv = document.getElementById('migrationResult');
+                    resultDiv.className = 'result info';
+                    resultDiv.innerHTML = `
+                        🔄 <strong>Detectada API Key legacy</strong><br>
+                        Key original: <code>${settings.key.substring(0, 20)}...</code><br>
+                        Iniciando migración...<br>
+                    `;
+
+                    // Migrar: cifrar y guardar
+                    const encrypted = await storage.encrypt(settings.key);
+                    const newSettings = {
+                        key: encrypted,
+                        encrypted: true,
+                        pinned: settings.pinned || false,
+                        expiry: settings.expiry
+                    };
+
+                    localStorage.setItem('test-api-settings', JSON.stringify(newSettings));
+
+                    setTimeout(() => {
+                        resultDiv.className = 'result success';
+                        resultDiv.innerHTML = `
+                            ✅ <strong>Migración completada</strong><br>
+                            Key original: <code>${settings.key.substring(0, 20)}...</code><br>
+                            Key cifrada: <code>${encrypted.substring(0, 40)}...</code><br>
+                            Campo 'encrypted': ✅ true<br>
+                            Estado: Migrada automáticamente a formato seguro
+                        `;
+                    }, 1000);
+                } else {
+                    document.getElementById('migrationResult').className = 'result info';
+                    document.getElementById('migrationResult').innerHTML = `
+                        ℹ️ La API Key ya está cifrada (no requiere migración)
+                    `;
+                }
+            } catch (e) {
+                document.getElementById('migrationResult').className = 'result error';
+                document.getElementById('migrationResult').innerHTML = `❌ Error: ${e.message}`;
+            }
+        }
+
+        // Check Web Crypto API availability
+        window.addEventListener('load', () => {
+            if (!window.crypto || !window.crypto.subtle) {
+                alert('⚠️ Web Crypto API no está disponible. Usa HTTPS o localhost.');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -4,8 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asistente Education - Centro Escolar</title>
-    <meta name="description" content="Asistente de gestión del ecosistema educativo: ASM, Jamf School y App Aula">
+    <title>Apple Edu Assistant - Colegio Huerta Santa Ana</title>
+    <meta name="description" content="Gestión inteligente del ecosistema Apple educativo: ASM, Jamf School y App Aula">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- iOS/iPadOS PWA Support -->
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Jamf Edu">
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#233D70">
+    <meta name="msapplication-TileColor" content="#233D70">
+    <meta name="msapplication-TileImage" content="icons/icon-144.png">
 
     <!-- Security Headers -->
     <!-- Content Security Policy: Define trusted sources for content -->
@@ -37,6 +51,10 @@
     ">
 
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/tooltips.css">
+    <link rel="stylesheet" href="css/toasts.css">
+    <link rel="stylesheet" href="css/onboarding.css">
+    <link rel="stylesheet" href="css/accessibility.css">
 
     <!-- Fonts y iconos se cargan condicionalmente según consentimiento RGPD (ver js/consent.js) -->
 
@@ -47,21 +65,100 @@
 </head>
 
 <body>
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-content">
+            <div class="splash-logo">
+                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Versión grande y detallada del logo para splash screen -->
+
+                    <!-- Libro abierto grande (base educativa) -->
+                    <path d="M20 65L60 75L100 65V100L60 110L20 100V65Z" fill="currentColor" opacity="0.08"/>
+                    <path d="M20 65V100L60 110V75L20 65Z" fill="currentColor" opacity="0.12"/>
+                    <path d="M60 75V110L100 100V65L60 75Z" fill="currentColor" opacity="0.10"/>
+
+                    <!-- Líneas de páginas del libro -->
+                    <line x1="35" y1="75" x2="35" y2="98" stroke="currentColor" stroke-width="1.5" opacity="0.15"/>
+                    <line x1="45" y1="77" x2="45" y2="102" stroke="currentColor" stroke-width="1.5" opacity="0.15"/>
+                    <line x1="75" y1="77" x2="75" y2="102" stroke="currentColor" stroke-width="1.5" opacity="0.15"/>
+                    <line x1="85" y1="75" x2="85" y2="98" stroke="currentColor" stroke-width="1.5" opacity="0.15"/>
+                    <line x1="60" y1="75" x2="60" y2="110" stroke="currentColor" stroke-width="2" opacity="0.2"/>
+
+                    <!-- Base del birrete (forma diamante) -->
+                    <path d="M60 30L15 50L60 70L105 50L60 30Z" fill="currentColor" opacity="0.95"/>
+
+                    <!-- Bordes del birrete con más profundidad -->
+                    <path d="M15 50L60 70L60 75L15 55L15 50Z" fill="currentColor" opacity="0.3"/>
+                    <path d="M105 50L60 70L60 75L105 55L105 50Z" fill="currentColor" opacity="0.25"/>
+
+                    <!-- Tablero superior del birrete con referencia a manzana -->
+                    <ellipse cx="60" cy="40" rx="48" ry="12" fill="currentColor" opacity="0.9"/>
+                    <path d="M25 38C25 35 30 32 60 32C90 32 95 35 95 38" fill="currentColor"/>
+
+                    <!-- Detalle superior: hoja de manzana estilizada -->
+                    <path d="M60 20C60 20 55 23 55 28C55 28 60 30 65 25C65 25 63 20 60 20Z" fill="currentColor" opacity="0.7"/>
+                    <path d="M60 20C58 20 57 22 57 24C57 26 58 27 60 28C62 27 63 26 63 24C63 22 62 20 60 20Z" fill="currentColor" opacity="0.5"/>
+
+                    <!-- Borla del birrete (detalle naranja) -->
+                    <circle cx="100" cy="50" r="4" fill="currentColor" opacity="0.85"/>
+                    <line x1="100" y1="42" x2="100" y2="50" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+                    <circle cx="100" cy="38" r="2.5" fill="currentColor" opacity="0.7"/>
+
+                    <!-- Detalles adicionales: pequeñas líneas decorativas en el birrete -->
+                    <line x1="35" y1="48" x2="45" y2="52" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+                    <line x1="75" y1="52" x2="85" y2="48" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+
+                    <!-- Destello sutil (efecto tecnológico) -->
+                    <circle cx="70" cy="35" r="2" fill="currentColor" opacity="0.4"/>
+                    <circle cx="73" cy="38" r="1" fill="currentColor" opacity="0.3"/>
+                </svg>
+            </div>
+            <h1 class="splash-title">Apple Edu Assistant</h1>
+            <p class="splash-subtitle">Colegio Huerta Santa Ana</p>
+            <div class="splash-loader">
+                <div class="loader-spinner"></div>
+            </div>
+        </div>
+    </div>
+
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="logo">
-                <i class="ri-graduation-cap-line logo-icon"></i>
-                <span class="logo-text">Asistente Education</span>
+                <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Base del birrete (graduación) -->
+                    <path d="M24 16L6 24L24 32L42 24L24 16Z" fill="var(--accent-primary)" opacity="0.9"/>
+
+                    <!-- Tablero superior del birrete con forma de manzana sutil -->
+                    <path d="M24 12C24 12 18 14 12 16C12 16 10 18 10 20C10 22 12 24 24 24C36 24 38 22 38 20C38 18 36 16 36 16C30 14 24 12 24 12Z" fill="var(--accent-primary)"/>
+
+                    <!-- Detalle superior (hoja de manzana) -->
+                    <path d="M24 10C24 10 22.5 11 22.5 12.5C22.5 12.5 24 13 25.5 11.5C25.5 11.5 25 10 24 10Z" fill="var(--accent-secondary)"/>
+
+                    <!-- Borla del birrete -->
+                    <ellipse cx="39" cy="24" rx="2.5" ry="2.5" fill="var(--accent-secondary)"/>
+                    <line x1="38" y1="20" x2="38" y2="24" stroke="var(--accent-secondary)" stroke-width="1.5" stroke-linecap="round"/>
+
+                    <!-- Libro abierto (base educativa) -->
+                    <path d="M12 28L24 32L36 28V38L24 42L12 38V28Z" fill="var(--accent-primary)" opacity="0.15"/>
+                    <path d="M12 28V38L24 42V32L12 28Z" fill="var(--accent-primary)" opacity="0.25"/>
+                    <path d="M24 32V42L36 38V28L24 32Z" fill="var(--accent-primary)" opacity="0.2"/>
+
+                    <!-- Líneas del libro (páginas) -->
+                    <line x1="18" y1="32" x2="18" y2="37" stroke="var(--accent-primary)" stroke-width="0.8" opacity="0.3"/>
+                    <line x1="30" y1="32" x2="30" y2="37" stroke="var(--accent-primary)" stroke-width="0.8" opacity="0.3"/>
+                    <line x1="24" y1="32" x2="24" y2="42" stroke="var(--accent-secondary)" stroke-width="1" opacity="0.4"/>
+                </svg>
+                <span class="logo-text">Apple Edu Assistant</span>
             </div>
         </div>
 
         <div class="nav-section">
             <span class="nav-label">Principal</span>
             <ul class="nav-menu">
-                <li class="nav-item active" data-section="dashboard">
+                <li class="nav-item active" data-section="dashboard" data-tooltip="Vista general del ecosistema Apple" data-tooltip-placement="right">
                     <i class="ri-dashboard-line"></i> Dashboard
                 </li>
-                <li class="nav-item" data-section="ecosistema">
+                <li class="nav-item" data-section="ecosistema" data-tooltip="Arquitectura y flujo del sistema" data-tooltip-placement="right">
                     <i class="ri-flow-chart"></i> Ecosistema
                 </li>
             </ul>
@@ -70,10 +167,10 @@
         <div class="nav-section">
             <span class="nav-label">Herramientas Esenciales</span>
             <ul class="nav-menu">
-                <li class="nav-item" data-section="aula">
+                <li class="nav-item" data-section="aula" data-tooltip="Gestión de clase con iPads" data-tooltip-placement="right">
                     <i class="ri-group-line"></i> App Aula
                 </li>
-                <li class="nav-item" data-section="teacher">
+                <li class="nav-item" data-section="teacher" data-tooltip="Control de dispositivos en clase" data-tooltip-placement="right">
                     <i class="ri-presentation-line"></i> Jamf Teacher
                 </li>
             </ul>
@@ -82,10 +179,10 @@
         <div class="nav-section">
             <span class="nav-label">Dispositivos</span>
             <ul class="nav-menu">
-                <li class="nav-item" data-section="ipads">
+                <li class="nav-item" data-section="ipads" data-tooltip="Gestión y configuración de iPads" data-tooltip-placement="right">
                     <i class="ri-tablet-line"></i> iPads Alumnado
                 </li>
-                <li class="nav-item" data-section="macs">
+                <li class="nav-item" data-section="macs" data-tooltip="Gestión de ordenadores Mac" data-tooltip-placement="right">
                     <i class="ri-macbook-line"></i> Macs Profesorado
                 </li>
             </ul>
@@ -94,7 +191,7 @@
         <div class="nav-section">
             <span class="nav-label">Soporte</span>
             <ul class="nav-menu">
-                <li class="nav-item" data-section="troubleshooting">
+                <li class="nav-item" data-section="troubleshooting" data-tooltip="Resolución de problemas comunes" data-tooltip-placement="right">
                     <i class="ri-tools-line"></i> Troubleshooting
                 </li>
             </ul>
@@ -103,7 +200,7 @@
         <div class="nav-section">
             <span class="nav-label">Recursos</span>
             <ul class="nav-menu">
-                <li class="nav-item" data-section="checklists">
+                <li class="nav-item" data-section="checklists" data-tooltip="Listas de verificación y tareas" data-tooltip-placement="right">
                     <i class="ri-task-line"></i> Checklists
                 </li>
             </ul>
@@ -112,7 +209,7 @@
         <div class="nav-section">
             <span class="nav-label">Privacidad</span>
             <ul class="nav-menu">
-                <li class="nav-item" data-section="mis-datos">
+                <li class="nav-item" data-section="mis-datos" data-tooltip="Gestionar tus datos personales" data-tooltip-placement="right">
                     <i class="ri-shield-user-line"></i> Mis Datos
                 </li>
             </ul>
@@ -120,7 +217,7 @@
 
         <div class="sidebar-footer">
             <div class="theme-toggle-container">
-                <button id="themeToggle" class="theme-btn" title="Cambiar tema">
+                <button id="themeToggle" class="theme-btn" data-tooltip="Cambiar tema claro/oscuro" data-tooltip-placement="top">
                     <i class="ri-moon-line" id="themeIcon"></i>
                 </button>
             </div>
@@ -128,7 +225,7 @@
                 <i class="ri-book-open-line update-icon"></i>
                 <span class="update-text">Cargando...</span>
             </div>
-            <a href="https://learn.jamf.com" target="_blank" class="docs-link">
+            <a href="https://learn.jamf.com" target="_blank" class="docs-link" data-tooltip="Abrir documentación oficial de Jamf" data-tooltip-placement="top">
                 <i class="ri-external-link-line"></i> Docs oficiales
             </a>
         </div>
@@ -139,11 +236,11 @@
 
     <main class="main-content">
         <header class="top-bar">
-            <button class="menu-toggle" id="menuToggle"><i class="ri-menu-2-line"></i></button>
+            <button class="menu-toggle" id="menuToggle" data-tooltip="Abrir/cerrar menú" data-tooltip-placement="bottom"><i class="ri-menu-2-line"></i></button>
             <div class="search-container">
                 <div class="search-wrapper">
                     <i class="ri-search-line search-icon-input"></i>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar soluciones...">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar soluciones..." data-tooltip="Buscar en la base de conocimientos" data-tooltip-placement="bottom" data-tooltip-delay="500">
                 </div>
             </div>
         </header>
@@ -155,10 +252,10 @@
         <!-- Footer Legal -->
         <footer class="legal-footer">
             <div class="legal-links">
-                <a href="aviso-legal.html" target="_blank" class="legal-link">
+                <a href="aviso-legal.html" target="_blank" class="legal-link" data-tooltip="Ver aviso legal" data-tooltip-placement="top">
                     <i class="ri-file-text-line"></i> Aviso Legal
                 </a>
-                <a href="politica-privacidad.html" target="_blank" class="legal-link">
+                <a href="politica-privacidad.html" target="_blank" class="legal-link" data-tooltip="Ver política de privacidad y RGPD" data-tooltip-placement="top">
                     <i class="ri-shield-check-line"></i> Política de Privacidad
                 </a>
             </div>
@@ -174,13 +271,13 @@
 
     <div class="modal" id="guideModal">
         <div class="modal-content">
-            <button class="modal-close" id="modalClose">✕</button>
+            <button class="modal-close" id="modalClose" data-tooltip="Cerrar (Esc)" data-tooltip-placement="left">✕</button>
             <div class="modal-body" id="modalBody"></div>
         </div>
     </div>
 
     <!-- Chatbot -->
-    <div class="chatbot-fab" id="chatbotFab">
+    <div class="chatbot-fab" id="chatbotFab" data-tooltip="Abrir asistente con IA" data-tooltip-placement="left">
         <span class="fab-icon"><i class="ri-robot-line"></i></span>
         <span class="fab-badge" id="fabBadge"></span>
     </div>
@@ -189,12 +286,12 @@
         <div class="chatbot-header">
             <div class="chatbot-title">
                 <i class="ri-robot-line"></i>
-                <span>Asistente Jamf IA</span>
+                <span>Edu Assistant IA</span>
             </div>
             <div class="chatbot-actions">
-                <button class="chatbot-settings" id="chatbotSettings" title="Configurar API"><i
+                <button class="chatbot-settings" id="chatbotSettings" data-tooltip="Configurar API Key de Google Gemini" data-tooltip-placement="bottom"><i
                         class="ri-settings-3-line"></i></button>
-                <button class="chatbot-close" id="chatbotClose">✕</button>
+                <button class="chatbot-close" id="chatbotClose" data-tooltip="Cerrar chat" data-tooltip-placement="bottom">✕</button>
             </div>
         </div>
         <div class="chatbot-messages" id="chatbotMessages">
@@ -214,7 +311,7 @@
         </div>
         <div class="chatbot-input-container">
             <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Escribe tu pregunta...">
-            <button class="chatbot-send" id="chatbotSend">
+            <button class="chatbot-send" id="chatbotSend" data-tooltip="Enviar mensaje" data-tooltip-placement="top">
                 <i class="ri-send-plane-fill"></i>
             </button>
         </div>
@@ -223,7 +320,7 @@
     <!-- API Key Modal -->
     <div class="modal" id="apiModal">
         <div class="modal-content api-modal">
-            <button class="modal-close" id="apiModalClose">✕</button>
+            <button class="modal-close" id="apiModalClose" data-tooltip="Cerrar (Esc)" data-tooltip-placement="left">✕</button>
             <div class="modal-body">
                 <h2><i class="ri-settings-3-line"></i> Configurar API de IA</h2>
                 <p>Para usar el asistente con IA, necesitas una API Key de Google Gemini (gratuita).</p>
@@ -231,7 +328,7 @@
                 <div class="api-steps">
                     <div class="api-step">
                         <span class="step-num">1</span>
-                        <span>Ve a <a href="https://aistudio.google.com/apikey" target="_blank">Google AI
+                        <span>Ve a <a href="https://aistudio.google.com/apikey" target="_blank" data-tooltip="Abrir Google AI Studio" data-tooltip-placement="top">Google AI
                                 Studio</a></span>
                     </div>
                     <div class="api-step">
@@ -246,7 +343,7 @@
 
                 <div class="api-input-group">
                     <input type="password" id="apiKeyInput" class="api-key-input" placeholder="AIza..." autocomplete="off">
-                    <button id="saveApiKey" class="save-api-btn">Guardar</button>
+                    <button id="saveApiKey" class="save-api-btn" data-tooltip="Guardar y cifrar API Key" data-tooltip-placement="top">Guardar</button>
                 </div>
 
                 <div class="api-validation-info" id="apiValidationInfo" style="margin-top: 8px; font-size: 0.9em; color: #666;"></div>
@@ -405,12 +502,23 @@
         </div>
     </div>
 
-    <!-- Scripts: El orden importa - consent.js debe cargarse primero -->
+    <!-- Scripts: El orden importa - splash.js primero, consent.js debe cargarse antes de otros -->
+    <script src="js/splash.js"></script>
     <script src="js/consent.js"></script>
     <script src="js/knowledge-base.js"></script>
     <script src="js/diagnostics.js"></script>
+
+    <!--
+        Main Entry Point (IoC Container)
+        - Creates IoC container with all services
+        - Initializes JamfAssistant with dependency injection
+        - Initializes Chatbot
+        Note: chatbot.js is kept for legacy compatibility but main.js handles initialization
+    -->
+    <script type="module" src="js/main.js"></script>
+
+    <!-- Legacy chatbot.js - Provides window.JamfChatbot for backward compatibility -->
     <script src="js/chatbot.js"></script>
-    <script src="js/app.js"></script>
 </body>
 
 </html>

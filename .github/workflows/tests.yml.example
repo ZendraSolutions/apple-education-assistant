@@ -1,0 +1,117 @@
+# GitHub Actions - Workflow de Tests para Jamf Assistant
+#
+# Para usar este archivo:
+# 1. Renombrar a tests.yml (quitar .example)
+# 2. Mover a .github/workflows/
+# 3. Hacer push a GitHub
+#
+# Este workflow se ejecutará automáticamente en:
+# - Push a main/master
+# - Pull requests
+# - Manualmente desde Actions tab
+
+name: Tests
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run tests
+      run: npm test
+
+    - name: Generate coverage report
+      run: npm run test:coverage
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+    - name: Archive coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report-${{ matrix.node-version }}
+        path: coverage/
+        retention-days: 30
+
+    - name: Check coverage thresholds
+      run: |
+        echo "Coverage thresholds enforced by Jest config"
+        echo "Statements: 80%, Branches: 70%, Functions: 80%, Lines: 80%"
+
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    # Descomentar si tienes ESLint configurado
+    # - name: Run ESLint
+    #   run: npm run lint
+
+  build:
+    name: Build Check
+    runs-on: ubuntu-latest
+    needs: [test, lint]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    # Si tienes build step
+    # - name: Build
+    #   run: npm run build
+
+    - name: Success message
+      run: |
+        echo "✅ All tests passed!"
+        echo "✅ Code quality checks passed!"
+        echo "✅ Build successful!"

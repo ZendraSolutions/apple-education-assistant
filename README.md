@@ -1,4 +1,4 @@
-# Jamf Assistant - Centro Escolar
+# Apple Edu Assistant - Colegio Huerta Santa Ana
 
 Asistente de soporte técnico para gestión de dispositivos Apple en entornos educativos.
 

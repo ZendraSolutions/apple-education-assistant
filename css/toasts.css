@@ -1,0 +1,290 @@
+/* ===========================================
+   TOAST NOTIFICATION SYSTEM
+   Non-intrusive notifications for user feedback
+   =========================================== */
+
+/* --- Container --- */
+.toast-container {
+    position: fixed;
+    top: var(--space-lg, 24px);
+    right: var(--space-lg, 24px);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm, 8px);
+    pointer-events: none;
+    max-width: 400px;
+}
+
+/* Mobile: Position at bottom for better thumb reach */
+@media (max-width: 768px) {
+    .toast-container {
+        top: auto;
+        bottom: calc(var(--space-xl, 32px) + 60px); /* Above FAB */
+        left: var(--space-md, 16px);
+        right: var(--space-md, 16px);
+        max-width: none;
+    }
+}
+
+/* --- Toast Base Styles --- */
+.toast {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm, 8px);
+    padding: var(--space-md, 16px);
+    background: var(--bg-card, #fff);
+    border-radius: var(--radius-md, 12px);
+    box-shadow: var(--shadow-lg, 0 10px 30px rgba(0, 0, 0, 0.1));
+    border: 1px solid var(--border-subtle, #e5e5e5);
+    pointer-events: auto;
+    min-height: 56px;
+    max-width: 100%;
+    word-wrap: break-word;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Entrance animation */
+.toast-enter {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Exit animation */
+.toast-exit {
+    opacity: 0;
+    transform: translateX(400px);
+}
+
+/* Mobile: Slide up instead of from right */
+@media (max-width: 768px) {
+    .toast {
+        transform: translateY(100px);
+    }
+
+    .toast-enter {
+        transform: translateY(0);
+    }
+
+    .toast-exit {
+        transform: translateY(100px);
+    }
+}
+
+/* --- Toast Icon --- */
+.toast-icon {
+    flex-shrink: 0;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+/* --- Toast Message --- */
+.toast-message {
+    flex: 1;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: var(--text-primary, #1a1a1a);
+}
+
+/* --- Dismiss Button --- */
+.toast-dismiss {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary, #666);
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.toast-dismiss:hover {
+    background: var(--bg-elevated, #f5f5f5);
+    color: var(--text-primary, #1a1a1a);
+}
+
+.toast-dismiss:active {
+    transform: scale(0.95);
+}
+
+.toast-dismiss i {
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+/* --- Toast Types --- */
+
+/* Info (default) - Blue */
+.toast-info {
+    border-left: 4px solid var(--accent-primary, hsl(218, 52%, 29%));
+}
+
+.toast-info .toast-icon {
+    color: var(--accent-primary, hsl(218, 52%, 29%));
+}
+
+/* Success - Green */
+.toast-success {
+    border-left: 4px solid var(--success, hsl(145, 45%, 40%));
+}
+
+.toast-success .toast-icon {
+    color: var(--success, hsl(145, 45%, 40%));
+}
+
+/* Warning - Orange */
+.toast-warning {
+    border-left: 4px solid var(--warning, hsl(27, 90%, 50%));
+}
+
+.toast-warning .toast-icon {
+    color: var(--warning, hsl(27, 90%, 50%));
+}
+
+/* Error - Red */
+.toast-error {
+    border-left: 4px solid var(--error, hsl(0, 65%, 50%));
+}
+
+.toast-error .toast-icon {
+    color: var(--error, hsl(0, 65%, 50%));
+}
+
+/* --- Dark Mode Adjustments --- */
+[data-theme="dark"] .toast {
+    background: var(--bg-card, hsl(218, 30%, 15%));
+    border-color: var(--border-medium, hsl(218, 20%, 25%));
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .toast-message {
+    color: var(--text-primary, #e5e5e5);
+}
+
+[data-theme="dark"] .toast-dismiss {
+    color: var(--text-secondary, #999);
+}
+
+[data-theme="dark"] .toast-dismiss:hover {
+    background: var(--bg-elevated, hsl(218, 25%, 20%));
+    color: var(--text-primary, #e5e5e5);
+}
+
+/* --- Offline Mode Styles --- */
+
+/* Offline mode indicator on chatbot FAB */
+.offline-mode .chatbot-fab .fab-badge.offline-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 28px;
+    height: 28px;
+    background: var(--warning, hsl(27, 90%, 50%));
+    color: white;
+    border-radius: 50%;
+    font-size: 0.875rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--bg-page, #fff);
+}
+
+[data-theme="dark"] .offline-mode .chatbot-fab .fab-badge.offline-badge {
+    border-color: var(--bg-page, hsl(218, 30%, 12%));
+}
+
+/* Offline mode: Disable chatbot interaction */
+.offline-mode .chatbot-fab {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.offline-mode .chatbot-fab:hover {
+    transform: scale(1); /* Disable hover effect */
+}
+
+/* Optional: Add a subtle offline indicator to sidebar/header */
+.offline-mode .top-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--warning, hsl(27, 90%, 50%)),
+        transparent
+    );
+    animation: offline-pulse 2s ease-in-out infinite;
+}
+
+@keyframes offline-pulse {
+    0%, 100% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* --- Accessibility --- */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .toast {
+        border-width: 2px;
+    }
+
+    .toast-info,
+    .toast-success,
+    .toast-warning,
+    .toast-error {
+        border-left-width: 6px;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .toast {
+        transition: opacity 0.2s ease;
+        transform: none;
+    }
+
+    .toast-exit {
+        transform: none;
+    }
+
+    .offline-mode .top-bar::before {
+        animation: none;
+        opacity: 0.5;
+    }
+}
+
+/* Focus visible for dismiss button */
+.toast-dismiss:focus-visible {
+    outline: 2px solid var(--accent-primary, hsl(218, 52%, 29%));
+    outline-offset: 2px;
+}
+
+/* --- Stacking --- */
+
+/* Add spacing between multiple toasts */
+.toast + .toast {
+    margin-top: 0; /* Gap handled by flex container */
+}
+
+/* Limit maximum number of visible toasts */
+.toast-container > .toast:nth-child(n+5) {
+    display: none; /* Hide excess toasts */
+}

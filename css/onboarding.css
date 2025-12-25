@@ -1,0 +1,482 @@
+/**
+ * Onboarding Tour Styles
+ * Custom implementation without external libraries
+ * Author: Jamf Assistant Team
+ * Version: 1.0.0
+ */
+
+/* ============================================================================
+   OVERLAY - Dark backdrop
+   ============================================================================ */
+
+.onboarding-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(2px);
+    z-index: 9998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.onboarding-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* ============================================================================
+   HIGHLIGHT - Element spotlight
+   ============================================================================ */
+
+.onboarding-highlight {
+    position: absolute;
+    border-radius: 12px;
+    box-shadow:
+        0 0 0 4px rgba(255, 149, 0, 0.5),
+        0 0 0 8px rgba(255, 149, 0, 0.3),
+        0 0 20px 10px rgba(255, 149, 0, 0.2),
+        0 0 0 9999px rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.onboarding-highlight.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Pulse animation for highlighted element */
+@keyframes onboarding-pulse {
+    0%, 100% {
+        box-shadow:
+            0 0 0 4px rgba(255, 149, 0, 0.5),
+            0 0 0 8px rgba(255, 149, 0, 0.3),
+            0 0 20px 10px rgba(255, 149, 0, 0.2),
+            0 0 0 9999px rgba(0, 0, 0, 0.7);
+    }
+    50% {
+        box-shadow:
+            0 0 0 6px rgba(255, 149, 0, 0.6),
+            0 0 0 12px rgba(255, 149, 0, 0.4),
+            0 0 30px 15px rgba(255, 149, 0, 0.3),
+            0 0 0 9999px rgba(0, 0, 0, 0.7);
+    }
+}
+
+.onboarding-highlight.active {
+    animation: onboarding-pulse 2s ease-in-out infinite;
+}
+
+/* ============================================================================
+   TOOLTIP - Main content container
+   ============================================================================ */
+
+.onboarding-tooltip {
+    position: absolute;
+    width: 400px;
+    max-width: calc(100vw - 32px);
+    background: var(--surface-primary, #ffffff);
+    border-radius: 16px;
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(0, 0, 0, 0.05);
+    z-index: 10000;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.onboarding-tooltip.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .onboarding-tooltip {
+        background: var(--surface-primary, #1c1c1e);
+        box-shadow:
+            0 10px 40px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.1);
+    }
+}
+
+[data-theme="dark"] .onboarding-tooltip {
+    background: var(--surface-primary, #1c1c1e);
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Arrow indicators based on position */
+.onboarding-tooltip::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+}
+
+.onboarding-tooltip-bottom::before {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom-color: var(--surface-primary, #ffffff);
+}
+
+.onboarding-tooltip-top::before {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top-color: var(--surface-primary, #ffffff);
+}
+
+.onboarding-tooltip-left::before {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left-color: var(--surface-primary, #ffffff);
+}
+
+.onboarding-tooltip-right::before {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border-right-color: var(--surface-primary, #ffffff);
+}
+
+[data-theme="dark"] .onboarding-tooltip-bottom::before {
+    border-bottom-color: var(--surface-primary, #1c1c1e);
+}
+
+[data-theme="dark"] .onboarding-tooltip-top::before {
+    border-top-color: var(--surface-primary, #1c1c1e);
+}
+
+[data-theme="dark"] .onboarding-tooltip-left::before {
+    border-left-color: var(--surface-primary, #1c1c1e);
+}
+
+[data-theme="dark"] .onboarding-tooltip-right::before {
+    border-right-color: var(--surface-primary, #1c1c1e);
+}
+
+/* ============================================================================
+   TOOLTIP HEADER
+   ============================================================================ */
+
+.onboarding-tooltip-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 12px;
+    border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.08));
+}
+
+.onboarding-tooltip-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary, #1d1d1f);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.onboarding-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--surface-secondary, #f5f5f7);
+    border-radius: 8px;
+    color: var(--text-secondary, #86868b);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.onboarding-close:hover {
+    background: var(--surface-tertiary, #e8e8ed);
+    color: var(--text-primary, #1d1d1f);
+}
+
+.onboarding-close i {
+    font-size: 1.25rem;
+}
+
+/* ============================================================================
+   TOOLTIP BODY
+   ============================================================================ */
+
+.onboarding-tooltip-body {
+    padding: 16px 24px 20px;
+}
+
+.onboarding-tooltip-body p {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-secondary, #86868b);
+    margin: 0;
+}
+
+/* ============================================================================
+   TOOLTIP FOOTER
+   ============================================================================ */
+
+.onboarding-tooltip-footer {
+    padding: 0 24px 20px;
+}
+
+/* Progress bar */
+.onboarding-progress {
+    width: 100%;
+    height: 4px;
+    background: var(--surface-secondary, #f5f5f7);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.onboarding-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #ff9500 0%, #ff6b00 100%);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+/* Actions container */
+.onboarding-tooltip-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.onboarding-nav-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+/* Step indicator */
+.onboarding-step-indicator {
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--text-tertiary, #86868b);
+    font-weight: 500;
+}
+
+/* ============================================================================
+   BUTTONS
+   ============================================================================ */
+
+.onboarding-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 10px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.onboarding-btn i {
+    font-size: 1rem;
+}
+
+/* Skip button */
+.onboarding-btn-skip {
+    background: transparent;
+    color: var(--text-tertiary, #86868b);
+    padding: 10px 12px;
+}
+
+.onboarding-btn-skip:hover {
+    background: var(--surface-secondary, #f5f5f7);
+    color: var(--text-secondary, #86868b);
+}
+
+/* Previous button */
+.onboarding-btn-prev {
+    background: var(--surface-secondary, #f5f5f7);
+    color: var(--text-primary, #1d1d1f);
+}
+
+.onboarding-btn-prev:hover:not(:disabled) {
+    background: var(--surface-tertiary, #e8e8ed);
+}
+
+.onboarding-btn-prev:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Next/Finish button */
+.onboarding-btn-next {
+    background: linear-gradient(135deg, #ff9500 0%, #ff6b00 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(255, 149, 0, 0.3);
+}
+
+.onboarding-btn-next:hover {
+    box-shadow: 0 4px 12px rgba(255, 149, 0, 0.4);
+    transform: translateY(-1px);
+}
+
+.onboarding-btn-next:active {
+    transform: translateY(0);
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    .onboarding-tooltip {
+        width: 340px;
+        max-width: calc(100vw - 24px);
+    }
+
+    .onboarding-tooltip-header {
+        padding: 16px 20px 10px;
+    }
+
+    .onboarding-tooltip-title {
+        font-size: 1rem;
+    }
+
+    .onboarding-tooltip-body {
+        padding: 12px 20px 16px;
+    }
+
+    .onboarding-tooltip-body p {
+        font-size: 0.875rem;
+    }
+
+    .onboarding-tooltip-footer {
+        padding: 0 20px 16px;
+    }
+
+    .onboarding-tooltip-actions {
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .onboarding-nav-buttons {
+        width: 100%;
+    }
+
+    .onboarding-btn {
+        flex: 1;
+        justify-content: center;
+        padding: 12px 16px;
+        font-size: 0.875rem;
+    }
+
+    .onboarding-btn-skip {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Adjust arrow position for mobile */
+    .onboarding-tooltip::before {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .onboarding-tooltip {
+        width: 300px;
+    }
+
+    .onboarding-highlight {
+        border-radius: 8px;
+    }
+}
+
+/* ============================================================================
+   ACCESSIBILITY
+   ============================================================================ */
+
+/* Focus visible for keyboard navigation */
+.onboarding-btn:focus-visible,
+.onboarding-close:focus-visible {
+    outline: 2px solid var(--accent-primary, #ff9500);
+    outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .onboarding-overlay,
+    .onboarding-highlight,
+    .onboarding-tooltip,
+    .onboarding-btn,
+    .onboarding-close {
+        transition: none;
+    }
+
+    .onboarding-highlight.active {
+        animation: none;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .onboarding-highlight {
+        box-shadow:
+            0 0 0 4px #ff9500,
+            0 0 0 8px #ff6b00,
+            0 0 0 9999px rgba(0, 0, 0, 0.85);
+    }
+
+    .onboarding-tooltip {
+        border: 2px solid var(--accent-primary, #ff9500);
+    }
+}
+
+/* ============================================================================
+   ANIMATIONS
+   ============================================================================ */
+
+@keyframes onboarding-fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes onboarding-slide-up {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Apply animations on activation */
+.onboarding-overlay.active {
+    animation: onboarding-fade-in 0.3s ease;
+}
+
+.onboarding-tooltip.active {
+    animation: onboarding-slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

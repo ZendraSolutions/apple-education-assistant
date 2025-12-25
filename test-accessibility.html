@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Test Page - Apple Edu Assistant</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #e57c35;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .test-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #e57c35;
+            background: #f9f9f9;
+        }
+        .checkbox {
+            width: 24px;
+            height: 24px;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .pass { background: #28a745; color: white; }
+        .pending { background: #ffc107; color: black; }
+        .fail { background: #dc3545; color: white; }
+        button {
+            background: #e57c35;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #d46d29;
+        }
+        .code {
+            background: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .instructions {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .score {
+            font-size: 48px;
+            font-weight: bold;
+            color: #e57c35;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 Accessibility Testing Checklist</h1>
+    <p>Use this page to verify WCAG 2.1 AA compliance for Apple Edu Assistant</p>
+
+    <!-- Quick Start -->
+    <div class="test-section">
+        <h2>🚀 Quick Start</h2>
+        <div class="instructions">
+            <p><strong>Before testing:</strong></p>
+            <ol>
+                <li>Open the main application (index.html) in a browser</li>
+                <li>Install recommended testing tools</li>
+                <li>Keep this checklist open in a separate tab</li>
+            </ol>
+        </div>
+        <button onclick="window.open('index.html', '_blank')">Open Main Application</button>
+    </div>
+
+    <!-- Automated Testing -->
+    <div class="test-section">
+        <h2>🤖 Automated Testing</h2>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="axe">
+            <label for="axe">
+                <strong>axe DevTools Scan</strong>
+                <p>Install: <a href="https://www.deque.com/axe/devtools/" target="_blank">Chrome/Firefox Extension</a></p>
+                <p>Run scan on main page. Target: 0 Critical/Serious violations</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="lighthouse">
+            <label for="lighthouse">
+                <strong>Lighthouse Accessibility Audit</strong>
+                <p>Open DevTools → Lighthouse → Accessibility category</p>
+                <p>Target Score: 100/100</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="wave">
+            <label for="wave">
+                <strong>WAVE Browser Extension</strong>
+                <p>Install: <a href="https://wave.webaim.org/extension/" target="_blank">WAVE Extension</a></p>
+                <p>Check for errors and alerts</p>
+            </label>
+        </div>
+    </div>
+
+    <!-- Keyboard Navigation Testing -->
+    <div class="test-section">
+        <h2>⌨️ Keyboard Navigation Testing</h2>
+
+        <div class="instructions">
+            <p><strong>Instructions:</strong> Use only keyboard (no mouse). Tab to navigate, Enter to activate.</p>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="skip-link">
+            <label for="skip-link">
+                <strong>Skip Link</strong>
+                <p>1. Load page<br>2. Press Tab once<br>3. Verify "Saltar al contenido principal" appears<br>4. Press Enter to test</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="tab-order">
+            <label for="tab-order">
+                <strong>Tab Order</strong>
+                <p>Tab through all elements. Order should be logical and visible.</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="focus-visible">
+            <label for="focus-visible">
+                <strong>Focus Indicators</strong>
+                <p>All focused elements must have visible 2-3px orange outline</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="modal-escape">
+            <label for="modal-escape">
+                <strong>Modal Escape Key</strong>
+                <p>1. Open any modal/dialog<br>2. Press Escape<br>3. Modal should close</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="focus-trap">
+            <label for="focus-trap">
+                <strong>Modal Focus Trap</strong>
+                <p>1. Open modal<br>2. Press Tab repeatedly<br>3. Focus should cycle within modal only<br>4. Close modal → focus returns to trigger</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="no-trap">
+            <label for="no-trap">
+                <strong>No Keyboard Trap</strong>
+                <p>Verify user can escape from all elements using Tab or Escape</p>
+            </label>
+        </div>
+    </div>
+
+    <!-- Screen Reader Testing -->
+    <div class="test-section">
+        <h2>📢 Screen Reader Testing</h2>
+
+        <div class="instructions">
+            <p><strong>Windows:</strong> Download <a href="https://www.nvaccess.org/" target="_blank">NVDA</a> (free)<br>
+            <strong>macOS:</strong> Enable VoiceOver (Cmd+F5)<br>
+            <strong>Commands:</strong> H=headings, B=buttons, R=regions, F=forms</p>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="sr-landmarks">
+            <label for="sr-landmarks">
+                <strong>Landmarks Navigation</strong>
+                <p>Navigate by landmarks (R key in NVDA). Should find: navigation, main, contentinfo</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="sr-headings">
+            <label for="sr-headings">
+                <strong>Heading Structure</strong>
+                <p>Navigate by headings (H key). Structure should be logical (h1 → h2 → h3)</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="sr-buttons">
+            <label for="sr-buttons">
+                <strong>Button Labels</strong>
+                <p>All buttons should have descriptive labels (not just "button")</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="sr-forms">
+            <label for="sr-forms">
+                <strong>Form Labels</strong>
+                <p>All form inputs should have associated labels</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="sr-icons">
+            <label for="sr-icons">
+                <strong>Decorative Icons</strong>
+                <p>Icons should not be read by screen reader (aria-hidden="true")</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="sr-live">
+            <label for="sr-live">
+                <strong>Live Regions</strong>
+                <p>Chat messages and notifications should be announced automatically</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="sr-modal">
+            <label for="sr-modal">
+                <strong>Modal Announcements</strong>
+                <p>When modal opens, title should be announced</p>
+            </label>
+        </div>
+    </div>
+
+    <!-- Visual Testing -->
+    <div class="test-section">
+        <h2>👁️ Visual Testing</h2>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="zoom-200">
+            <label for="zoom-200">
+                <strong>200% Zoom</strong>
+                <p>Ctrl/Cmd + Plus to zoom to 200%. Content should remain usable.</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="high-contrast">
+            <label for="high-contrast">
+                <strong>High Contrast Mode</strong>
+                <p>Windows: Settings → Ease of Access → High Contrast<br>UI should remain visible and usable</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="dark-mode">
+            <label for="dark-mode">
+                <strong>Dark Mode</strong>
+                <p>Toggle theme. Verify sufficient contrast in both modes.</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="color-contrast">
+            <label for="color-contrast">
+                <strong>Color Contrast</strong>
+                <p>Use <a href="https://webaim.org/resources/contrastchecker/" target="_blank">Contrast Checker</a><br>
+                Normal text: 4.5:1, Large text: 3:1</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="reduced-motion">
+            <label for="reduced-motion">
+                <strong>Reduced Motion</strong>
+                <p>Windows: Settings → Ease of Access → Display → Show animations<br>
+                macOS: System Preferences → Accessibility → Display → Reduce motion<br>
+                Animations should be minimal or disabled</p>
+            </label>
+        </div>
+    </div>
+
+    <!-- Mobile Testing -->
+    <div class="test-section">
+        <h2>📱 Mobile Testing</h2>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="touch-targets">
+            <label for="touch-targets">
+                <strong>Touch Target Size</strong>
+                <p>All interactive elements should be at least 44x44 pixels</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="mobile-sr">
+            <label for="mobile-sr">
+                <strong>TalkBack (Android) / VoiceOver (iOS)</strong>
+                <p>Test navigation with mobile screen readers</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="mobile-zoom">
+            <label for="mobile-zoom">
+                <strong>Pinch Zoom</strong>
+                <p>Verify pinch-to-zoom is enabled (no user-scalable=no)</p>
+            </label>
+        </div>
+    </div>
+
+    <!-- ARIA Validation -->
+    <div class="test-section">
+        <h2>🏷️ ARIA Validation</h2>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="aria-roles">
+            <label for="aria-roles">
+                <strong>ARIA Roles</strong>
+                <p>Check: navigation, main, dialog, menubar, menuitem, log, article</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="aria-labels">
+            <label for="aria-labels">
+                <strong>ARIA Labels</strong>
+                <p>All interactive elements have aria-label or aria-labelledby</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="aria-states">
+            <label for="aria-states">
+                <strong>ARIA States</strong>
+                <p>Check: aria-expanded, aria-current, aria-hidden, aria-modal</p>
+            </label>
+        </div>
+
+        <div class="test-item">
+            <input type="checkbox" class="checkbox" id="aria-live">
+            <label for="aria-live">
+                <strong>ARIA Live Regions</strong>
+                <p>Notifications and chat use aria-live="polite"</p>
+            </label>
+        </div>
+    </div>
+
+    <!-- Score Display -->
+    <div class="test-section">
+        <h2>📊 Test Score</h2>
+        <div class="score" id="score">0/28</div>
+        <div style="text-align: center;">
+            <p><strong>Passing Score:</strong> 28/28 (100%)</p>
+            <button onclick="calculateScore()">Calculate Score</button>
+            <button onclick="resetTests()">Reset All</button>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="test-section">
+        <h2>📝 Test Report</h2>
+        <button onclick="generateReport()">Generate Test Report</button>
+        <button onclick="window.print()">Print Checklist</button>
+        <div id="report" class="code" style="display:none;"></div>
+    </div>
+
+    <script>
+        // Calculate score
+        function calculateScore() {
+            const checkboxes = document.querySelectorAll('.checkbox');
+            const checked = document.querySelectorAll('.checkbox:checked').length;
+            const total = checkboxes.length;
+            const percentage = Math.round((checked / total) * 100);
+
+            document.getElementById('score').textContent = `${checked}/${total} (${percentage}%)`;
+
+            // Save to localStorage
+            const results = {};
+            checkboxes.forEach(cb => {
+                results[cb.id] = cb.checked;
+            });
+            localStorage.setItem('a11y-test-results', JSON.stringify(results));
+        }
+
+        // Reset all tests
+        function resetTests() {
+            if (confirm('Reset all test results?')) {
+                document.querySelectorAll('.checkbox').forEach(cb => cb.checked = false);
+                calculateScore();
+                localStorage.removeItem('a11y-test-results');
+            }
+        }
+
+        // Generate report
+        function generateReport() {
+            const checkboxes = document.querySelectorAll('.checkbox');
+            const checked = document.querySelectorAll('.checkbox:checked').length;
+            const total = checkboxes.length;
+
+            let report = `ACCESSIBILITY TEST REPORT\n`;
+            report += `Date: ${new Date().toLocaleString()}\n`;
+            report += `Score: ${checked}/${total} (${Math.round((checked/total)*100)}%)\n\n`;
+
+            report += `PASSED TESTS:\n`;
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    const label = document.querySelector(`label[for="${cb.id}"]`);
+                    report += `✅ ${label.querySelector('strong').textContent}\n`;
+                }
+            });
+
+            report += `\nFAILED TESTS:\n`;
+            checkboxes.forEach(cb => {
+                if (!cb.checked) {
+                    const label = document.querySelector(`label[for="${cb.id}"]`);
+                    report += `❌ ${label.querySelector('strong').textContent}\n`;
+                }
+            });
+
+            const reportDiv = document.getElementById('report');
+            reportDiv.textContent = report;
+            reportDiv.style.display = 'block';
+        }
+
+        // Auto-save on checkbox change
+        document.querySelectorAll('.checkbox').forEach(cb => {
+            cb.addEventListener('change', calculateScore);
+        });
+
+        // Load saved results
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('a11y-test-results');
+            if (saved) {
+                const results = JSON.parse(saved);
+                Object.entries(results).forEach(([id, checked]) => {
+                    const checkbox = document.getElementById(id);
+                    if (checkbox) checkbox.checked = checked;
+                });
+            }
+            calculateScore();
+        });
+    </script>
+</body>
+</html>

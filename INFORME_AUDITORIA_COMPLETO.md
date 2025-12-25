@@ -1,6 +1,6 @@
 # INFORME EJECUTIVO DE AUDITORIA DE SEGURIDAD Y COMPLIANCE RGPD
 
-**Aplicacion:** Asistente Education - Centro Escolar
+**Aplicacion:** Apple Edu Assistant - Centro Escolar
 **Fecha de Auditoria:** 2025-12-24
 **Version Analizada:** 2.1.0
 **Auditor:** Claude (Anthropic) - Agentes Especializados
@@ -9,7 +9,7 @@
 
 ## RESUMEN EJECUTIVO
 
-Se ha realizado una auditoria exhaustiva de seguridad y cumplimiento normativo de la aplicacion web "Asistente Education", utilizada para la gestion del ecosistema Apple en centros educativos espanoles.
+Se ha realizado una auditoria exhaustiva de seguridad y cumplimiento normativo de la aplicacion web "Apple Edu Assistant", utilizada para la gestion del ecosistema Apple en centros educativos espanoles.
 
 ### Puntuaciones Globales
 

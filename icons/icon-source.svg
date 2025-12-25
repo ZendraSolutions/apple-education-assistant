@@ -1,0 +1,44 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background -->
+    <rect width="512" height="512" rx="115" fill="#233D70"/>
+
+    <!-- Educational Book Base -->
+    <path d="M128 320L256 352L384 320V448L256 480L128 448V320Z" fill="#FF8C42" opacity="0.15"/>
+    <path d="M128 320V448L256 480V352L128 320Z" fill="#FF8C42" opacity="0.25"/>
+    <path d="M256 352V480L384 448V320L256 352Z" fill="#FF8C42" opacity="0.20"/>
+
+    <!-- Book pages lines -->
+    <line x1="176" y1="340" x2="176" y2="435" stroke="#FF8C42" stroke-width="6" opacity="0.3"/>
+    <line x1="220" y1="350" x2="220" y2="455" stroke="#FF8C42" stroke-width="6" opacity="0.3"/>
+    <line x1="292" y1="350" x2="292" y2="455" stroke="#FF8C42" stroke-width="6" opacity="0.3"/>
+    <line x1="336" y1="340" x2="336" y2="435" stroke="#FF8C42" stroke-width="6" opacity="0.3"/>
+    <line x1="256" y1="352" x2="256" y2="480" stroke="#FF8C42" stroke-width="8" opacity="0.4"/>
+
+    <!-- Graduation Cap Base (diamond shape) -->
+    <path d="M256 100L80 180L256 260L432 180L256 100Z" fill="#FF8C42"/>
+
+    <!-- Cap depth/shadow -->
+    <path d="M80 180L256 260L256 280L80 200L80 180Z" fill="#E67A33" opacity="0.5"/>
+    <path d="M432 180L256 260L256 280L432 200L432 180Z" fill="#E67A33" opacity="0.4"/>
+
+    <!-- Cap top board (with subtle apple reference) -->
+    <ellipse cx="256" cy="150" rx="190" ry="48" fill="#FF8C42"/>
+    <path d="M100 145C100 135 130 120 256 120C382 120 412 135 412 145" fill="#FFA05C"/>
+
+    <!-- Apple leaf detail on top -->
+    <path d="M256 60C256 60 240 70 240 85C240 85 256 92 272 80C272 80 266 60 256 60Z" fill="#FF8C42" opacity="0.9"/>
+    <path d="M256 60C252 60 248 65 248 72C248 79 252 84 256 88C260 84 264 79 264 72C264 65 260 60 256 60Z" fill="#FFA05C"/>
+
+    <!-- Graduation cap tassel (orange accent) -->
+    <circle cx="420" cy="180" r="16" fill="#FF8C42"/>
+    <line x1="420" y1="150" x2="420" y2="180" stroke="#FF8C42" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="420" cy="138" r="10" fill="#FFA05C"/>
+
+    <!-- Decorative lines on cap -->
+    <line x1="150" y1="175" x2="180" y2="185" stroke="#E67A33" stroke-width="4" opacity="0.3"/>
+    <line x1="332" y1="185" x2="362" y2="175" stroke="#E67A33" stroke-width="4" opacity="0.3"/>
+
+    <!-- Technology highlight effects -->
+    <circle cx="300" cy="135" r="8" fill="white" opacity="0.5"/>
+    <circle cx="312" cy="145" r="4" fill="white" opacity="0.3"/>
+</svg>

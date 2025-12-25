@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG to PNG Converter - Jamf Edu Icons</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #233D70;
+            margin-bottom: 12px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 32px;
+            font-size: 16px;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #233D70;
+            padding: 16px;
+            margin-bottom: 24px;
+            border-radius: 4px;
+        }
+
+        .info-box p {
+            margin: 8px 0;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 32px;
+        }
+
+        .icon-card {
+            background: #fafafa;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .icon-card:hover {
+            border-color: #233D70;
+            box-shadow: 0 4px 12px rgba(35, 61, 112, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .icon-preview {
+            width: 100%;
+            aspect-ratio: 1;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .icon-preview canvas {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .icon-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .icon-size {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .download-btn {
+            background: #233D70;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .download-btn:hover {
+            background: #1a2d54;
+        }
+
+        .download-btn:active {
+            transform: scale(0.98);
+        }
+
+        .download-all {
+            background: #FF8C42;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 32px 0;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .download-all:hover {
+            background: #E67A33;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 140, 66, 0.3);
+        }
+
+        .status {
+            text-align: center;
+            margin: 16px 0;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #233D70;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Generador de Iconos PWA</h1>
+        <p class="subtitle">Convierte icon-source.svg a todos los tamaños necesarios</p>
+
+        <div class="info-box">
+            <p><strong>Instrucciones:</strong></p>
+            <p>1. Esta herramienta cargará automáticamente el archivo icon-source.svg</p>
+            <p>2. Generará todos los tamaños de iconos necesarios para la PWA</p>
+            <p>3. Haz clic en "Descargar" para cada icono o "Descargar Todos" para obtener un ZIP</p>
+            <p>4. Coloca todos los archivos PNG en la carpeta /icons/</p>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <button class="download-all" onclick="downloadAll()" id="downloadAllBtn">
+            📦 Descargar Todos los Iconos (ZIP)
+        </button>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Generando iconos...</p>
+        </div>
+
+        <div id="iconGrid" class="icon-grid" style="display: none;"></div>
+    </div>
+
+    <script>
+        const ICON_SIZES = [
+            { name: 'icon-72.png', size: 72 },
+            { name: 'icon-96.png', size: 96 },
+            { name: 'icon-128.png', size: 128 },
+            { name: 'icon-144.png', size: 144 },
+            { name: 'icon-152.png', size: 152 },
+            { name: 'icon-192.png', size: 192 },
+            { name: 'icon-384.png', size: 384 },
+            { name: 'icon-512.png', size: 512 },
+            { name: 'apple-touch-icon.png', size: 180 }
+        ];
+
+        let generatedIcons = [];
+
+        async function loadAndConvertSVG() {
+            try {
+                const response = await fetch('icon-source.svg');
+                const svgText = await response.text();
+
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                const svgElement = svgDoc.documentElement;
+
+                const iconGrid = document.getElementById('iconGrid');
+                iconGrid.innerHTML = '';
+
+                for (const icon of ICON_SIZES) {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = icon.size;
+                    canvas.height = icon.size;
+                    const ctx = canvas.getContext('2d');
+
+                    const img = new Image();
+                    const svgBlob = new Blob([svgText], { type: 'image/svg+xml' });
+                    const url = URL.createObjectURL(svgBlob);
+
+                    await new Promise((resolve, reject) => {
+                        img.onload = () => {
+                            ctx.drawImage(img, 0, 0, icon.size, icon.size);
+                            URL.revokeObjectURL(url);
+
+                            canvas.toBlob((blob) => {
+                                generatedIcons.push({ name: icon.name, blob, canvas });
+                                createIconCard(icon, canvas);
+                                resolve();
+                            }, 'image/png');
+                        };
+                        img.onerror = reject;
+                        img.src = url;
+                    });
+                }
+
+                document.getElementById('loading').style.display = 'none';
+                iconGrid.style.display = 'grid';
+                showStatus('¡Iconos generados exitosamente!', 'success');
+
+            } catch (error) {
+                console.error('Error generating icons:', error);
+                showStatus('Error al generar iconos: ' + error.message, 'error');
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        function createIconCard(icon, canvas) {
+            const iconGrid = document.getElementById('iconGrid');
+            const card = document.createElement('div');
+            card.className = 'icon-card';
+
+            card.innerHTML = `
+                <div class="icon-preview"></div>
+                <div class="icon-name">${icon.name}</div>
+                <div class="icon-size">${icon.size}x${icon.size}px</div>
+                <button class="download-btn" onclick="downloadIcon('${icon.name}')">
+                    ⬇️ Descargar
+                </button>
+            `;
+
+            const preview = card.querySelector('.icon-preview');
+            const previewCanvas = canvas.cloneNode(true);
+            previewCanvas.style.width = '100%';
+            previewCanvas.style.height = '100%';
+            preview.appendChild(previewCanvas);
+
+            iconGrid.appendChild(card);
+        }
+
+        function downloadIcon(filename) {
+            const icon = generatedIcons.find(i => i.name === filename);
+            if (!icon) return;
+
+            const url = URL.createObjectURL(icon.blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showStatus(`✓ ${filename} descargado`, 'success');
+        }
+
+        async function downloadAll() {
+            showStatus('Generando archivo ZIP...', 'success');
+
+            // Note: This requires JSZip library for production use
+            // For simplicity, we'll download individually with a delay
+            for (let i = 0; i < generatedIcons.length; i++) {
+                await new Promise(resolve => setTimeout(resolve, 300));
+                downloadIcon(generatedIcons[i].name);
+            }
+
+            showStatus('✓ Todos los iconos descargados', 'success');
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+
+            if (type === 'success') {
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Auto-load on page load
+        window.addEventListener('load', loadAndConvertSVG);
+    </script>
+</body>
+</html>

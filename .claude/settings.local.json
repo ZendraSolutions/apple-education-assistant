@@ -24,7 +24,24 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo view ZendraSolutions/apple-education-assistant --json name,url,homepageUrl)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" api repos/ZendraSolutions/apple-education-assistant/pages)",
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run list --repo ZendraSolutions/apple-education-assistant --limit 2)",
-      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo view ZendraSolutions/apple-education-assistant --json homepageUrl,url)"
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" repo view ZendraSolutions/apple-education-assistant --json homepageUrl,url)",
+      "Bash(dir:*)",
+      "Bash(curl:*)",
+      "Bash(openssl dgst:*)",
+      "Bash(openssl base64:*)",
+      "Bash(taskkill:*)",
+      "Bash(ls:*)",
+      "Bash(node -c:*)",
+      "Bash(node --check:*)",
+      "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run list --repo ZendraSolutions/apple-education-assistant --limit 3)",
+      "Bash(start \"c:\\\\Users\\\\95vaz\\\\Desktop\\\\carpetas que me quedo\\\\PROYECTOS IA\\\\app papa\\\\index.html\")",
+      "Bash(grep:*)",
+      "Bash(wc:*)",
+      "Bash(for f in js/views/*.js)",
+      "Bash(do node --check:*)",
+      "Bash(echo:*)",
+      "Bash(done)",
+      "Bash(find:*)"
     ]
   }
 }

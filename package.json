@@ -1,8 +1,12 @@
 {
     "name": "jamf-assistant",
     "version": "1.0.0",
-    "description": "Asistente de soporte para gestión de dispositivos Apple con Jamf",
+    "type": "module",
+    "description": "Gestión inteligente del ecosistema Apple educativo para Colegio Huerta Santa Ana",
     "scripts": {
+        "test": "jest",
+        "test:coverage": "jest --coverage",
+        "test:watch": "jest --watch",
         "update-docs": "node scripts/update-docs.js"
     },
     "keywords": [
@@ -13,5 +17,10 @@
         "assistant"
     ],
     "author": "",
-    "license": "MIT"
+    "license": "MIT",
+    "devDependencies": {
+        "jest": "^29.7.0",
+        "@jest/globals": "^29.7.0",
+        "jest-environment-jsdom": "^29.7.0"
+    }
 }

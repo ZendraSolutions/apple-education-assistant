@@ -1,0 +1,467 @@
+/**
+ * ACCESSIBILITY STYLES
+ * WCAG 2.1 AA Compliance
+ *
+ * Features:
+ * - Skip link for keyboard navigation
+ * - Screen reader only content (.sr-only)
+ * - Focus indicators
+ * - High contrast support
+ */
+
+/* ====================================
+   SKIP LINK
+   ==================================== */
+
+/**
+ * Skip link allows keyboard users to jump directly to main content
+ * Requirement: WCAG 2.1 - 2.4.1 Bypass Blocks (Level A)
+ */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    z-index: 10000;
+    padding: 12px 20px;
+    background-color: var(--accent-primary, #e57c35);
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 0 0 8px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: top 0.2s ease-in-out;
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: 3px solid #ffffff;
+    outline-offset: 2px;
+}
+
+.skip-link:hover {
+    background-color: var(--accent-hover, #d46d29);
+}
+
+/* ====================================
+   SCREEN READER ONLY
+   ==================================== */
+
+/**
+ * Visually hidden but accessible to screen readers
+ * Requirement: WCAG 2.1 - 1.3.1 Info and Relationships (Level A)
+ */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/**
+ * Make .sr-only content visible on focus
+ * Useful for skip links and keyboard-only navigation
+ */
+.sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* ====================================
+   FOCUS INDICATORS
+   ==================================== */
+
+/**
+ * Enhanced focus indicators for keyboard navigation
+ * Requirement: WCAG 2.1 - 2.4.7 Focus Visible (Level AA)
+ */
+
+/* Default focus style for all interactive elements */
+*:focus {
+    outline: 2px solid var(--accent-primary, #e57c35);
+    outline-offset: 2px;
+}
+
+/* Enhanced focus for buttons */
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid var(--accent-primary, #e57c35);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(229, 124, 53, 0.1);
+}
+
+/* Focus within containers */
+.nav-item:focus-within {
+    background-color: rgba(229, 124, 53, 0.1);
+    outline: 2px solid var(--accent-primary, #e57c35);
+    outline-offset: -2px;
+}
+
+/* Visible focus for custom checkboxes and radios */
+input[type="checkbox"]:focus + span,
+input[type="radio"]:focus + span {
+    outline: 2px solid var(--accent-primary, #e57c35);
+    outline-offset: 2px;
+}
+
+/* ====================================
+   HIGH CONTRAST MODE SUPPORT
+   ==================================== */
+
+/**
+ * Support for Windows High Contrast Mode
+ * Ensures UI remains usable with forced colors
+ */
+@media (prefers-contrast: high) {
+    .skip-link {
+        outline: 3px solid;
+    }
+
+    button,
+    a,
+    .nav-item {
+        outline: 1px solid;
+    }
+
+    .modal-content {
+        border: 3px solid;
+    }
+}
+
+/* ====================================
+   REDUCED MOTION
+   ==================================== */
+
+/**
+ * Respect user's motion preferences
+ * Requirement: WCAG 2.1 - 2.3.3 Animation from Interactions (Level AAA)
+ */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .skip-link {
+        transition: none;
+    }
+}
+
+/* ====================================
+   ARIA LIVE REGIONS
+   ==================================== */
+
+/**
+ * Styles for live regions and notifications
+ * Screen readers will announce changes to these areas
+ */
+#notifications {
+    /* sr-only by default, but ensure it's in the DOM */
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+/* Toast notifications should be visible */
+.toast-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    min-width: 300px;
+    max-width: 500px;
+    padding: 16px 20px;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Dark mode support for toasts */
+[data-theme="dark"] .toast-notification {
+    background-color: #2a2a2a;
+    color: #ffffff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* ====================================
+   KEYBOARD NAVIGATION INDICATORS
+   ==================================== */
+
+/**
+ * Visual indicator when navigating with keyboard
+ */
+body.keyboard-navigation *:focus {
+    outline: 3px solid var(--accent-primary, #e57c35);
+    outline-offset: 3px;
+}
+
+body.keyboard-navigation button:focus,
+body.keyboard-navigation a:focus {
+    box-shadow: 0 0 0 6px rgba(229, 124, 53, 0.15);
+}
+
+/* ====================================
+   MODAL ACCESSIBILITY
+   ==================================== */
+
+/**
+ * Ensure modals are properly announced and focusable
+ */
+.modal[aria-hidden="true"] {
+    display: none;
+}
+
+.modal[aria-hidden="false"] {
+    display: flex;
+}
+
+/* Focus trap indicator */
+.modal[aria-modal="true"]:focus-within {
+    /* Modal is active and receiving focus */
+}
+
+/* ====================================
+   TOUCH TARGET SIZE
+   ==================================== */
+
+/**
+ * Ensure touch targets are at least 44x44px
+ * Requirement: WCAG 2.1 - 2.5.5 Target Size (Level AAA)
+ */
+button,
+a,
+.nav-item,
+.chatbot-fab,
+input[type="checkbox"],
+input[type="radio"] {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* For smaller visual elements, extend the clickable area */
+.nav-item,
+.theme-btn,
+.modal-close,
+.chatbot-close {
+    position: relative;
+}
+
+.nav-item::before,
+.theme-btn::before,
+.modal-close::before,
+.chatbot-close::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* ====================================
+   TEXT SPACING
+   ==================================== */
+
+/**
+ * Support for custom text spacing
+ * Requirement: WCAG 2.1 - 1.4.12 Text Spacing (Level AA)
+ */
+@media (min-width: 768px) {
+    body.custom-spacing {
+        line-height: 1.5;
+        letter-spacing: 0.12em;
+        word-spacing: 0.16em;
+    }
+
+    body.custom-spacing p {
+        margin-bottom: 2em;
+    }
+}
+
+/* ====================================
+   COLOR CONTRAST
+   ==================================== */
+
+/**
+ * Ensure sufficient color contrast
+ * Requirement: WCAG 2.1 - 1.4.3 Contrast (Minimum) (Level AA)
+ * - Normal text: 4.5:1
+ * - Large text: 3:1
+ */
+
+/* Override low contrast combinations */
+.low-contrast-warning {
+    outline: 2px dashed #ff0000;
+    outline-offset: 2px;
+}
+
+/* ====================================
+   FORM ACCESSIBILITY
+   ==================================== */
+
+/**
+ * Enhanced form field accessibility
+ */
+input:invalid:focus,
+textarea:invalid:focus,
+select:invalid:focus {
+    outline-color: #dc3545;
+    box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+}
+
+input:valid:focus,
+textarea:valid:focus,
+select:valid:focus {
+    outline-color: #28a745;
+    box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
+}
+
+/* Required field indicator */
+.required::after {
+    content: ' *';
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Error message styling */
+.error-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.error-message::before {
+    content: '⚠';
+    font-size: 1rem;
+}
+
+/* ====================================
+   ARIA ATTRIBUTES VISUAL FEEDBACK
+   ==================================== */
+
+/**
+ * Visual feedback for elements with ARIA attributes
+ * (For development/testing only - remove in production)
+ */
+[aria-hidden="true"] {
+    /* Hidden from assistive technologies */
+}
+
+[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+[aria-expanded="true"] {
+    /* Expanded state */
+}
+
+[aria-expanded="false"] {
+    /* Collapsed state */
+}
+
+[aria-current="page"] {
+    /* Current page indicator */
+    font-weight: 600;
+}
+
+/* ====================================
+   LOADING STATES
+   ==================================== */
+
+/**
+ * Accessible loading indicators
+ */
+.loading[aria-busy="true"]::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    border: 2px solid rgba(229, 124, 53, 0.3);
+    border-top-color: var(--accent-primary, #e57c35);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ====================================
+   UTILITIES
+   ==================================== */
+
+/**
+ * Utility classes for accessibility
+ */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.not-sr-only {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* Focus trap boundary */
+.focus-trap-boundary {
+    position: relative;
+}
+
+.focus-trap-boundary::before,
+.focus-trap-boundary::after {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 1px;
+}

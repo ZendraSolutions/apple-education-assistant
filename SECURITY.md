@@ -1,6 +1,6 @@
 # Medidas de Seguridad Web Implementadas
 
-**Proyecto:** Asistente Education
+**Proyecto:** Apple Edu Assistant
 **Fecha:** 2025-12-24
 **Arquitecto de Seguridad:** Implementación CSP, SRI y Security Headers
 
@@ -8,7 +8,7 @@
 
 ## Resumen Ejecutivo
 
-Se han implementado múltiples capas de seguridad web en la aplicación "Asistente Education" siguiendo las mejores prácticas de la industria para aplicaciones SPA (Single Page Application) estáticas hospedadas en GitHub Pages.
+Se han implementado múltiples capas de seguridad web en la aplicación "Apple Edu Assistant" siguiendo las mejores prácticas de la industria para aplicaciones SPA (Single Page Application) estáticas hospedadas en GitHub Pages.
 
 ---
 
@@ -375,7 +375,7 @@ Cuando se actualice una dependencia CDN:
 
 ## Conclusión
 
-La aplicación "Asistente Education" implementa un stack de seguridad web robusto que protege contra las amenazas más comunes:
+La aplicación "Apple Edu Assistant" implementa un stack de seguridad web robusto que protege contra las amenazas más comunes:
 
 - ✅ **XSS (Cross-Site Scripting)** → CSP + DOMPurify
 - ✅ **Clickjacking** → frame-ancestors 'none'

@@ -2,7 +2,7 @@
 
 ## Resumen
 
-Sistema completo de consentimiento RGPD/ePrivacy implementado para la aplicación "Asistente Education", totalmente integrado con el diseño existente y cumpliendo con la normativa europea.
+Sistema completo de consentimiento RGPD/ePrivacy implementado para la aplicación "Apple Edu Assistant", totalmente integrado con el diseño existente y cumpliendo con la normativa europea.
 
 ## Archivos Modificados y Creados
 

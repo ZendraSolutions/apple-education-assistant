@@ -248,4 +248,4 @@ localStorage.getItem('jamf-api-settings')
 
 ## Autor
 
-Implementado por Claude Opus 4.5 (Anthropic) como mejora de seguridad para el proyecto "Asistente Education".
+Implementado por Claude Opus 4.5 (Anthropic) como mejora de seguridad para el proyecto "Apple Edu Assistant".

@@ -247,6 +247,30 @@ export class Container {
     }
 
     /**
+     * Registers a factory function for creating instances
+     * Shorthand for register() with factory: true
+     *
+     * @param {string} name - Service identifier
+     * @param {Function} factory - Factory function that returns an instance
+     * @param {boolean} [singleton=false] - If true, result is cached as singleton
+     * @returns {this} Container instance for chaining
+     *
+     * @example
+     * // Register a factory that creates new instances
+     * container.registerFactory('client', () => new ApiClient());
+     *
+     * @example
+     * // Register a singleton factory
+     * container.registerFactory('config', () => loadConfig(), true);
+     */
+    registerFactory(name, factory, singleton = false) {
+        return this.register(name, factory, {
+            factory: true,
+            lifecycle: singleton ? 'singleton' : 'transient'
+        });
+    }
+
+    /**
      * Resolves a service and all its dependencies
      *
      * @param {string} name - Service identifier to resolve

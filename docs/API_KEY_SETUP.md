@@ -403,7 +403,7 @@ Si después de seguir esta guía tienes problemas:
 
 1. **Revisa la sección "Qué hacer si no funciona"** (arriba)
 2. **Consulta el FAQ** en `docs/FAQ.md`
-3. **Contacta con IT del Colegio Huerta Santa Ana**
+3. **Contacta con el departamento de IT**
 
 **Información útil al pedir ayuda**:
 - Captura de pantalla del error

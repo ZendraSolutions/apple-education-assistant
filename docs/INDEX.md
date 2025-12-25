@@ -352,7 +352,7 @@ Cuando necesite modificar:
 
 ## Contacto y Feedback
 
-**Docentes**: Contacta con IT del Colegio Huerta Santa Ana para:
+**Docentes**: Contacta con el departamento de IT para:
 - Reportar errores en la documentación
 - Sugerir mejoras o aclaraciones
 - Solicitar documentación adicional

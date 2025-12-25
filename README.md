@@ -1,4 +1,4 @@
-# Apple Edu Assistant - Colegio Huerta Santa Ana
+# Apple Edu Assistant
 
 Asistente de soporte técnico para gestión de dispositivos Apple en entornos educativos.
 

@@ -5,7 +5,6 @@
  * @license MIT
  *
  * Jamf Assistant - Educational AI Chatbot
- * Colegio Huerta Santa Ana - Gines, Sevilla
  *
  * Architecture: Clean Architecture with Dependency Injection
  * - ChatbotCore: Orchestrator (no business logic)

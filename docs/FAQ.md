@@ -8,7 +8,7 @@ Respuestas rápidas a las dudas más comunes sobre Jamf Assistant.
 
 ### ¿Qué es Jamf Assistant?
 
-Jamf Assistant es una aplicación web diseñada para ayudar a los docentes del Colegio Huerta Santa Ana a gestionar el ecosistema de dispositivos Apple. Incluye:
+Jamf Assistant es una aplicación web diseñada para ayudar a los docentes a gestionar el ecosistema de dispositivos Apple. Incluye:
 - Guías paso a paso para App Aula, Jamf School y Apple School Manager
 - Chatbot con IA para resolver dudas en tiempo real
 - Diagnósticos interactivos para solucionar problemas comunes
@@ -323,7 +323,7 @@ Sí, pero está **optimizada para tablets y ordenadores**. En móviles:
 
 ### ¿Dónde reporto errores o sugiero mejoras?
 
-Contacta con el **departamento de IT del Colegio Huerta Santa Ana**. Ellos canalizarán tu feedback al equipo de desarrollo.
+Contacta con **el departamento de IT**. Ellos canalizarán tu feedback al equipo de desarrollo.
 
 **Información útil al reportar un error:**
 - Dispositivo que usas (iPad, Mac, Windows)

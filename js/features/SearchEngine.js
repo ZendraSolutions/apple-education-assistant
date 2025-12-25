@@ -121,16 +121,18 @@ export class SearchEngine {
         if (!eventBus) {
             throw new TypeError('SearchEngine requires an EventBus instance');
         }
+
+        // Graceful degradation - work with partial data
         if (!knowledgeBase) {
-            throw new TypeError('SearchEngine requires a knowledgeBase');
+            console.warn('[SearchEngine] knowledgeBase not provided - guide search disabled');
         }
         if (!diagnostics) {
-            throw new TypeError('SearchEngine requires diagnostics data');
+            console.warn('[SearchEngine] diagnostics not provided - diagnostic search disabled');
         }
 
         this.#eventBus = eventBus;
-        this.#knowledgeBase = knowledgeBase;
-        this.#diagnostics = diagnostics;
+        this.#knowledgeBase = knowledgeBase || {};
+        this.#diagnostics = diagnostics || {};
         this.#document = doc || (typeof document !== 'undefined' ? document : null);
     }
 

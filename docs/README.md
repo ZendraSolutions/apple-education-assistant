@@ -6,7 +6,7 @@ Bienvenido a la documentación de Jamf Assistant. Aquí encontrarás toda la inf
 
 ## Documentación para Usuarios (Docentes)
 
-Si eres docente del Colegio Huerta Santa Ana, empieza aquí:
+Si eres docente, empieza aquí:
 
 ### 1. [Manual del Usuario](USER_GUIDE.md)
 **Lectura esencial** - Guía completa de cómo usar Jamf Assistant.
@@ -264,7 +264,7 @@ docs/
 
 Si encuentras errores o quieres sugerir mejoras:
 
-1. **Docentes**: Contacta con IT del Colegio Huerta Santa Ana
+1. **Docentes**: Contacta con el departamento de IT
 2. **Desarrolladores**: Abre un issue o pull request en el repositorio
 
 ---
@@ -299,7 +299,7 @@ Si encuentras errores o quieres sugerir mejoras:
 **Última actualización**: Enero 2025
 **Versión del proyecto**: 3.0.0
 **Mantenido por**: Equipo de desarrollo de Jamf Assistant
-**Dirigido a**: Docentes del Colegio Huerta Santa Ana y desarrolladores
+**Dirigido a**: Docentes y desarrolladores
 
 ---
 

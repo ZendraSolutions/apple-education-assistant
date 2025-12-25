@@ -2,7 +2,7 @@
 
 ## Introducción
 
-Jamf Assistant es tu asistente personal para la gestión del ecosistema Apple en el Colegio Huerta Santa Ana. Te ayuda a resolver problemas con iPads, Macs, la App Aula y Jamf School de forma rápida y sencilla. Con acceso a guías paso a paso, checklists y un chatbot con inteligencia artificial, tendrás soporte 24/7 a tu alcance.
+Jamf Assistant es tu asistente personal para la gestión del ecosistema Apple en tu centro educativo. Te ayuda a resolver problemas con iPads, Macs, la App Aula y Jamf School de forma rápida y sencilla. Con acceso a guías paso a paso, checklists y un chatbot con inteligencia artificial, tendrás soporte 24/7 a tu alcance.
 
 ---
 
@@ -20,7 +20,7 @@ Jamf Assistant es tu asistente personal para la gestión del ecosistema Apple en
 La primera vez que accedes, verás una pantalla de bienvenida con:
 
 - **Logo educativo**: Un birrete de graduación combinado con una manzana
-- **Título**: Apple Edu Assistant - Colegio Huerta Santa Ana
+- **Título**: Apple Edu Assistant
 - **Carga automática**: La app se prepara en segundos
 
 Después aparecerá un **banner de privacidad** donde puedes:
@@ -147,7 +147,7 @@ El chatbot es tu asistente virtual con inteligencia artificial, potenciado por G
 El chatbot tiene acceso a:
 - ✅ **Base de conocimientos** de Jamf, Apple School Manager y App Aula
 - ✅ **Internet** para consultar documentación oficial actualizada
-- ✅ **Contexto educativo** específico del Colegio Huerta Santa Ana
+- ✅ **Contexto educativo** para entornos escolares
 
 **Importante**: El chatbot **NO** tiene acceso a datos personales ni información privada del centro. Solo consulta documentación pública.
 
@@ -479,4 +479,4 @@ Tus datos están seguros:
 
 **Versión del manual**: 1.0.0
 **Última actualización**: Diciembre 2024
-**Creado para**: Docentes del Colegio Huerta Santa Ana
+**Creado para**: Docentes

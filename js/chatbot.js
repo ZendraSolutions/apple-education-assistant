@@ -1,7 +1,6 @@
 /**
  * JAMF ASSISTANT - Chatbot Module v5 (Modular Architecture)
  * Sistema RAG centrado en ASM + Jamf School + App Aula
- * Colegio Huerta Santa Ana - Gines, Sevilla
  *
  * @version 5.1.0
  * @license MIT

@@ -2,7 +2,7 @@
     "name": "jamf-assistant",
     "version": "1.0.0",
     "type": "module",
-    "description": "Gestión inteligente del ecosistema Apple educativo para Colegio Huerta Santa Ana",
+    "description": "Gestión inteligente del ecosistema Apple educativo",
     "scripts": {
         "test": "jest",
         "test:coverage": "jest --coverage",

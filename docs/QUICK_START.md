@@ -1,6 +1,6 @@
 # Guía de Inicio Rápido - Jamf Assistant
 
-**Para:** Docentes del Colegio Huerta Santa Ana
+**Para:** Docentes
 **Tiempo de lectura:** 3 minutos
 **Objetivo:** Empezar a usar Jamf Assistant en menos de 5 minutos
 
@@ -268,6 +268,6 @@ El chatbot te ayuda con preguntas complejas usando inteligencia artificial de Go
 
 **Versión:** 1.0.0
 **Actualizado:** 25/12/2024
-**Creado para:** Docentes del Colegio Huerta Santa Ana
+**Creado para:** Docentes
 
 **¡Disfruta usando Jamf Assistant!** 🎉

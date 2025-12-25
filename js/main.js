@@ -112,11 +112,37 @@ async function initializeApplication() {
         // ====================================================================
         // 2. Register external global dependencies
         // These are loaded via script tags before main.js
+        // Note: knowledge-base.js uses async loading, so we must wait for it
         // ====================================================================
+
+        // Wait for KnowledgeBase to be loaded (async dynamic imports)
+        if (typeof KnowledgeBase === 'undefined') {
+            console.log('[Main] Waiting for KnowledgeBase to load...');
+            await new Promise((resolve, reject) => {
+                // Check if already loaded
+                if (typeof window.KnowledgeBase !== 'undefined') {
+                    resolve();
+                    return;
+                }
+
+                // Wait for the load event
+                const timeout = setTimeout(() => {
+                    console.warn('[Main] KnowledgeBase load timeout - continuing without it');
+                    resolve();
+                }, 5000);
+
+                window.addEventListener('knowledgeBaseLoaded', () => {
+                    clearTimeout(timeout);
+                    console.log('[Main] KnowledgeBase loaded via event');
+                    resolve();
+                }, { once: true });
+            });
+        }
 
         // KnowledgeBase - Global object from knowledge-base.js
         if (typeof KnowledgeBase !== 'undefined') {
             container.registerInstance('knowledgeBase', KnowledgeBase);
+            console.log('[Main] KnowledgeBase registered successfully');
         } else {
             console.warn('[Main] KnowledgeBase not found - some features may not work');
         }

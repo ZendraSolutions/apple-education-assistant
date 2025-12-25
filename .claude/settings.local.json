@@ -52,7 +52,8 @@
       "Bash(\"/c/Program Files/GitHub CLI/gh.exe\" run list --repo ZendraSolutions/apple-education-assistant --limit 1)",
       "Bash(npm test:*)",
       "Bash(test:*)",
-      "Bash(python -m json.tool:*)"
+      "Bash(python -m json.tool:*)",
+      "Bash(node test-container.js:*)"
     ]
   }
 }

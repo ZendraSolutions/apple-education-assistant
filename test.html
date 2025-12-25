@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Container Test</title>
+</head>
+<body>
+    <h1>Container Test</h1>
+    <div id="output"></div>
+
+    <script type="module">
+        import { Container } from './js/core/Container.js';
+        import { createContainer } from './js/core/bootstrap.js';
+
+        const output = document.getElementById('output');
+
+        function log(msg) {
+            const p = document.createElement('p');
+            p.textContent = msg;
+            output.appendChild(p);
+            console.log(msg);
+        }
+
+        try {
+            log('Creating container via new Container()...');
+            const directContainer = new Container();
+            log('✓ Direct container created');
+            log('registerFactory type: ' + typeof directContainer.registerFactory);
+
+            if (typeof directContainer.registerFactory === 'function') {
+                directContainer.registerFactory('test', () => ({ value: 'test' }), true);
+                log('✓ registerFactory worked on direct container');
+            } else {
+                log('✗ registerFactory is not a function on direct container');
+            }
+
+        } catch (error) {
+            log('✗ Error with direct container: ' + error.message);
+            console.error(error);
+        }
+
+        try {
+            log('\nCreating container via createContainer()...');
+            const bootstrapContainer = createContainer({ debug: true });
+            log('✓ Bootstrap container created');
+            log('registerFactory type: ' + typeof bootstrapContainer.registerFactory);
+
+            if (typeof bootstrapContainer.registerFactory === 'function') {
+                bootstrapContainer.registerFactory('test2', () => ({ value: 'test2' }), true);
+                log('✓ registerFactory worked on bootstrap container');
+            } else {
+                log('✗ registerFactory is not a function on bootstrap container');
+            }
+
+        } catch (error) {
+            log('✗ Error with bootstrap container: ' + error.message);
+            console.error(error);
+        }
+    </script>
+</body>
+</html>

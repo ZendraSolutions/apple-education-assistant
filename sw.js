@@ -8,7 +8,7 @@
  * - Offline fallback page
  */
 
-const CACHE_VERSION = 'v1.0.0';
+const CACHE_VERSION = 'v1.1.0';
 const CACHE_NAME = `jamf-edu-${CACHE_VERSION}`;
 
 // Assets to cache on install

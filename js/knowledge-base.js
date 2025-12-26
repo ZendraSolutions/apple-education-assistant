@@ -31,21 +31,32 @@
     'use strict';
 
     try {
-        // Determine the base path for imports
-        const scripts = document.getElementsByTagName('script');
-        let basePath = '';
-        for (let i = 0; i < scripts.length; i++) {
-            const src = scripts[i].src;
-            if (src.includes('knowledge-base.js')) {
-                basePath = src.replace('knowledge-base.js', 'data/');
-                break;
+        // Determine the base path for imports (handles GitHub Pages correctly)
+        function getBasePath() {
+            // Method 1: Try to get absolute URL from script element
+            const scripts = document.getElementsByTagName('script');
+            for (let i = 0; i < scripts.length; i++) {
+                const src = scripts[i].src;
+                if (src && src.includes('knowledge-base.js')) {
+                    // Only use if it's an absolute URL
+                    if (src.startsWith('http') || src.startsWith('file')) {
+                        return src.replace('knowledge-base.js', 'data/');
+                    }
+                }
             }
+
+            // Method 2: Construct from current page location
+            // This handles GitHub Pages: https://user.github.io/repo/
+            const loc = window.location;
+            const pathname = loc.pathname;
+            const lastSlash = pathname.lastIndexOf('/');
+            const base = lastSlash > 0 ? pathname.substring(0, lastSlash + 1) : '/';
+
+            return `${loc.origin}${base}js/data/`;
         }
 
-        // If we couldn't determine the path, use relative path
-        if (!basePath) {
-            basePath = './js/data/';
-        }
+        const basePath = getBasePath();
+        console.log('[KnowledgeBase] Base path:', basePath);
 
         // Import all modules in parallel
         const [

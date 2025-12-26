@@ -113,13 +113,15 @@ export class DiagnosticsManager {
         if (!modalManager) {
             throw new TypeError('DiagnosticsManager requires a ModalManager instance');
         }
+
+        // Graceful degradation - work without diagnostics data
         if (!diagnostics) {
-            throw new TypeError('DiagnosticsManager requires diagnostics data');
+            console.warn('[DiagnosticsManager] diagnostics data not provided - troubleshooting disabled');
         }
 
         this.#eventBus = eventBus;
         this.#modalManager = modalManager;
-        this.#diagnostics = diagnostics;
+        this.#diagnostics = diagnostics || {};
     }
 
     /**

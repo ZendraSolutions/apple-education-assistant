@@ -266,7 +266,7 @@ async function initializeApplication() {
                     <p style="font-size: 0.875em; margin-top: 16px; color: var(--text-tertiary);">
                         Error: ${error.message}
                     </p>
-                    <button onclick="location.reload()" style="
+                    <button id="reload-btn" style="
                         margin-top: 24px;
                         padding: 12px 24px;
                         background: var(--accent-primary);
@@ -279,6 +279,11 @@ async function initializeApplication() {
                     </button>
                 </div>
             `;
+
+            // Add event listener instead of inline onclick (CSP compliance)
+            document.getElementById('reload-btn')?.addEventListener('click', () => {
+                location.reload();
+            });
         }
     }
 }

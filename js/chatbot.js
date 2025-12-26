@@ -214,7 +214,7 @@ class JamfChatbot {
             if (this.#apiKeyManager.hasKey) {
                 const rateLimitCheck = this.#rateLimiter.canMakeCall();
                 if (!rateLimitCheck.allowed) {
-                    this.#showRateLimitMessage(message, rateLimitCheck.waitTime);
+                    this.#showRateLimitMessage(message, rateLimitCheck.waitTime, rateLimitCheck.penalized);
                     return;
                 }
             }
@@ -255,20 +255,45 @@ class JamfChatbot {
         }
     }
 
-    #showRateLimitMessage(message, waitTime) {
-        const waitMinutes = Math.floor(waitTime / 60);
-        const waitSeconds = waitTime % 60;
-        const timeText = waitMinutes > 0
-            ? `${waitMinutes} minuto${waitMinutes > 1 ? 's' : ''} y ${waitSeconds} segundo${waitSeconds !== 1 ? 's' : ''}`
-            : `${waitSeconds} segundo${waitSeconds !== 1 ? 's' : ''}`;
-
+    /**
+     * Shows rate limit exceeded message
+     * @private
+     * @param {string} message - Original user message
+     * @param {number} waitTime - Seconds to wait
+     * @param {boolean} [penalized=false] - Whether user is under security penalty
+     */
+    #showRateLimitMessage(message, waitTime, penalized = false) {
         this.#chatUI.addUserMessage(message);
-        this.#chatUI.addBotMessage(
-            `**Limite de consultas alcanzado**\n\n` +
-            `Para proteger tu cuota de API, he limitado las llamadas a ${this.#rateLimiter.maxCalls} por minuto.\n\n` +
-            `Por favor, espera **${timeText}** antes de hacer otra consulta.\n\n` +
-            `_Esto protege tu API Key de Google de consumir toda su cuota gratuita._`
-        );
+
+        if (penalized) {
+            // Security penalty message - user attempted to manipulate rate limiter
+            const waitHours = Math.floor(waitTime / 3600);
+            const waitMinutes = Math.floor((waitTime % 3600) / 60);
+            const timeText = waitHours > 0
+                ? `${waitHours} hora${waitHours > 1 ? 's' : ''} y ${waitMinutes} minuto${waitMinutes > 1 ? 's' : ''}`
+                : `${waitMinutes} minuto${waitMinutes > 1 ? 's' : ''}`;
+
+            this.#chatUI.addBotMessage(
+                `**Acceso restringido por seguridad**\n\n` +
+                `Se ha detectado un intento de manipulacion del sistema de proteccion.\n\n` +
+                `El acceso a la API ha sido suspendido por **${timeText}**.\n\n` +
+                `_Esta medida protege los recursos del sistema contra uso indebido._`
+            );
+        } else {
+            // Normal rate limit message
+            const waitMinutes = Math.floor(waitTime / 60);
+            const waitSeconds = waitTime % 60;
+            const timeText = waitMinutes > 0
+                ? `${waitMinutes} minuto${waitMinutes > 1 ? 's' : ''} y ${waitSeconds} segundo${waitSeconds !== 1 ? 's' : ''}`
+                : `${waitSeconds} segundo${waitSeconds !== 1 ? 's' : ''}`;
+
+            this.#chatUI.addBotMessage(
+                `**Limite de consultas alcanzado**\n\n` +
+                `Para proteger tu cuota de API, he limitado las llamadas a ${this.#rateLimiter.maxCalls} por minuto.\n\n` +
+                `Por favor, espera **${timeText}** antes de hacer otra consulta.\n\n` +
+                `_Esto protege tu API Key de Google de consumir toda su cuota gratuita._`
+            );
+        }
 
         this.#isProcessing = false;
     }

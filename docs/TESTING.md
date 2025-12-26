@@ -1,6 +1,6 @@
-# Testing Guide - Jamf Assistant
+# Testing Guide - Apple Edu Assistant
 
-Guía completa para ejecutar y escribir tests en el proyecto Jamf Assistant.
+Guia completa para ejecutar y escribir tests en el proyecto Apple Edu Assistant.
 
 ## Tabla de Contenidos
 
@@ -90,47 +90,59 @@ npx jest --verbose
 
 ### Estado Actual de los Tests
 
-**⚠️ IMPORTANTE: Los tests están creados pero actualmente en estado de PLANIFICACIÓN.**
-
 Los siguientes archivos de test existen en el proyecto:
-- ✅ `__tests__/core/Container.test.js` (90+ tests escritos)
-- ✅ `__tests__/patterns/ValidatorChain.test.js` (40+ tests escritos)
-- ✅ `__tests__/patterns/SectionRegistry.test.js` (35+ tests escritos)
-- ✅ `__tests__/chatbot/EncryptionService.test.js` (40+ tests escritos)
-- ✅ `__tests__/chatbot/RateLimiter.test.js` (35+ tests escritos)
-- ✅ `__tests__/utils/EventBus.test.js` (45+ tests escritos)
 
-**Estado:** Requieren configuración de Jest para ES6 Modules antes de ejecutarse.
+| Test File | Module | Tests | Status |
+|-----------|--------|-------|--------|
+| `__tests__/core/Container.test.js` | IoC Container | 90+ | Ready |
+| `__tests__/core/StateManager.test.js` | State Management | 25+ | Ready |
+| `__tests__/patterns/ValidatorChain.test.js` | API Key Validation | 40+ | Ready |
+| `__tests__/patterns/SectionRegistry.test.js` | View Registry | 35+ | Ready |
+| `__tests__/chatbot/EncryptionService.test.js` | AES-256-GCM | 40+ | Ready |
+| `__tests__/chatbot/RateLimiter.test.js` | Rate Limiting | 35+ | Ready |
+| `__tests__/chatbot/GeminiClient.test.js` | Gemini API | 30+ | Ready |
+| `__tests__/utils/EventBus.test.js` | Pub/Sub Events | 45+ | Ready |
 
-**Salida Esperada (una vez configurado):**
+**Total: 8 test suites, 340+ tests escritos**
+
+**Salida Esperada:**
 
 ```
 PASS  __tests__/core/Container.test.js
+PASS  __tests__/core/StateManager.test.js
 PASS  __tests__/patterns/ValidatorChain.test.js
 PASS  __tests__/patterns/SectionRegistry.test.js
 PASS  __tests__/chatbot/EncryptionService.test.js
 PASS  __tests__/chatbot/RateLimiter.test.js
+PASS  __tests__/chatbot/GeminiClient.test.js
 PASS  __tests__/utils/EventBus.test.js
 
-Test Suites: 6 passed, 6 total
-Tests:       150+ passed, 150+ total
+Test Suites: 8 passed, 8 total
+Tests:       340+ passed, 340+ total
 Snapshots:   0 total
-Time:        5.432s
+Time:        6.5s
 ```
 
-### Configuración Pendiente
+### Configuracion Instalada
 
-Para ejecutar los tests, se requiere:
+El proyecto ya tiene instaladas las dependencias necesarias:
 
-1. **Configurar Jest para ES6 Modules**: Actualizar `jest.config.js` con soporte para `import/export`
-2. **Babel Transform**: Instalar `@babel/preset-env` para transformar módulos ES6
-3. **JSDOM configurado**: Ya instalado (`jest-environment-jsdom`)
+```json
+{
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@jest/globals": "^29.7.0",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+}
+```
 
 **Roadmap de Testing:**
-- ✅ **Fase 1 (Completada)**: Escribir todos los tests (150+ tests)
-- 🔄 **Fase 2 (En progreso)**: Configurar entorno de ejecución Jest
-- ⏳ **Fase 3 (Planificada)**: Ejecutar y validar cobertura > 80%
-- ⏳ **Fase 4 (Planificada)**: Integración con CI/CD
+- [x] **Fase 1**: Escribir todos los tests (340+ tests)
+- [x] **Fase 2**: Instalar dependencias (Babel, Jest, JSDOM)
+- [ ] **Fase 3**: Ejecutar y validar cobertura > 80%
+- [ ] **Fase 4**: Integracion con CI/CD (GitHub Actions)
 
 ---
 
@@ -139,22 +151,27 @@ Para ejecutar los tests, se requiere:
 ### Organización de Archivos
 
 ```
-jamf-assistant/
+apple-edu-assistant/
 ├── __tests__/
 │   ├── core/
-│   │   └── Container.test.js
+│   │   ├── Container.test.js
+│   │   └── StateManager.test.js
 │   ├── patterns/
 │   │   ├── ValidatorChain.test.js
 │   │   └── SectionRegistry.test.js
 │   ├── chatbot/
 │   │   ├── EncryptionService.test.js
-│   │   └── RateLimiter.test.js
+│   │   ├── RateLimiter.test.js
+│   │   └── GeminiClient.test.js
 │   └── utils/
 │       └── EventBus.test.js
 ├── js/
 │   ├── core/
 │   ├── patterns/
 │   ├── chatbot/
+│   ├── features/
+│   ├── ui/
+│   ├── views/
 │   └── utils/
 ├── jest.config.js
 └── package.json
@@ -307,7 +324,7 @@ describe('RateLimiter', () => {
 
 **Tests incluidos:**
 - on/off/once/emit
-- Múltiples listeners
+- Multiples listeners
 - Manejo de errores
 - Cleanup y memory leaks
 - AppEvents constants
@@ -322,6 +339,62 @@ describe('EventBus', () => {
         eventBus.emit('test:event', { data: 'test' });
 
         expect(callback).toHaveBeenCalledWith({ data: 'test' });
+    });
+});
+```
+
+### 7. StateManager
+
+**Archivo:** `__tests__/core/StateManager.test.js`
+
+**Tests incluidos:**
+- Inicializacion y carga desde localStorage
+- get/set/remove operaciones
+- Persistencia automatica
+- Eventos state:changed
+- Valores por defecto
+- Limpieza de estado
+
+**Ejemplo:**
+```javascript
+describe('StateManager', () => {
+    it('should persist state to localStorage', () => {
+        stateManager.set('theme', 'dark');
+
+        expect(stateManager.get('theme')).toBe('dark');
+        expect(localStorage.getItem('jamf-state')).toContain('dark');
+    });
+});
+```
+
+### 8. GeminiClient
+
+**Archivo:** `__tests__/chatbot/GeminiClient.test.js`
+
+**Tests incluidos:**
+- Construccion con API key
+- Envio de mensajes
+- Manejo de system prompt
+- Historial de conversacion
+- Manejo de errores de red
+- Rate limiting y reintentos
+- Limpieza de historial
+
+**Ejemplo:**
+```javascript
+describe('GeminiClient', () => {
+    it('should send message and receive response', async () => {
+        const client = new GeminiClient('test-api-key');
+
+        global.fetch = jest.fn().mockResolvedValue({
+            ok: true,
+            json: () => Promise.resolve({
+                candidates: [{ content: { parts: [{ text: 'Hello!' }] } }]
+            })
+        });
+
+        const response = await client.sendMessage('Hi');
+        expect(response).toBe('Hello!');
     });
 });
 ```
@@ -719,5 +792,99 @@ Al añadir nuevas features:
 
 ---
 
-**Última actualización:** 2024-12-25
-**Versión:** 1.0.0
+## CI/CD Integration
+
+### GitHub Actions Workflow
+
+Para agregar testing automatico en CI/CD, crea `.github/workflows/test.yml`:
+
+```yaml
+name: Run Tests
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+```
+
+### Pre-commit Hook
+
+Para ejecutar tests antes de cada commit, agrega a `package.json`:
+
+```json
+{
+    "scripts": {
+        "precommit": "npm test"
+    }
+}
+```
+
+O usa Husky para hooks de Git:
+
+```bash
+npm install husky --save-dev
+npx husky init
+echo "npm test" > .husky/pre-commit
+```
+
+---
+
+## Modules Pending Tests
+
+Los siguientes modulos aun no tienen tests:
+
+| Module | Priority | Reason |
+|--------|----------|--------|
+| `js/ui/ToastManager.js` | Medium | UI component, less critical |
+| `js/ui/OnboardingTour.js` | Low | Visual-only, hard to test |
+| `js/ui/TooltipManager.js` | Low | DOM-heavy, requires integration tests |
+| `js/ui/FocusTrap.js` | Medium | Accessibility critical |
+| `js/features/SearchEngine.js` | High | Core functionality |
+| `js/features/ChecklistManager.js` | Medium | State management |
+| `js/patterns/RenderStrategy.js` | Medium | New pattern |
+| `js/chatbot/RAGEngine.js` | High | Core AI functionality |
+| `js/chatbot/ChatUI.js` | Low | UI component |
+| `js/chatbot/ApiKeyManager.js` | High | Security critical |
+
+### Suggested Next Tests
+
+1. **ApiKeyManager** - Security-critical, handles encryption
+2. **RAGEngine** - Core search and context building
+3. **SearchEngine** - User-facing search functionality
+4. **FocusTrap** - Accessibility compliance
+
+---
+
+**Version**: 1.1.0
+**Last Updated**: 2025-01-15
+**Maintained By**: Apple Edu Assistant Team

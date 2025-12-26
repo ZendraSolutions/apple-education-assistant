@@ -1,14 +1,19 @@
 /**
  * @fileoverview Gemini API Client - HTTP client for Google Gemini
  * @module chatbot/GeminiClient
- * @version 2.0.0
+ * @version 2.2.0
  * @license MIT
  *
  * Handles all communication with the Google Gemini API.
  * Supports RAG context injection and conversation history.
+ * Includes ErrorMonitor integration for production error tracking.
  *
  * @security API key is passed via header, not URL parameters
+ * @security Integrates PromptGuard for injection protection
  */
+
+import { PromptGuard } from './PromptGuard.js';
+import { ErrorMonitor } from '../core/ErrorMonitor.js';
 
 /**
  * @typedef {Object} ConversationMessage
@@ -117,12 +122,13 @@ export class GeminiClient {
 
     /**
      * Sends a message to Gemini with optional context and history
+     * Applies PromptGuard protection against injection attacks
      *
      * @param {string} userMessage - User's message
      * @param {string} systemPrompt - System instructions
      * @param {string} [ragContext=''] - RAG-retrieved context
      * @returns {Promise<string>} Model's response
-     * @throws {GeminiApiError} If API call fails
+     * @throws {GeminiApiError} If API call fails or message is blocked
      *
      * @example
      * const response = await client.sendMessage(
@@ -130,17 +136,57 @@ export class GeminiClient {
      *   systemPrompt,
      *   ragContext
      * );
+     *
+     * @security User messages and RAG context are validated and sanitized
      */
     async sendMessage(userMessage, systemPrompt, ragContext = '') {
+        // Add breadcrumb for request tracking
+        ErrorMonitor.addBreadcrumb({
+            category: 'api',
+            message: 'Sending message to Gemini API',
+            level: 'info',
+            data: {
+                model: this.#model,
+                hasContext: !!ragContext,
+                messageLength: userMessage?.length || 0
+            }
+        });
+
+        // Validate user message for injection attempts
+        const userValidation = PromptGuard.validateUserMessage(userMessage);
+        if (!userValidation.valid) {
+            console.warn('[GeminiClient] User message blocked:', userValidation.threats);
+            throw new GeminiApiError(
+                'Tu mensaje contiene patrones no permitidos. Por favor, reformula tu pregunta.',
+                400
+            );
+        }
+
+        // Use the validated/truncated message
+        const safeUserMessage = userValidation.message;
+
         // Add user message to history
         this.#conversationHistory.push({
             role: 'user',
-            parts: [{ text: userMessage }]
+            parts: [{ text: safeUserMessage }]
         });
 
-        // Build full prompt with context
-        const fullSystemPrompt = ragContext
-            ? `${systemPrompt}\n\nDOCUMENTACION OFICIAL DE JAMF:\n${ragContext}`
+        // Sanitize RAG context with clear delimiters
+        let safeContext = '';
+        if (ragContext) {
+            const contextAnalysis = PromptGuard.analyze(ragContext);
+            if (contextAnalysis.safe) {
+                safeContext = PromptGuard.sanitize(ragContext);
+                safeContext = PromptGuard.wrapContext(safeContext);
+            } else {
+                console.warn('[GeminiClient] RAG context blocked:', contextAnalysis.threats);
+                // Continue without context rather than failing
+            }
+        }
+
+        // Build full prompt with sanitized context
+        const fullSystemPrompt = safeContext
+            ? `${systemPrompt}\n\n${safeContext}`
             : systemPrompt;
 
         const controller = new AbortController();
@@ -201,17 +247,48 @@ export class GeminiClient {
         } catch (error) {
             clearTimeout(timeoutId);
 
+            // Add breadcrumb for error context
+            ErrorMonitor.addBreadcrumb({
+                category: 'api',
+                message: `Gemini API error: ${error.message}`,
+                level: 'error',
+                data: {
+                    model: this.#model,
+                    historyLength: this.#conversationHistory.length
+                }
+            });
+
             if (error.name === 'AbortError') {
-                throw new GeminiApiError(
+                const timeoutError = new GeminiApiError(
                     `Timeout: La API tardo mas de ${this.#timeout / 1000} segundos en responder`
                 );
+                ErrorMonitor.captureException(timeoutError, {
+                    component: 'GeminiClient',
+                    action: 'sendMessage',
+                    errorType: 'timeout',
+                    timeout: this.#timeout
+                });
+                throw timeoutError;
             }
 
             if (error instanceof GeminiApiError) {
+                ErrorMonitor.captureException(error, {
+                    component: 'GeminiClient',
+                    action: 'sendMessage',
+                    errorType: 'api_error',
+                    statusCode: error.statusCode
+                });
                 throw error;
             }
 
-            throw new GeminiApiError(error.message, null, error);
+            const wrappedError = new GeminiApiError(error.message, null, error);
+            ErrorMonitor.captureException(wrappedError, {
+                component: 'GeminiClient',
+                action: 'sendMessage',
+                errorType: 'unknown',
+                originalError: error.name
+            });
+            throw wrappedError;
         }
     }
 

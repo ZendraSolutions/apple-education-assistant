@@ -10,28 +10,114 @@ permissions:
   pages: write
   id-token: write
 
+# Prevent concurrent deployments
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
+  # Build job - validates and prepares the artifact
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      - name: Install dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Validate manifest.json
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('manifest.json'))"
+          echo "manifest.json is valid JSON"
+
+      - name: Validate service worker
+        run: |
+          node -e "require('fs').accessSync('sw.js')"
+          echo "Service worker exists"
+
+      - name: Check critical files
+        run: |
+          critical_files=("index.html" "css/styles.css" "js/app.js" "js/main.js" "js/chatbot.js")
+          for file in "${critical_files[@]}"; do
+            if [ -f "$file" ]; then
+              echo "$file exists"
+            else
+              echo "CRITICAL: $file missing" && exit 1
+            fi
+          done
+
+      - name: Validate HTML syntax
+        run: |
+          if grep -q "<!DOCTYPE html>" index.html; then
+            echo "index.html has valid DOCTYPE"
+          else
+            echo "CRITICAL: index.html missing DOCTYPE" && exit 1
+          fi
+
+      - name: Prepare deployment directory
+        run: |
+          echo "Preparing clean deployment package..."
+          mkdir -p _deploy
+
+          # Copy only production files (exclude dev/test files)
+          cp -r css _deploy/
+          cp -r js _deploy/
+          cp -r data _deploy/
+          cp -r icons _deploy/
+          cp -r scripts _deploy/
+
+          # Copy root production files
+          cp index.html _deploy/
+          cp manifest.json _deploy/
+          cp sw.js _deploy/
+          cp aviso-legal.html _deploy/ 2>/dev/null || true
+          cp politica-privacidad.html _deploy/ 2>/dev/null || true
+
+          # List what will be deployed
+          echo "=== Deployment package contents ==="
+          find _deploy -type f | head -50
+          echo "=== Package size ==="
+          du -sh _deploy
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_deploy'
+
+  # Deploy job - only runs after successful build
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    needs: build
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-      
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-      
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Deployment Summary
+        run: |
+          echo "=========================================="
+          echo "  DEPLOYMENT SUCCESSFUL"
+          echo "=========================================="
+          echo "URL: ${{ steps.deployment.outputs.page_url }}"
+          echo "Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "=========================================="

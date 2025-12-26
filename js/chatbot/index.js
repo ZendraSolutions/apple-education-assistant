@@ -30,9 +30,11 @@ export { EncryptionService, EncryptionError, DecryptionError } from './Encryptio
 export { ApiKeyManager } from './ApiKeyManager.js';
 export { GeminiClient, GeminiApiError } from './GeminiClient.js';
 export { RAGEngine } from './RAGEngine.js';
+export { EmbeddingService } from './EmbeddingService.js';
 export { ChatUI } from './ChatUI.js';
 export { EventBus, ChatEvents } from './EventBus.js';
 export { ChatbotCore } from './ChatbotCore.js';
+export { PromptGuard } from './PromptGuard.js';
 
 // Import for factory (Composition Root pattern)
 import { RateLimiter } from './RateLimiter.js';

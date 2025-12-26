@@ -28,16 +28,18 @@
     <!-- Security Headers -->
     <!-- Content Security Policy: Define trusted sources for content -->
     <!-- Note: 'unsafe-inline' required for dynamic JS style manipulation (tooltips, animations, etc.) -->
+    <!-- Note: 'wasm-unsafe-eval' required for Transformers.js WebAssembly execution -->
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self';
-        script-src 'self' https://cdn.jsdelivr.net;
+        script-src 'self' 'wasm-unsafe-eval' https://cdn.jsdelivr.net https://browser.sentry-cdn.com;
         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net;
         font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net;
-        connect-src 'self' https://generativelanguage.googleapis.com https://cdn.jsdelivr.net;
+        connect-src 'self' https://generativelanguage.googleapis.com https://cdn.jsdelivr.net https://huggingface.co https://*.huggingface.co https://*.sentry.io https://*.ingest.sentry.io;
         img-src 'self' data:;
         frame-ancestors 'none';
         base-uri 'self';
         form-action 'self';
+        worker-src 'self' blob:;
     ">
     <!-- Prevent MIME type sniffing -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -67,14 +69,39 @@
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.3.1/dist/purify.min.js"
             integrity="sha384-80VlBZnyAwkkqtSfg5NhPyZff6nU4K/qniLBL8Jnm4KDv6jZhLiYtJbhglg/i9ww"
             crossorigin="anonymous"></script>
+
+    <!-- Transformers.js: ML embeddings for semantic search (RAG) -->
+    <!-- Model (~22MB) downloads on first use and is cached by browser -->
+    <script type="module">
+        import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
+        // Disable local model check to always use CDN
+        env.allowLocalModels = false;
+        // Expose to window for EmbeddingService
+        window.TransformersJS = { pipeline, env };
+        console.log('[Transformers.js] Library loaded, ready for semantic search');
+    </script>
+
+    <!-- Error Monitoring: Sentry SDK (optional - works without it in local mode) -->
+    <!-- Note: ErrorMonitor.js will function in local logging mode if Sentry is not loaded -->
+    <script
+        src="https://browser.sentry-cdn.com/8.40.0/bundle.min.js"
+        crossorigin="anonymous"
+        async
+        defer></script>
 </head>
 
 <body>
+    <!-- Skip Link for Keyboard Navigation - WCAG 2.1 AA -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+    <!-- Live Region for Toast Notifications - WCAG 2.1 AA -->
+    <div id="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
+
     <!-- Splash Screen -->
     <div id="splash-screen" class="splash-screen">
         <div class="splash-content">
             <div class="splash-logo">
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                     <!-- Versión grande y detallada del logo para splash screen -->
 
                     <!-- Libro abierto grande (base educativa) -->
@@ -126,10 +153,10 @@
         </div>
     </div>
 
-    <nav class="sidebar" id="sidebar">
+    <nav class="sidebar" id="sidebar" role="navigation" aria-label="Menu principal de navegacion">
         <div class="sidebar-header">
             <div class="logo">
-                <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="logo-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
                     <!-- Base del birrete (graduación) -->
                     <path d="M24 16L6 24L24 32L42 24L24 16Z" fill="var(--accent-primary)" opacity="0.9"/>
 
@@ -161,10 +188,10 @@
             <span class="nav-label">Principal</span>
             <ul class="nav-menu">
                 <li class="nav-item active" data-section="dashboard" data-tooltip="Vista general del ecosistema Apple" data-tooltip-placement="right">
-                    <i class="ri-dashboard-line"></i> Dashboard
+                    <i class="ri-dashboard-line" aria-hidden="true"></i> Dashboard
                 </li>
                 <li class="nav-item" data-section="ecosistema" data-tooltip="Arquitectura y flujo del sistema" data-tooltip-placement="right">
-                    <i class="ri-flow-chart"></i> Ecosistema
+                    <i class="ri-flow-chart" aria-hidden="true"></i> Ecosistema
                 </li>
             </ul>
         </div>
@@ -173,10 +200,10 @@
             <span class="nav-label">Herramientas Esenciales</span>
             <ul class="nav-menu">
                 <li class="nav-item" data-section="aula" data-tooltip="Gestión de clase con iPads" data-tooltip-placement="right">
-                    <i class="ri-group-line"></i> App Aula
+                    <i class="ri-group-line" aria-hidden="true"></i> App Aula
                 </li>
                 <li class="nav-item" data-section="teacher" data-tooltip="Control de dispositivos en clase" data-tooltip-placement="right">
-                    <i class="ri-presentation-line"></i> Jamf Teacher
+                    <i class="ri-presentation-line" aria-hidden="true"></i> Jamf Teacher
                 </li>
             </ul>
         </div>
@@ -185,10 +212,10 @@
             <span class="nav-label">Dispositivos</span>
             <ul class="nav-menu">
                 <li class="nav-item" data-section="ipads" data-tooltip="Gestión y configuración de iPads" data-tooltip-placement="right">
-                    <i class="ri-tablet-line"></i> iPads Alumnado
+                    <i class="ri-tablet-line" aria-hidden="true"></i> iPads Alumnado
                 </li>
                 <li class="nav-item" data-section="macs" data-tooltip="Gestión de ordenadores Mac" data-tooltip-placement="right">
-                    <i class="ri-macbook-line"></i> Macs Profesorado
+                    <i class="ri-macbook-line" aria-hidden="true"></i> Macs Profesorado
                 </li>
             </ul>
         </div>
@@ -197,7 +224,7 @@
             <span class="nav-label">Soporte</span>
             <ul class="nav-menu">
                 <li class="nav-item" data-section="troubleshooting" data-tooltip="Resolución de problemas comunes" data-tooltip-placement="right">
-                    <i class="ri-tools-line"></i> Troubleshooting
+                    <i class="ri-tools-line" aria-hidden="true"></i> Troubleshooting
                 </li>
             </ul>
         </div>
@@ -206,7 +233,7 @@
             <span class="nav-label">Recursos</span>
             <ul class="nav-menu">
                 <li class="nav-item" data-section="checklists" data-tooltip="Listas de verificación y tareas" data-tooltip-placement="right">
-                    <i class="ri-task-line"></i> Checklists
+                    <i class="ri-task-line" aria-hidden="true"></i> Checklists
                 </li>
             </ul>
         </div>
@@ -215,23 +242,23 @@
             <span class="nav-label">Privacidad</span>
             <ul class="nav-menu">
                 <li class="nav-item" data-section="mis-datos" data-tooltip="Gestionar tus datos personales" data-tooltip-placement="right">
-                    <i class="ri-shield-user-line"></i> Mis Datos
+                    <i class="ri-shield-user-line" aria-hidden="true"></i> Mis Datos
                 </li>
             </ul>
         </div>
 
         <div class="sidebar-footer">
             <div class="theme-toggle-container">
-                <button id="themeToggle" class="theme-btn" data-tooltip="Cambiar tema claro/oscuro" data-tooltip-placement="top">
-                    <i class="ri-moon-line" id="themeIcon"></i>
+                <button id="themeToggle" class="theme-btn" data-tooltip="Cambiar tema claro/oscuro" data-tooltip-placement="top" aria-label="Cambiar tema claro/oscuro">
+                    <i class="ri-moon-line" id="themeIcon" aria-hidden="true"></i>
                 </button>
             </div>
             <div class="update-info" id="updateInfo">
-                <i class="ri-book-open-line update-icon"></i>
+                <i class="ri-book-open-line update-icon" aria-hidden="true"></i>
                 <span class="update-text">Cargando...</span>
             </div>
-            <a href="https://learn.jamf.com" target="_blank" class="docs-link" data-tooltip="Abrir documentación oficial de Jamf" data-tooltip-placement="top">
-                <i class="ri-external-link-line"></i> Docs oficiales
+            <a href="https://learn.jamf.com" target="_blank" class="docs-link" data-tooltip="Abrir documentación oficial de Jamf" data-tooltip-placement="top" aria-label="Abrir documentacion oficial de Jamf (abre en nueva ventana)">
+                <i class="ri-external-link-line" aria-hidden="true"></i> Docs oficiales
             </a>
         </div>
     </nav>
@@ -239,13 +266,13 @@
     <!-- Overlay para cerrar sidebar en móvil -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <main class="main-content">
-        <header class="top-bar">
-            <button class="menu-toggle" id="menuToggle" data-tooltip="Abrir/cerrar menú" data-tooltip-placement="bottom"><i class="ri-menu-2-line"></i></button>
+    <main class="main-content" id="main-content" role="main">
+        <header class="top-bar" role="banner">
+            <button class="menu-toggle" id="menuToggle" data-tooltip="Abrir/cerrar menú" data-tooltip-placement="bottom" aria-label="Abrir menu de navegacion" aria-expanded="false" aria-controls="sidebar"><i class="ri-menu-2-line" aria-hidden="true"></i></button>
             <div class="search-container">
                 <div class="search-wrapper">
-                    <i class="ri-search-line search-icon-input"></i>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar soluciones..." data-tooltip="Buscar en la base de conocimientos" data-tooltip-placement="bottom" data-tooltip-delay="500">
+                    <i class="ri-search-line search-icon-input" aria-hidden="true"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar soluciones..." data-tooltip="Buscar en la base de conocimientos" data-tooltip-placement="bottom" data-tooltip-delay="500" aria-label="Buscar en la base de conocimientos" role="searchbox">
                 </div>
             </div>
         </header>
@@ -255,13 +282,13 @@
         </div>
 
         <!-- Footer Legal -->
-        <footer class="legal-footer">
+        <footer class="legal-footer" role="contentinfo">
             <div class="legal-links">
-                <a href="aviso-legal.html" target="_blank" class="legal-link" data-tooltip="Ver aviso legal" data-tooltip-placement="top">
-                    <i class="ri-file-text-line"></i> Aviso Legal
+                <a href="aviso-legal.html" target="_blank" class="legal-link" data-tooltip="Ver aviso legal" data-tooltip-placement="top" aria-label="Ver aviso legal (abre en nueva ventana)">
+                    <i class="ri-file-text-line" aria-hidden="true"></i> Aviso Legal
                 </a>
-                <a href="politica-privacidad.html" target="_blank" class="legal-link" data-tooltip="Ver política de privacidad y RGPD" data-tooltip-placement="top">
-                    <i class="ri-shield-check-line"></i> Política de Privacidad
+                <a href="politica-privacidad.html" target="_blank" class="legal-link" data-tooltip="Ver política de privacidad y RGPD" data-tooltip-placement="top" aria-label="Ver politica de privacidad (abre en nueva ventana)">
+                    <i class="ri-shield-check-line" aria-hidden="true"></i> Politica de Privacidad
                 </a>
             </div>
             <div class="legal-info">
@@ -270,64 +297,63 @@
         </footer>
     </main>
 
-    <div class="search-overlay" id="searchOverlay">
-        <div class="search-results" id="searchResults"></div>
+    <div class="search-overlay" id="searchOverlay" role="region" aria-label="Resultados de busqueda">
+        <div class="search-results" id="searchResults" aria-live="polite"></div>
     </div>
 
-    <div class="modal" id="guideModal">
+    <div class="modal" id="guideModal" role="dialog" aria-modal="true" aria-labelledby="guideModalTitle">
         <div class="modal-content">
-            <button class="modal-close" id="modalClose" data-tooltip="Cerrar (Esc)" data-tooltip-placement="left">✕</button>
+            <button class="modal-close" id="modalClose" data-tooltip="Cerrar (Esc)" data-tooltip-placement="left" aria-label="Cerrar modal">&#10005;</button>
             <div class="modal-body" id="modalBody"></div>
         </div>
     </div>
 
     <!-- Chatbot -->
-    <div class="chatbot-fab" id="chatbotFab" data-tooltip="Abrir asistente con IA" data-tooltip-placement="left">
-        <span class="fab-icon"><i class="ri-robot-line"></i></span>
-        <span class="fab-badge" id="fabBadge"></span>
-    </div>
+    <button class="chatbot-fab" id="chatbotFab" data-tooltip="Abrir asistente con IA" data-tooltip-placement="left" aria-label="Abrir asistente de chat con IA" aria-expanded="false" aria-controls="chatbotPanel">
+        <span class="fab-icon"><i class="ri-robot-line" aria-hidden="true"></i></span>
+        <span class="fab-badge" id="fabBadge" aria-hidden="true"></span>
+    </button>
 
-    <div class="chatbot-panel" id="chatbotPanel">
+    <div class="chatbot-panel" id="chatbotPanel" role="dialog" aria-modal="false" aria-labelledby="chatbotTitleText">
         <div class="chatbot-header">
             <div class="chatbot-title">
-                <i class="ri-robot-line"></i>
-                <span>Edu Assistant IA</span>
+                <i class="ri-robot-line" aria-hidden="true"></i>
+                <span id="chatbotTitleText">Edu Assistant IA</span>
             </div>
             <div class="chatbot-actions">
-                <button class="chatbot-settings" id="chatbotSettings" data-tooltip="Configurar API Key de Google Gemini" data-tooltip-placement="bottom"><i
-                        class="ri-settings-3-line"></i></button>
-                <button class="chatbot-close" id="chatbotClose" data-tooltip="Cerrar chat" data-tooltip-placement="bottom">✕</button>
+                <button class="chatbot-settings" id="chatbotSettings" data-tooltip="Configurar API Key de Google Gemini" data-tooltip-placement="bottom" aria-label="Configurar API Key de Google Gemini"><i class="ri-settings-3-line" aria-hidden="true"></i></button>
+                <button class="chatbot-close" id="chatbotClose" data-tooltip="Cerrar chat" data-tooltip-placement="bottom" aria-label="Cerrar panel de chat">&#10005;</button>
             </div>
         </div>
-        <div class="chatbot-messages" id="chatbotMessages">
+        <div class="chatbot-messages" id="chatbotMessages" role="log" aria-live="polite" aria-label="Historial de mensajes del chat">
             <div class="chat-message bot">
-                <div class="message-avatar"><i class="ri-robot-line"></i></div>
+                <div class="message-avatar"><i class="ri-robot-line" aria-hidden="true"></i></div>
                 <div class="message-content">
-                    <p>¡Hola! Soy tu asistente del ecosistema educativo. Puedo ayudarte con:</p>
+                    <p>Hola! Soy tu asistente del ecosistema educativo. Puedo ayudarte con:</p>
                     <ul>
                         <li>School Manager (ASM) y Jamf School</li>
-                        <li>App Aula y gestión de clase</li>
-                        <li>Gestión de iPads y Macs</li>
+                        <li>App Aula y gestion de clase</li>
+                        <li>Gestion de iPads y Macs</li>
                         <li>Troubleshooting de problemas</li>
                     </ul>
-                    <p>¿En qué puedo ayudarte hoy?</p>
+                    <p>En que puedo ayudarte hoy?</p>
                 </div>
             </div>
         </div>
         <div class="chatbot-input-container">
-            <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Escribe tu pregunta...">
-            <button class="chatbot-send" id="chatbotSend" data-tooltip="Enviar mensaje" data-tooltip-placement="top">
-                <i class="ri-send-plane-fill"></i>
+            <input type="text" class="chatbot-input" id="chatbotInput" placeholder="Escribe tu pregunta..." aria-label="Escribe tu pregunta al asistente">
+            <button class="chatbot-send" id="chatbotSend" data-tooltip="Enviar mensaje" data-tooltip-placement="top" aria-label="Enviar mensaje">
+                <i class="ri-send-plane-fill" aria-hidden="true"></i>
             </button>
         </div>
     </div>
 
     <!-- API Key Modal -->
-    <div class="modal" id="apiModal">
+    <div class="modal" id="apiModal" role="dialog" aria-modal="true" aria-labelledby="apiModalTitle">
         <div class="modal-content api-modal">
-            <button class="modal-close" id="apiModalClose" data-tooltip="Cerrar (Esc)" data-tooltip-placement="left">✕</button>
+            <button class="modal-close" id="apiModalClose" data-tooltip="Cerrar (Esc)" data-tooltip-placement="left" aria-label="Cerrar modal de configuracion">&#10005;</button>
             <div class="modal-body">
-                <h2><i class="ri-settings-3-line"></i> Configurar API de IA</h2>
+                <h2 id="apiModalTitle"><i class="ri-settings-3-line" aria-hidden="true"></i> Configurar API de IA</h2>
                 <p>Para usar el asistente con IA, necesitas una API Key de Google Gemini (gratuita).</p>
 
                 <div class="api-steps">
@@ -347,8 +373,8 @@
                 </div>
 
                 <div class="api-input-group">
-                    <input type="password" id="apiKeyInput" class="api-key-input" placeholder="AIza..." autocomplete="off">
-                    <button id="saveApiKey" class="save-api-btn" data-tooltip="Guardar y cifrar API Key" data-tooltip-placement="top">Guardar</button>
+                    <input type="password" id="apiKeyInput" class="api-key-input" placeholder="AIza..." autocomplete="off" aria-label="Introduce tu API Key de Google Gemini">
+                    <button id="saveApiKey" class="save-api-btn" data-tooltip="Guardar y cifrar API Key" data-tooltip-placement="top" aria-label="Guardar API Key">Guardar</button>
                 </div>
 
                 <div class="api-validation-info" id="apiValidationInfo"></div>
@@ -356,12 +382,12 @@
                 <div class="api-storage-options">
                     <label class="storage-checkbox">
                         <input type="checkbox" id="sessionApiKey">
-                        <span><i class="ri-time-line"></i> Usar solo en esta sesión (se borra al cerrar navegador)</span>
+                        <span><i class="ri-time-line" aria-hidden="true"></i> Usar solo en esta sesion (se borra al cerrar navegador)</span>
                     </label>
 
                     <label class="storage-checkbox">
                         <input type="checkbox" id="pinApiKey">
-                        <span><i class="ri-pushpin-line"></i> Anclar API Key (guardar permanentemente)</span>
+                        <span><i class="ri-pushpin-line" aria-hidden="true"></i> Anclar API Key (guardar permanentemente)</span>
                     </label>
                 </div>
 
@@ -370,9 +396,9 @@
                 <div class="api-status" id="apiStatus"></div>
 
                 <div class="info-box">
-                    <div class="info-icon"><i class="ri-shield-check-line"></i></div>
+                    <div class="info-icon"><i class="ri-shield-check-line" aria-hidden="true"></i></div>
                     <div class="info-content">
-                        <p><strong>Seguridad mejorada:</strong> Tu API Key se cifra con AES-256-GCM antes de guardarla en tu navegador. Solo se descifra cuando la necesitas. No se envía a ningún servidor externo.</p>
+                        <p><strong>Seguridad mejorada:</strong> Tu API Key se cifra con AES-256-GCM antes de guardarla en tu navegador. Solo se descifra cuando la necesitas. No se envia a ningun servidor externo.</p>
                     </div>
                 </div>
             </div>
@@ -380,12 +406,12 @@
     </div>
 
     <!-- RGPD Consent Banner -->
-    <div class="consent-banner" id="consent-banner">
+    <div class="consent-banner" id="consent-banner" role="dialog" aria-modal="true" aria-labelledby="consent-title">
         <div class="consent-header">
             <div class="consent-icon">
-                <i class="ri-shield-check-line"></i>
+                <i class="ri-shield-check-line" aria-hidden="true"></i>
             </div>
-            <h3 class="consent-title">Respetamos tu privacidad</h3>
+            <h3 class="consent-title" id="consent-title">Respetamos tu privacidad</h3>
         </div>
         <div class="consent-body">
             <p class="consent-description">
@@ -394,29 +420,29 @@
             <p class="consent-services">
                 <strong>Servicios:</strong> Google Fonts, Remixicon (jsDelivr), Google Gemini API
             </p>
-            <a href="politica-privacidad.html" class="consent-link" target="_blank">
-                <i class="ri-file-text-line"></i> Ver política de privacidad
+            <a href="politica-privacidad.html" class="consent-link" target="_blank" aria-label="Ver politica de privacidad (abre en nueva ventana)">
+                <i class="ri-file-text-line" aria-hidden="true"></i> Ver politica de privacidad
             </a>
         </div>
         <div class="consent-actions">
             <button class="consent-btn consent-btn-primary" id="consent-accept-all">
-                <i class="ri-check-line"></i> Aceptar todo
+                <i class="ri-check-line" aria-hidden="true"></i> Aceptar todo
             </button>
             <button class="consent-btn consent-btn-secondary" id="consent-essential">
                 Solo necesarias
             </button>
             <button class="consent-btn consent-btn-text" id="consent-settings">
-                <i class="ri-settings-3-line"></i> Configurar
+                <i class="ri-settings-3-line" aria-hidden="true"></i> Configurar
             </button>
         </div>
     </div>
 
     <!-- Modal de Configuración de Consentimiento -->
-    <div class="consent-settings-modal" id="consent-settings-modal">
+    <div class="consent-settings-modal" id="consent-settings-modal" role="dialog" aria-modal="true" aria-labelledby="consent-settings-title">
         <div class="consent-modal-content">
             <div class="consent-modal-header">
-                <h2><i class="ri-settings-3-line"></i> Configuración de cookies</h2>
-                <button class="consent-modal-close" id="consent-modal-close">✕</button>
+                <h2 id="consent-settings-title"><i class="ri-settings-3-line" aria-hidden="true"></i> Configuracion de cookies</h2>
+                <button class="consent-modal-close" id="consent-modal-close" aria-label="Cerrar configuracion de cookies">&#10005;</button>
             </div>
             <div class="consent-modal-body">
                 <p class="consent-intro">
@@ -427,7 +453,7 @@
                 <div class="consent-option">
                     <div class="consent-option-header">
                         <div class="consent-option-title">
-                            <i class="ri-lock-line"></i>
+                            <i class="ri-lock-line" aria-hidden="true"></i>
                             Cookies esenciales
                             <span class="consent-option-badge essential">Necesarias</span>
                         </div>
@@ -448,7 +474,7 @@
                 <div class="consent-option">
                     <div class="consent-option-header">
                         <div class="consent-option-title">
-                            <i class="ri-font-size"></i>
+                            <i class="ri-font-size" aria-hidden="true"></i>
                             Google Fonts
                             <span class="consent-option-badge optional">Opcional</span>
                         </div>
@@ -469,7 +495,7 @@
                 <div class="consent-option">
                     <div class="consent-option-header">
                         <div class="consent-option-title">
-                            <i class="ri-emotion-line"></i>
+                            <i class="ri-emotion-line" aria-hidden="true"></i>
                             Remixicon (jsDelivr)
                             <span class="consent-option-badge optional">Opcional</span>
                         </div>
@@ -489,10 +515,10 @@
                 <!-- Info Box -->
                 <div class="consent-info-box">
                     <div class="consent-info-icon">
-                        <i class="ri-information-line"></i>
+                        <i class="ri-information-line" aria-hidden="true"></i>
                     </div>
                     <div class="consent-info-text">
-                        <strong>Nota sobre el chatbot IA:</strong> Al usar el asistente con IA, aceptas que tus mensajes se envíen a Google Gemini API. Tu API Key se guarda solo en tu navegador (localStorage).
+                        <strong>Nota sobre el chatbot IA:</strong> Al usar el asistente con IA, aceptas que tus mensajes se envien a Google Gemini API. Tu API Key se guarda solo en tu navegador (localStorage).
                     </div>
                 </div>
             </div>
@@ -501,7 +527,7 @@
                     Cancelar
                 </button>
                 <button class="consent-btn consent-btn-primary" id="consent-save-settings">
-                    <i class="ri-save-line"></i> Guardar preferencias
+                    <i class="ri-save-line" aria-hidden="true"></i> Guardar preferencias
                 </button>
             </div>
         </div>

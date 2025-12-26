@@ -1963,6 +1963,939 @@ type SectionMetadata = {
 
 ---
 
-**Version**: 3.0.0
-**Last Updated**: 2024-01-15
-**Maintained By**: Jamf Assistant Team
+## Additional UI APIs
+
+### OnboardingTour
+
+**Module**: `js/ui/OnboardingTour.js`
+
+**Purpose**: Interactive first-time user guide with element highlighting.
+
+#### Constructor
+
+```javascript
+new OnboardingTour()
+```
+
+#### Public Methods
+
+##### `shouldShow()`
+
+Checks if tour should be shown (first-time visit).
+
+```javascript
+shouldShow(): boolean
+```
+
+**Returns**: `true` if tour has not been completed before
+
+##### `start()`
+
+Starts the onboarding tour.
+
+```javascript
+start(): void
+```
+
+**Example**:
+```javascript
+const tour = new OnboardingTour();
+if (tour.shouldShow()) {
+    tour.start();
+}
+```
+
+##### `reset()`
+
+Resets the tour (for testing purposes).
+
+```javascript
+reset(): void
+```
+
+**Example**:
+```javascript
+tour.reset(); // Tour will show again on next page load
+```
+
+#### Tour Steps
+
+The tour includes 7 steps:
+1. Welcome - Dashboard hero section
+2. Navigation - Sidebar navigation
+3. Quick Access - Quick access grid
+4. Search - Search container
+5. Chatbot - Chatbot FAB button
+6. Theme Toggle - Theme selector
+7. Completion - Ready to start
+
+#### Features
+
+- Element highlighting with overlay
+- Navigation controls (Next, Previous, Skip)
+- LocalStorage persistence
+- Responsive positioning
+- Keyboard navigation (Arrow keys, Escape)
+
+---
+
+### TooltipManager
+
+**Module**: `js/ui/TooltipManager.js`
+
+**Purpose**: Lightweight tooltip system with intelligent viewport-aware positioning.
+
+#### Constructor
+
+```javascript
+new TooltipManager(options?: {
+    delay?: number,
+    offset?: number,
+    className?: string,
+    preferredPlacement?: 'top' | 'bottom' | 'left' | 'right'
+})
+```
+
+**Parameters**:
+- `options.delay`: Delay before showing tooltip in ms (default: 300)
+- `options.offset`: Offset from trigger element in px (default: 8)
+- `options.className`: Additional CSS class for tooltips
+- `options.preferredPlacement`: Preferred position (default: `'top'`)
+
+#### Public Methods
+
+##### `show(trigger)`
+
+Shows tooltip for a trigger element.
+
+```javascript
+show(trigger: HTMLElement): void
+```
+
+##### `hide()`
+
+Hides the active tooltip.
+
+```javascript
+hide(): void
+```
+
+##### `refresh()`
+
+Refreshes tooltips after dynamic content changes.
+
+```javascript
+refresh(): void
+```
+
+##### `destroy()`
+
+Destroys the tooltip manager.
+
+```javascript
+destroy(): void
+```
+
+#### Usage with Data Attributes
+
+```html
+<!-- Basic tooltip -->
+<button data-tooltip="Click to save">Save</button>
+
+<!-- With placement -->
+<button data-tooltip="Settings" data-tooltip-placement="right">
+    <i class="ri-settings-line"></i>
+</button>
+
+<!-- With variant -->
+<button data-tooltip="Delete item" data-tooltip-variant="error">Delete</button>
+
+<!-- Multiline tooltip -->
+<button data-tooltip="This is a longer tooltip text" data-tooltip-multiline>Info</button>
+```
+
+#### Features
+
+- Automatic viewport-aware positioning
+- 300ms delay before showing
+- Smooth fade-in animation
+- Keyboard accessible (ESC to close)
+- Mobile support (tap to show/hide)
+- ARIA attributes for screen readers
+
+---
+
+### FocusTrap
+
+**Module**: `js/ui/FocusTrap.js`
+
+**Purpose**: Modal focus management for WCAG 2.1 AA compliance.
+
+#### Constructor
+
+```javascript
+new FocusTrap(container: HTMLElement, options?: {
+    initialFocus?: string | HTMLElement,
+    returnFocusOnClose?: boolean,
+    escapeDeactivates?: boolean,
+    clickOutsideDeactivates?: boolean,
+    onActivate?: Function,
+    onDeactivate?: Function
+})
+```
+
+**Parameters**:
+- `container`: The modal container element
+- `options.initialFocus`: Element or selector to focus on activation
+- `options.returnFocusOnClose`: Restore focus to trigger element (default: true)
+- `options.escapeDeactivates`: Close on Escape key (default: true)
+- `options.clickOutsideDeactivates`: Close on click outside (default: false)
+- `options.onActivate`: Callback when trap activates
+- `options.onDeactivate`: Callback when trap deactivates
+
+#### Public Methods
+
+##### `activate()`
+
+Activates the focus trap.
+
+```javascript
+activate(): void
+```
+
+**Example**:
+```javascript
+const modal = document.getElementById('myModal');
+const trap = new FocusTrap(modal);
+trap.activate();
+```
+
+##### `deactivate()`
+
+Deactivates the focus trap and restores focus.
+
+```javascript
+deactivate(): void
+```
+
+##### `isActive()`
+
+Checks if trap is currently active.
+
+```javascript
+isActive(): boolean
+```
+
+##### `updateTrap()`
+
+Updates focusable elements when content changes.
+
+```javascript
+updateTrap(): void
+```
+
+##### `pause()`
+
+Pauses the focus trap without deactivating.
+
+```javascript
+pause(): void
+```
+
+##### `resume()`
+
+Resumes a paused focus trap.
+
+```javascript
+resume(): void
+```
+
+##### `destroy()`
+
+Destroys the focus trap and cleans up.
+
+```javascript
+destroy(): void
+```
+
+---
+
+### FocusTrapManager
+
+**Module**: `js/ui/FocusTrap.js`
+
+**Purpose**: Global manager for handling multiple focus traps.
+
+#### Constructor
+
+```javascript
+new FocusTrapManager()
+```
+
+#### Public Methods
+
+##### `createTrap(id, container, options)`
+
+Creates and registers a focus trap.
+
+```javascript
+createTrap(
+    id: string,
+    container: HTMLElement | string,
+    options?: FocusTrapOptions
+): FocusTrap
+```
+
+**Example**:
+```javascript
+const manager = new FocusTrapManager();
+manager.createTrap('settings-modal', '#settingsModal', {
+    escapeDeactivates: true
+});
+```
+
+##### `activate(id)`
+
+Activates a trap by ID.
+
+```javascript
+activate(id: string): void
+```
+
+##### `deactivate(id)`
+
+Deactivates a trap by ID.
+
+```javascript
+deactivate(id: string): void
+```
+
+##### `getTrap(id)`
+
+Gets a trap by ID.
+
+```javascript
+getTrap(id: string): FocusTrap | undefined
+```
+
+##### `removeTrap(id)`
+
+Removes a trap from the manager.
+
+```javascript
+removeTrap(id: string): void
+```
+
+##### `deactivateAll()`
+
+Deactivates all traps.
+
+```javascript
+deactivateAll(): void
+```
+
+##### `destroyAll()`
+
+Destroys all traps.
+
+```javascript
+destroyAll(): void
+```
+
+#### Singleton Export
+
+```javascript
+import { focusTrapManager } from './FocusTrap.js';
+focusTrapManager.activate('myModal');
+```
+
+---
+
+## Additional Pattern APIs
+
+### RenderStrategy
+
+**Module**: `js/patterns/RenderStrategy.js`
+
+**Purpose**: Strategy Pattern for flexible view rendering.
+
+#### Abstract Class: RenderStrategy
+
+Base class for all render strategies.
+
+```javascript
+abstract class RenderStrategy {
+    name: string;
+    abstract render(container: HTMLElement, data: Object, options?: Object): void | string;
+    dispose(): void;
+}
+```
+
+---
+
+### TemplateRenderStrategy
+
+**Module**: `js/patterns/RenderStrategy.js`
+
+**Purpose**: Template-based rendering using template functions.
+
+#### Constructor
+
+```javascript
+new TemplateRenderStrategy(
+    templateFn: (data: Object) => string,
+    options?: { sanitize?: boolean }
+)
+```
+
+**Parameters**:
+- `templateFn`: Function that returns HTML string from data
+- `options.sanitize`: Sanitize output with DOMPurify (default: true)
+
+#### Public Methods
+
+##### `render(container, data, options)`
+
+Renders the template to a container.
+
+```javascript
+render(container: HTMLElement, data: Object, options?: Object): void
+```
+
+##### `renderToString(data)`
+
+Returns rendered HTML without modifying DOM.
+
+```javascript
+renderToString(data: Object): string
+```
+
+**Example**:
+```javascript
+const template = (data) => `
+    <div class="card">
+        <h2>${data.title}</h2>
+        <p>${data.description}</p>
+    </div>
+`;
+
+const strategy = new TemplateRenderStrategy(template);
+strategy.render(container, { title: 'Hello', description: 'World' });
+```
+
+---
+
+### ComponentRenderStrategy
+
+**Module**: `js/patterns/RenderStrategy.js`
+
+**Purpose**: Component-based rendering using custom elements.
+
+#### Constructor
+
+```javascript
+new ComponentRenderStrategy(
+    tagName: string,
+    options?: {
+        attributes?: string[],
+        clearContainer?: boolean
+    }
+)
+```
+
+**Parameters**:
+- `tagName`: Custom element tag name
+- `options.attributes`: Data properties to set as attributes
+- `options.clearContainer`: Clear container before rendering (default: true)
+
+#### Public Methods
+
+##### `render(container, data, options)`
+
+Creates and renders a component.
+
+```javascript
+render(container: HTMLElement, data: Object, options?: Object): HTMLElement
+```
+
+**Example**:
+```javascript
+const strategy = new ComponentRenderStrategy('my-card', {
+    attributes: ['title', 'description']
+});
+strategy.render(container, { title: 'Hello', description: 'World' });
+// Creates: <my-card title="Hello" description="World"></my-card>
+```
+
+---
+
+### FragmentRenderStrategy
+
+**Module**: `js/patterns/RenderStrategy.js`
+
+**Purpose**: Performance-optimized rendering using DocumentFragment.
+
+#### Constructor
+
+```javascript
+new FragmentRenderStrategy(
+    builder: (data: Object, fragment: DocumentFragment) => void,
+    options?: { clearContainer?: boolean }
+)
+```
+
+**Parameters**:
+- `builder`: Function that populates the fragment
+- `options.clearContainer`: Clear container before appending (default: true)
+
+#### Public Methods
+
+##### `render(container, data, options)`
+
+Renders using DocumentFragment.
+
+```javascript
+render(container: HTMLElement, data: Object, options?: Object): void
+```
+
+**Example**:
+```javascript
+const builder = (data, fragment) => {
+    data.items.forEach(item => {
+        const div = document.createElement('div');
+        div.textContent = item.name;
+        fragment.appendChild(div);
+    });
+};
+
+const strategy = new FragmentRenderStrategy(builder);
+strategy.render(container, { items: [...] });
+```
+
+---
+
+### DiffRenderStrategy
+
+**Module**: `js/patterns/RenderStrategy.js`
+
+**Purpose**: Diff-based rendering that only updates changed elements.
+
+#### Constructor
+
+```javascript
+new DiffRenderStrategy(templateFn: (data: Object) => string)
+```
+
+#### Public Methods
+
+##### `render(container, data, options)`
+
+Renders with diff comparison.
+
+```javascript
+render(
+    container: HTMLElement,
+    data: Object,
+    options?: { force?: boolean }
+): boolean
+```
+
+**Returns**: `true` if DOM was updated
+
+**Example**:
+```javascript
+const strategy = new DiffRenderStrategy((data) => `<div>${data.value}</div>`);
+strategy.render(container, { value: 1 }); // Full render, returns true
+strategy.render(container, { value: 1 }); // No change, returns false
+strategy.render(container, { value: 2 }); // Diff update, returns true
+```
+
+---
+
+### RenderContext
+
+**Module**: `js/patterns/RenderStrategy.js`
+
+**Purpose**: Manages render strategy selection and lifecycle.
+
+#### Constructor
+
+```javascript
+new RenderContext(strategy?: RenderStrategy)
+```
+
+#### Public Methods
+
+##### `setStrategy(strategy)`
+
+Sets the current render strategy.
+
+```javascript
+setStrategy(strategy: RenderStrategy): RenderContext
+```
+
+##### `getStrategy()`
+
+Gets the current strategy.
+
+```javascript
+getStrategy(): RenderStrategy | null
+```
+
+##### `render(container, data, options)`
+
+Renders using the current strategy.
+
+```javascript
+render(container: HTMLElement, data: Object, options?: Object): any
+```
+
+##### `dispose()`
+
+Disposes the current strategy.
+
+```javascript
+dispose(): void
+```
+
+**Example**:
+```javascript
+const context = new RenderContext(new TemplateRenderStrategy(template));
+context.render(container, data);
+
+// Switch strategy at runtime
+context.setStrategy(new ComponentRenderStrategy('my-component'));
+context.render(container, data);
+```
+
+---
+
+## Bootstrap API
+
+### createContainer
+
+**Module**: `js/core/bootstrap.js`
+
+**Purpose**: IoC container factory - Single source of truth for dependency injection.
+
+```javascript
+createContainer(config?: {
+    debug?: boolean,
+    rateLimitCalls?: number,
+    rateLimitWindow?: number
+}): Container
+```
+
+**Parameters**:
+- `config.debug`: Enable container debug logging (default: false)
+- `config.rateLimitCalls`: Rate limiter max calls (default: 10)
+- `config.rateLimitWindow`: Rate limiter window in ms (default: 60000)
+
+**Returns**: Configured `Container` instance with all application services registered
+
+**Example**:
+```javascript
+import { createContainer } from './core/bootstrap.js';
+
+const container = createContainer({ debug: true });
+const eventBus = container.resolve('eventBus');
+const themeManager = container.resolve('themeManager');
+```
+
+#### Registered Services
+
+| Service Name | Class | Lifecycle | Dependencies |
+|-------------|-------|-----------|--------------|
+| eventBus | EventBus | singleton | - |
+| toastManager | ToastManager | singleton | - |
+| connectionStatus | ConnectionStatus | singleton | eventBus, toastManager |
+| stateManager | StateManager | singleton | eventBus |
+| themeManager | ThemeManager | singleton | eventBus, stateManager |
+| modalManager | ModalManager | singleton | eventBus |
+| sidebarManager | SidebarManager | singleton | eventBus, stateManager |
+| navigationManager | NavigationManager | singleton | eventBus, stateManager |
+| sectionRegistry | SectionRegistry | singleton | - |
+| validatorChain | ApiKeyValidatorChain | singleton | - |
+| searchEngine | SearchEngine | singleton | eventBus |
+| diagnosticsManager | DiagnosticsManager | singleton | eventBus, modalManager |
+| checklistManager | ChecklistManager | singleton | eventBus, stateManager, modalManager |
+| guideManager | GuideManager | singleton | eventBus, modalManager |
+| dataManager | DataManager | singleton | eventBus, stateManager, modalManager |
+| encryptionService | EncryptionService | singleton | - |
+| rateLimiter | RateLimiter | singleton | - |
+| apiKeyManager | ApiKeyManager | singleton | encryptionService, validatorChain |
+| ragEngine | RAGEngine | singleton | - |
+| chatUI | ChatUI | singleton | - |
+| chatEventBus | EventBus | singleton | - |
+| geminiClientFactory | Function | singleton | - |
+| chatbotCore | ChatbotCore | singleton | apiKeyManager, ragEngine, chatUI, rateLimiter, chatEventBus, geminiClientFactory |
+
+---
+
+### createTestContainer
+
+**Module**: `js/core/bootstrap.js`
+
+**Purpose**: Creates a test container with mock services for unit testing.
+
+```javascript
+createTestContainer(
+    mocks?: { [serviceName: string]: any },
+    config?: Object
+): Container
+```
+
+**Parameters**:
+- `mocks`: Object mapping service names to mock instances
+- `config`: Container configuration (passed to createContainer)
+
+**Returns**: Child scope container with mocks applied
+
+**Example**:
+```javascript
+import { createTestContainer } from './core/bootstrap.js';
+
+const mockEventBus = {
+    on: jest.fn(),
+    emit: jest.fn(),
+    off: jest.fn()
+};
+
+const container = createTestContainer({
+    eventBus: mockEventBus
+});
+
+const themeManager = container.resolve('themeManager');
+// themeManager uses mockEventBus instead of real EventBus
+```
+
+---
+
+### SERVICE_REGISTRY
+
+**Module**: `js/core/bootstrap.js`
+
+**Purpose**: Documentation constant listing all registered services.
+
+```javascript
+const SERVICE_REGISTRY: {
+    [serviceName: string]: {
+        class: string,
+        lifecycle: 'singleton' | 'transient' | 'scoped',
+        dependencies: string[],
+        description: string
+    }
+}
+```
+
+**Example**:
+```javascript
+import { SERVICE_REGISTRY } from './core/bootstrap.js';
+
+console.log(SERVICE_REGISTRY.themeManager);
+// {
+//   class: 'ThemeManager',
+//   lifecycle: 'singleton',
+//   dependencies: ['eventBus', 'stateManager'],
+//   description: 'Theme switching (dark/light mode)'
+// }
+```
+
+---
+
+## ChatUI (Extended)
+
+**Module**: `js/chatbot/ChatUI.js`
+
+**Purpose**: Manages the chatbot user interface with XSS protection.
+
+#### Constructor
+
+```javascript
+new ChatUI()
+```
+
+#### Properties
+
+##### `isOpen`
+
+Whether the chat panel is currently open.
+
+```javascript
+get isOpen(): boolean
+```
+
+#### Public Methods
+
+##### `getInputValue()`
+
+Gets the current input value (trimmed).
+
+```javascript
+getInputValue(): string
+```
+
+##### `clearInput()`
+
+Clears the input field.
+
+```javascript
+clearInput(): void
+```
+
+##### `toggleChat()`
+
+Toggles the chat panel visibility.
+
+```javascript
+toggleChat(): boolean
+```
+
+**Returns**: New open state
+
+##### `openChat()`
+
+Opens the chat panel.
+
+```javascript
+openChat(): void
+```
+
+##### `closeChat()`
+
+Closes the chat panel.
+
+```javascript
+closeChat(): void
+```
+
+##### `openApiModal()`
+
+Opens the API key configuration modal.
+
+```javascript
+openApiModal(): void
+```
+
+##### `closeApiModal()`
+
+Closes the API key configuration modal.
+
+```javascript
+closeApiModal(): void
+```
+
+##### `addUserMessage(text)`
+
+Adds a user message to the chat.
+
+```javascript
+addUserMessage(text: string): void
+```
+
+##### `addBotMessage(text)`
+
+Adds a bot message with markdown formatting.
+
+```javascript
+addBotMessage(text: string): void
+```
+
+**Supported Markdown**:
+- Bold: `**text**`
+- Links: `[text](url)`
+- Lists: `- item` or `1. item`
+
+##### `showTyping()`
+
+Shows the typing indicator.
+
+```javascript
+showTyping(): void
+```
+
+##### `hideTyping()`
+
+Hides the typing indicator.
+
+```javascript
+hideTyping(): void
+```
+
+##### `showSources(docs)`
+
+Shows source documents under the last message.
+
+```javascript
+showSources(docs: Array<{title: string, category: string}>): void
+```
+
+##### `showRateLimitWarning(remaining)`
+
+Shows rate limit warning.
+
+```javascript
+showRateLimitWarning(remaining: number): void
+```
+
+##### `updateApiStatus(message, type)`
+
+Updates the API status message.
+
+```javascript
+updateApiStatus(message: string, type?: 'success' | 'error'): void
+```
+
+##### `updateValidationInfo(validation)`
+
+Updates API key validation info display.
+
+```javascript
+updateValidationInfo(validation: {
+    valid: boolean,
+    error?: string,
+    strength?: string
+} | null): void
+```
+
+##### `updateApiKeyUI(settings)`
+
+Updates API key UI with current settings.
+
+```javascript
+updateApiKeyUI(settings: {
+    apiKey: string,
+    isPinned: boolean,
+    isSessionOnly: boolean,
+    statusText: string
+}): void
+```
+
+##### `getApiModalValues()`
+
+Gets API modal form values.
+
+```javascript
+getApiModalValues(): {
+    key: string,
+    pinned: boolean,
+    sessionOnly: boolean
+}
+```
+
+##### `showDocsInfo(metadata)`
+
+Shows documentation info footer.
+
+```javascript
+showDocsInfo(metadata: {
+    lastUpdated: string,
+    articleCount: number
+}): void
+```
+
+---
+
+**Version**: 3.1.0
+**Last Updated**: 2025-01-15
+**Maintained By**: Apple Edu Assistant Team

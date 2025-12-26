@@ -16,8 +16,15 @@ export default {
         '**/?(*.)+(spec|test).js'
     ],
 
-    // Transform files before testing (none needed for ES modules)
-    transform: {},
+    // Transform files before testing - Babel transforms ES modules for Jest
+    transform: {
+        '^.+\\.js$': 'babel-jest'
+    },
+
+    // Transform node_modules that use ES modules
+    transformIgnorePatterns: [
+        '/node_modules/(?!(@babel)/)'
+    ],
 
     // Coverage collection patterns
     collectCoverageFrom: [

@@ -1,12 +1,24 @@
 /**
- * @fileoverview RAG Engine - Retrieval-Augmented Generation
+ * @fileoverview RAG Engine - Retrieval-Augmented Generation with Semantic Search
  * @module chatbot/RAGEngine
- * @version 2.0.0
+ * @version 3.0.0
  * @license MIT
  *
  * Provides document search and context building for the chatbot.
- * Uses keyword-based retrieval to find relevant documentation.
+ * Uses semantic embeddings for intelligent retrieval with keyword fallback.
+ * Includes ErrorMonitor integration for debugging breadcrumbs.
+ *
+ * @security Integrates PromptGuard for context sanitization
+ *
+ * @example
+ * const rag = new RAGEngine();
+ * await rag.loadDocumentation();
+ * const results = await rag.search('Como configurar App Aula?');
  */
+
+import { PromptGuard } from './PromptGuard.js';
+import { EmbeddingService } from './EmbeddingService.js';
+import { ErrorMonitor } from '../core/ErrorMonitor.js';
 
 /**
  * @typedef {Object} Document
@@ -19,6 +31,13 @@
  */
 
 /**
+ * @typedef {Object} IndexedDocument
+ * @property {string} id - Document ID
+ * @property {Float32Array} embedding - Semantic embedding vector
+ * @property {Document} document - Original document
+ */
+
+/**
  * @typedef {Object} SearchResult
  * @property {string} id - Document ID
  * @property {string} title - Document title
@@ -26,7 +45,8 @@
  * @property {string} content - Document content
  * @property {string[]} [keywords] - Search keywords
  * @property {string} [officialDocUrl] - Official documentation URL
- * @property {number} score - Relevance score
+ * @property {number} score - Relevance score (0-1 for semantic, normalized for keyword)
+ * @property {string} [searchType] - 'semantic', 'keyword', or 'hybrid'
  */
 
 /**
@@ -38,19 +58,50 @@
  */
 
 /**
+ * @typedef {Object} SearchOptions
+ * @property {number} [topK=3] - Maximum results to return
+ * @property {number} [minScore=0.3] - Minimum similarity score for semantic search
+ * @property {boolean} [forceKeyword=false] - Force keyword search only
+ * @property {boolean} [hybridMode=true] - Combine semantic and keyword scores
+ */
+
+/**
  * @class RAGEngine
- * @description Retrieval-Augmented Generation engine for document search
+ * @description Retrieval-Augmented Generation engine with semantic search
+ *
+ * Architecture:
+ * - Semantic search using Transformers.js embeddings (primary)
+ * - Keyword-based search (fallback)
+ * - Hybrid mode combining both approaches
+ * - Lazy initialization of embedding model
+ * - PromptGuard integration for security
+ * - ErrorMonitor integration for debugging
  *
  * @example
  * const rag = new RAGEngine();
  * await rag.loadDocumentation();
  *
- * const results = rag.search('Como configurar App Aula?');
- * const context = rag.buildContext(results);
+ * // Semantic search (default, async)
+ * const results = await rag.search('problemas con bluetooth');
+ *
+ * // Force keyword search (sync compatible)
+ * const kwResults = rag.search('bluetooth', { forceKeyword: true });
  */
 export class RAGEngine {
     /** @private @type {Document[]} */
     #documents = [];
+
+    /** @private @type {IndexedDocument[]} */
+    #indexedDocuments = [];
+
+    /** @private @type {boolean} */
+    #isIndexed = false;
+
+    /** @private @type {boolean} */
+    #isIndexing = false;
+
+    /** @private @type {EmbeddingService} */
+    #embeddingService;
 
     /** @private @type {DocsMetadata} */
     #metadata = {
@@ -62,15 +113,32 @@ export class RAGEngine {
     /** @private @type {string} */
     #docsPath = 'data/docs.json';
 
+    /** @private @type {function(Object):void|null} */
+    #onProgress = null;
+
     /**
      * Creates a new RAGEngine instance
      *
      * @param {string} [docsPath='data/docs.json'] - Path to documentation JSON
+     * @param {Object} [options={}] - Configuration options
+     * @param {function(Object):void} [options.onProgress] - Progress callback for indexing
      */
-    constructor(docsPath) {
+    constructor(docsPath, options = {}) {
         if (docsPath) {
             this.#docsPath = docsPath;
         }
+
+        this.#onProgress = options.onProgress || null;
+
+        // Create embedding service with progress reporting
+        this.#embeddingService = new EmbeddingService({
+            onProgress: (progress) => {
+                this.#reportProgress({
+                    type: 'embedding',
+                    ...progress
+                });
+            }
+        });
     }
 
     /**
@@ -92,6 +160,44 @@ export class RAGEngine {
     }
 
     /**
+     * Whether documents are semantically indexed
+     * @type {boolean}
+     * @readonly
+     */
+    get isIndexed() {
+        return this.#isIndexed;
+    }
+
+    /**
+     * Whether semantic search is available
+     * @type {boolean}
+     * @readonly
+     */
+    get isSemanticReady() {
+        return this.#embeddingService.isReady && this.#isIndexed;
+    }
+
+    /**
+     * Embedding service instance (for external access)
+     * @type {EmbeddingService}
+     * @readonly
+     */
+    get embeddingService() {
+        return this.#embeddingService;
+    }
+
+    /**
+     * Reports progress to callback
+     * @private
+     * @param {Object} data
+     */
+    #reportProgress(data) {
+        if (this.#onProgress) {
+            this.#onProgress(data);
+        }
+    }
+
+    /**
      * Loads documentation from JSON file or uses embedded fallback
      *
      * @returns {Promise<void>}
@@ -101,6 +207,13 @@ export class RAGEngine {
      * console.log(`Loaded ${rag.documentCount} documents`);
      */
     async loadDocumentation() {
+        ErrorMonitor.addBreadcrumb({
+            category: 'rag',
+            message: 'Loading documentation',
+            level: 'info',
+            data: { docsPath: this.#docsPath }
+        });
+
         try {
             const response = await fetch(this.#docsPath);
             if (response.ok) {
@@ -113,30 +226,340 @@ export class RAGEngine {
                     updateFrequency: data.updateFrequency
                 };
                 console.log(
-                    `[Docs] Documentation loaded: ${this.#documents.length} articles (v${data.version})`
+                    `[RAG] Documentation loaded: ${this.#documents.length} articles (v${data.version})`
                 );
+
+                ErrorMonitor.addBreadcrumb({
+                    category: 'rag',
+                    message: 'Documentation loaded successfully',
+                    level: 'info',
+                    data: {
+                        articleCount: this.#documents.length,
+                        version: data.version
+                    }
+                });
             } else {
-                console.log('[WARN] Could not load docs.json, using embedded docs');
+                console.log('[RAG] Could not load docs.json, using embedded docs');
                 this.#documents = this.#getEmbeddedDocs();
+
+                ErrorMonitor.addBreadcrumb({
+                    category: 'rag',
+                    message: 'Using embedded documentation (fetch failed)',
+                    level: 'warning',
+                    data: { status: response.status }
+                });
             }
         } catch (e) {
-            console.log('[WARN] Error loading documentation:', e);
+            console.log('[RAG] Error loading documentation:', e);
             this.#documents = this.#getEmbeddedDocs();
+
+            ErrorMonitor.addBreadcrumb({
+                category: 'rag',
+                message: 'Error loading documentation, using embedded',
+                level: 'error',
+                data: { error: e.message }
+            });
+        }
+
+        // Start background indexing (non-blocking)
+        this.#backgroundIndex();
+    }
+
+    /**
+     * Starts background indexing of documents for semantic search
+     * @private
+     */
+    async #backgroundIndex() {
+        // Don't block the main flow - index in background
+        setTimeout(async () => {
+            try {
+                await this.indexDocuments();
+            } catch (error) {
+                console.warn('[RAG] Background indexing failed, will use keyword search:', error.message);
+                ErrorMonitor.addBreadcrumb({
+                    category: 'rag',
+                    message: 'Background indexing failed',
+                    level: 'warning',
+                    data: { error: error.message }
+                });
+            }
+        }, 1000); // Small delay to let UI settle
+    }
+
+    /**
+     * Indexes all documents for semantic search
+     * Downloads embedding model on first call (~22MB, cached)
+     *
+     * @returns {Promise<boolean>} True if indexing succeeded
+     *
+     * @example
+     * const indexed = await rag.indexDocuments();
+     * if (indexed) console.log('Semantic search ready');
+     */
+    async indexDocuments() {
+        if (this.#isIndexed) return true;
+        if (this.#isIndexing) return this.#waitForIndexing();
+        if (this.#documents.length === 0) return false;
+
+        this.#isIndexing = true;
+        this.#reportProgress({
+            type: 'indexing',
+            status: 'start',
+            total: this.#documents.length
+        });
+
+        ErrorMonitor.addBreadcrumb({
+            category: 'rag',
+            message: 'Starting document indexing for semantic search',
+            level: 'info',
+            data: { documentCount: this.#documents.length }
+        });
+
+        try {
+            // Initialize embedding service first
+            const initialized = await this.#embeddingService.initialize();
+            if (!initialized) {
+                throw new Error('Embedding service failed to initialize');
+            }
+
+            console.log(`[RAG] Indexing ${this.#documents.length} documents...`);
+
+            // Index each document
+            this.#indexedDocuments = [];
+            for (let i = 0; i < this.#documents.length; i++) {
+                const doc = this.#documents[i];
+
+                // Create searchable text from document
+                const searchText = this.#createSearchableText(doc);
+
+                // Generate embedding
+                const embedding = await this.#embeddingService.embed(searchText);
+
+                this.#indexedDocuments.push({
+                    id: doc.id,
+                    embedding,
+                    document: doc
+                });
+
+                this.#reportProgress({
+                    type: 'indexing',
+                    status: 'progress',
+                    current: i + 1,
+                    total: this.#documents.length
+                });
+            }
+
+            this.#isIndexed = true;
+            this.#isIndexing = false;
+
+            this.#reportProgress({
+                type: 'indexing',
+                status: 'complete',
+                total: this.#documents.length
+            });
+
+            console.log(`[RAG] Indexing complete: ${this.#indexedDocuments.length} documents indexed`);
+
+            ErrorMonitor.addBreadcrumb({
+                category: 'rag',
+                message: 'Semantic indexing complete',
+                level: 'info',
+                data: { indexedCount: this.#indexedDocuments.length }
+            });
+
+            return true;
+
+        } catch (error) {
+            this.#isIndexing = false;
+            this.#reportProgress({
+                type: 'indexing',
+                status: 'error',
+                error: error.message
+            });
+            console.error('[RAG] Indexing failed:', error);
+
+            ErrorMonitor.addBreadcrumb({
+                category: 'rag',
+                message: 'Indexing failed',
+                level: 'error',
+                data: { error: error.message }
+            });
+
+            return false;
         }
     }
 
     /**
+     * Waits for ongoing indexing to complete
+     * @private
+     * @returns {Promise<boolean>}
+     */
+    async #waitForIndexing() {
+        const maxWait = 120000; // 2 minutes
+        const interval = 100;
+        let waited = 0;
+
+        while (this.#isIndexing && waited < maxWait) {
+            await new Promise(r => setTimeout(r, interval));
+            waited += interval;
+        }
+
+        return this.#isIndexed;
+    }
+
+    /**
+     * Creates searchable text from document for embedding
+     * @private
+     * @param {Document} doc
+     * @returns {string}
+     */
+    #createSearchableText(doc) {
+        const parts = [
+            doc.title,
+            doc.category,
+            doc.content,
+            (doc.keywords || []).join(' ')
+        ];
+
+        return parts.join(' ').slice(0, 512); // Limit for model
+    }
+
+    /**
      * Searches for relevant documents based on a query
+     * Uses semantic search if available, falls back to keyword search
      *
      * @param {string} query - User's search query
-     * @param {number} [topK=3] - Maximum number of results to return
-     * @returns {SearchResult[]} Sorted array of relevant documents
+     * @param {SearchOptions|number} [options={}] - Search options or topK (legacy)
+     * @returns {Promise<SearchResult[]>|SearchResult[]} Sorted array of relevant documents
      *
      * @example
-     * const results = rag.search('problemas con bluetooth aula', 3);
-     * // Returns top 3 most relevant documents
+     * // Modern async usage (recommended)
+     * const results = await rag.search('problemas con bluetooth', { topK: 5 });
+     *
+     * // Legacy sync usage (keyword only)
+     * const results = rag.search('bluetooth', 3);
      */
-    search(query, topK = 3) {
+    search(query, options = {}) {
+        // Legacy support: if options is a number, treat as topK
+        if (typeof options === 'number') {
+            options = { topK: options };
+        }
+
+        const {
+            topK = 3,
+            minScore = 0.3,
+            forceKeyword = false,
+            hybridMode = true
+        } = options;
+
+        // Add breadcrumb for search tracking (don't log full query for privacy)
+        ErrorMonitor.addBreadcrumb({
+            category: 'rag',
+            message: 'RAG search executed',
+            level: 'info',
+            data: {
+                queryLength: query?.length || 0,
+                topK,
+                documentsAvailable: this.#documents.length,
+                semanticReady: this.isSemanticReady,
+                forceKeyword
+            }
+        });
+
+        // If semantic is ready and not forced keyword, do async semantic search
+        if (!forceKeyword && this.#embeddingService.isReady && this.#isIndexed) {
+            return this.#asyncSearch(query, topK, minScore, hybridMode);
+        }
+
+        // Fallback to synchronous keyword search
+        return this.#keywordSearch(query, topK);
+    }
+
+    /**
+     * Performs async semantic search with fallback
+     * @private
+     * @param {string} query
+     * @param {number} topK
+     * @param {number} minScore
+     * @param {boolean} hybridMode
+     * @returns {Promise<SearchResult[]>}
+     */
+    async #asyncSearch(query, topK, minScore, hybridMode) {
+        try {
+            const semanticResults = await this.#semanticSearch(query, topK, minScore);
+
+            // If hybrid mode, boost with keyword matches
+            if (hybridMode && semanticResults.length > 0) {
+                return this.#hybridRank(query, semanticResults, topK);
+            }
+
+            if (semanticResults.length > 0) {
+                return semanticResults;
+            }
+
+            // Semantic returned nothing, fall through to keyword
+            console.log('[RAG] Semantic search returned no results, using keyword fallback');
+        } catch (error) {
+            console.warn('[RAG] Semantic search failed, falling back to keyword:', error.message);
+        }
+
+        // Fallback to keyword search
+        return this.#keywordSearch(query, topK);
+    }
+
+    /**
+     * Performs semantic search using embeddings
+     * @private
+     * @param {string} query
+     * @param {number} topK
+     * @param {number} minScore
+     * @returns {Promise<SearchResult[]>}
+     */
+    async #semanticSearch(query, topK, minScore) {
+        // Generate query embedding
+        const queryEmbedding = await this.#embeddingService.embed(query);
+
+        // Calculate similarity scores
+        const scores = this.#indexedDocuments.map(indexed => {
+            const similarity = this.#embeddingService.cosineSimilarity(
+                queryEmbedding,
+                indexed.embedding
+            );
+
+            return {
+                ...indexed.document,
+                score: similarity,
+                searchType: 'semantic'
+            };
+        });
+
+        // Filter by minimum score and sort
+        const results = scores
+            .filter(d => d.score >= minScore)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, topK);
+
+        ErrorMonitor.addBreadcrumb({
+            category: 'rag',
+            message: 'Semantic search completed',
+            level: 'info',
+            data: {
+                resultsCount: results.length,
+                topScore: results[0]?.score || 0
+            }
+        });
+
+        return results;
+    }
+
+    /**
+     * Performs keyword-based search (fallback)
+     * @private
+     * @param {string} query
+     * @param {number} topK
+     * @returns {SearchResult[]}
+     */
+    #keywordSearch(query, topK) {
         const queryWords = query.toLowerCase().split(/\s+/);
 
         const results = this.#documents.map(doc => {
@@ -160,7 +583,14 @@ export class RAGEngine {
                 if (doc.title.toLowerCase().includes(word)) score += 3;
             });
 
-            return { ...doc, score };
+            // Normalize score to 0-1 range for consistency with semantic
+            const normalizedScore = Math.min(score / 10, 1);
+
+            return {
+                ...doc,
+                score: normalizedScore,
+                searchType: 'keyword'
+            };
         });
 
         return results
@@ -170,15 +600,55 @@ export class RAGEngine {
     }
 
     /**
+     * Combines semantic and keyword scores for hybrid ranking
+     * @private
+     * @param {string} query
+     * @param {SearchResult[]} semanticResults
+     * @param {number} topK
+     * @returns {SearchResult[]}
+     */
+    #hybridRank(query, semanticResults, topK) {
+        const queryWords = query.toLowerCase().split(/\s+/);
+
+        return semanticResults.map(result => {
+            // Calculate keyword boost
+            let keywordBoost = 0;
+
+            queryWords.forEach(word => {
+                if (word.length < 3) return;
+
+                // Exact keyword match gets boost
+                if ((result.keywords || []).some(k => k.toLowerCase() === word)) {
+                    keywordBoost += 0.1;
+                }
+
+                // Title exact match gets bigger boost
+                if (result.title.toLowerCase().includes(word)) {
+                    keywordBoost += 0.05;
+                }
+            });
+
+            return {
+                ...result,
+                score: Math.min(result.score + keywordBoost, 1),
+                searchType: 'hybrid'
+            };
+        }).sort((a, b) => b.score - a.score).slice(0, topK);
+    }
+
+    /**
      * Builds a context string for the LLM from search results
+     * Applies PromptGuard sanitization to prevent injection attacks
      *
      * @param {SearchResult[]} docs - Documents to include in context
-     * @returns {string} Formatted context string
+     * @returns {string} Formatted and sanitized context string
      *
      * @example
-     * const results = rag.search(query);
+     * const results = await rag.search(query);
      * const context = rag.buildContext(results);
-     * // Returns: "[1] Title\nContent...\nFuente: url\n"
+     * // Returns sanitized: "[1] Title (relevancia: 85%)\nContent...\nFuente: url\n"
+     *
+     * @security Documents are analyzed and sanitized before inclusion
      */
     buildContext(docs) {
         if (!docs || docs.length === 0) {
@@ -186,14 +656,45 @@ export class RAGEngine {
         }
 
         let context = '';
-        docs.forEach((doc, i) => {
-            context += `\n[${i + 1}] ${doc.title}\n${doc.content}\n`;
+        let blockedCount = 0;
+
+        for (let i = 0; i < docs.length; i++) {
+            const doc = docs[i];
+
+            // Analyze document content for injection attempts
+            const analysis = PromptGuard.analyze(doc.content);
+
+            if (!analysis.safe) {
+                console.warn(
+                    `[RAGEngine] Blocked suspicious document "${doc.title}":`,
+                    analysis.threats
+                );
+                blockedCount++;
+                continue;
+            }
+
+            // Sanitize content even if it passed initial analysis
+            const sanitizedContent = PromptGuard.sanitize(doc.content);
+            const truncatedContent = PromptGuard.truncate(sanitizedContent, 1500);
+
+            // Add relevance info for semantic/hybrid results
+            const scoreInfo = doc.searchType === 'semantic' || doc.searchType === 'hybrid'
+                ? ` (relevancia: ${Math.round(doc.score * 100)}%)`
+                : '';
+
+            context += `\n[${i + 1 - blockedCount}] ${doc.title}${scoreInfo}\n${truncatedContent}\n`;
+
             if (doc.officialDocUrl) {
                 context += `Fuente: ${doc.officialDocUrl}\n`;
             }
-        });
+        }
 
-        return context;
+        if (blockedCount > 0) {
+            console.log(`[RAGEngine] ${blockedCount} document(s) blocked for security`);
+        }
+
+        // Apply final truncation to total context
+        return PromptGuard.truncate(context, 6000);
     }
 
     /**
@@ -204,13 +705,18 @@ export class RAGEngine {
      * @returns {string} Offline response with documentation
      *
      * @example
-     * const docs = rag.search(query);
+     * const docs = await rag.search(query);
      * const response = rag.generateOfflineResponse(query, docs);
      */
     generateOfflineResponse(query, relevantDocs) {
         if (relevantDocs.length > 0) {
             const doc = relevantDocs[0];
             let resp = `**${doc.title}**\n\n${doc.content}`;
+
+            // Add relevance info for semantic results
+            if (doc.searchType === 'semantic' || doc.searchType === 'hybrid') {
+                resp += `\n\n_Relevancia: ${Math.round(doc.score * 100)}%_`;
+            }
 
             if (doc.officialDocUrl) {
                 resp += `\n\n[Ver documentacion oficial](${doc.officialDocUrl})`;
@@ -222,6 +728,19 @@ export class RAGEngine {
 
         return `No encontre informacion sobre eso.\n\n` +
             `Prueba con: enrollment, apps, classroom, teacher, restricciones, bloqueo, actualizaciones`;
+    }
+
+    /**
+     * Gets search statistics and status
+     * @returns {Object} Search engine stats
+     */
+    getStats() {
+        return {
+            documentCount: this.#documents.length,
+            isIndexed: this.#isIndexed,
+            isSemanticReady: this.isSemanticReady,
+            embeddingService: this.#embeddingService.getStats()
+        };
     }
 
     /**
@@ -360,6 +879,18 @@ IMPORTANTE: Los iPads deben ser supervisados para que funcionen todas las restri
      */
     setDocuments(docs) {
         this.#documents = docs;
+        this.#isIndexed = false;
+        this.#indexedDocuments = [];
+    }
+
+    /**
+     * Forces re-indexing of documents
+     * @returns {Promise<boolean>}
+     */
+    async reindex() {
+        this.#isIndexed = false;
+        this.#indexedDocuments = [];
+        return this.indexDocuments();
     }
 }
 

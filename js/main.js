@@ -26,6 +26,7 @@ import { createContainer } from './core/bootstrap.js';
 import { JamfAssistant } from './app.js';
 import { OnboardingTour } from './ui/OnboardingTour.js';
 import { TooltipManager } from './ui/TooltipManager.js';
+import { ErrorMonitor } from './core/ErrorMonitor.js';
 
 // Import views to trigger self-registration with SectionRegistry
 import './views/DashboardView.js';
@@ -96,7 +97,26 @@ async function registerServiceWorker() {
 async function initializeApplication() {
     try {
         // ====================================================================
-        // 0. Register Service Worker for PWA functionality
+        // 0. Initialize Error Monitoring (must be first for catching errors)
+        // ====================================================================
+        ErrorMonitor.initialize({
+            dsn: '', // Configure via admin settings - app works without it
+            release: 'apple-edu-assistant@1.0.0',
+            sampleRate: 1.0,
+            tracesSampleRate: 0.1
+        });
+
+        // Add navigation breadcrumb
+        ErrorMonitor.addBreadcrumb({
+            category: 'lifecycle',
+            message: 'Application initialization started',
+            level: 'info'
+        });
+
+        console.log('[Main] ErrorMonitor initialized:', ErrorMonitor.healthCheck());
+
+        // ====================================================================
+        // 0.1 Register Service Worker for PWA functionality
         // ====================================================================
         await registerServiceWorker();
 
@@ -251,10 +271,38 @@ async function initializeApplication() {
                 console.log('[Main] Development mode - tour exposed as window.__tour__');
                 console.log('[Main] Use window.__tour__.reset() to reset the tour');
             }
+
+            // Expose ErrorMonitor for debugging
+            window.__errorMonitor__ = ErrorMonitor;
+            console.log('[Main] Development mode - ErrorMonitor exposed as window.__errorMonitor__');
         }
+
+        // ====================================================================
+        // 8. Finalize ErrorMonitor Setup
+        // ====================================================================
+        ErrorMonitor.addBreadcrumb({
+            category: 'lifecycle',
+            message: 'Application initialization completed successfully',
+            level: 'info',
+            data: {
+                servicesCount: container.size,
+                hasChatbot: !!chatbotCore,
+                hasTooltips: !!tooltipManager
+            }
+        });
+
+        // Register ErrorMonitor in container for DI access
+        container.registerInstance('errorMonitor', ErrorMonitor);
 
     } catch (error) {
         console.error('[Main] Failed to initialize application:', error);
+
+        // Capture error in ErrorMonitor
+        ErrorMonitor.captureException(error, {
+            component: 'main',
+            action: 'initializeApplication',
+            phase: 'startup'
+        });
 
         // Show user-friendly error message
         const wrapper = document.getElementById('contentWrapper');

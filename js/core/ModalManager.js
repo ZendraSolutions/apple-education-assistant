@@ -19,6 +19,9 @@ import { createFocusTrap } from '../ui/FocusTrap.js';
  * @typedef {Object} SanitizerConfig
  * @property {string[]} ALLOWED_TAGS - Allowed HTML tags
  * @property {string[]} ALLOWED_ATTR - Allowed HTML attributes
+ * @property {boolean} ALLOW_DATA_ATTR - Whether to allow data attributes
+ * @property {string[]} ADD_ATTR - Attributes to force add
+ * @property {boolean} FORCE_BODY - Force body parsing
  */
 
 /**
@@ -77,7 +80,7 @@ export class ModalManager {
     #focusTrap = null;
 
     /**
-     * Sanitizer configuration
+     * Sanitizer configuration - Security hardened
      * @type {SanitizerConfig}
      * @private
      */
@@ -88,10 +91,20 @@ export class ModalManager {
             'button', 'label', 'input', 'pre', 'code'
         ],
         ALLOWED_ATTR: [
-            'class', 'href', 'target', 'data-idx', 'data-next',
-            'data-solution', 'id', 'type', 'checked', 'style', 'title'
-        ]
+            'class', 'href', 'target', 'rel', 'data-idx', 'data-next',
+            'data-solution', 'id', 'type', 'checked', 'title'
+        ],
+        ALLOW_DATA_ATTR: false,
+        ADD_ATTR: ['target'],
+        FORCE_BODY: true
     };
+
+    /**
+     * Flag to track if DOMPurify availability has been verified
+     * @type {boolean}
+     * @private
+     */
+    #domPurifyVerified = false;
 
     /**
      * Creates a new ModalManager instance
@@ -225,71 +238,114 @@ export class ModalManager {
     }
 
     /**
-     * Sanitizes HTML content for safe display
-     * @param {string} content - HTML content to sanitize
-     * @returns {string} Sanitized HTML
+     * SECURITY: Verifies DOMPurify is loaded and functional
+     * DOMPurify is REQUIRED - modal rendering is disabled without it
+     *
+     * @throws {Error} If DOMPurify is not available
+     * @returns {boolean} True if DOMPurify is available
      * @private
      */
-    #sanitize(content) {
-        // Use DOMPurify if available (expected to be loaded globally)
-        if (typeof DOMPurify !== 'undefined') {
-            return DOMPurify.sanitize(content, this.#sanitizerConfig);
+    #ensureDOMPurify() {
+        if (this.#domPurifyVerified) {
+            return true;
         }
 
-        // Fallback: basic escape (not recommended for production)
-        console.warn('[ModalManager] DOMPurify not available, using basic escape');
-        return this.#basicEscape(content);
+        if (typeof DOMPurify === 'undefined' || typeof DOMPurify.sanitize !== 'function') {
+            const errorMsg = 'SECURITY ERROR: DOMPurify is required but not loaded. ' +
+                'Modal rendering disabled for security. ' +
+                'Ensure DOMPurify is loaded before ModalManager.';
+            console.error('[ModalManager]', errorMsg);
+            throw new Error(errorMsg);
+        }
+
+        this.#domPurifyVerified = true;
+        return true;
     }
 
     /**
-     * Basic HTML escape fallback
-     * @param {string} text - Text to escape
-     * @returns {string} Escaped text
+     * SECURITY: Sanitizes HTML content using DOMPurify (MANDATORY)
+     * This method ALWAYS sanitizes - there is no bypass option
+     *
+     * @param {string} content - HTML content to sanitize
+     * @returns {string} Sanitized HTML safe for innerHTML
+     * @throws {Error} If DOMPurify is not available
      * @private
      */
-    #basicEscape(text) {
-        const div = this.#document?.createElement('div');
-        if (div) {
-            div.textContent = text;
-            return div.innerHTML;
+    #sanitizeHTML(content) {
+        this.#ensureDOMPurify();
+        return DOMPurify.sanitize(content, this.#sanitizerConfig);
+    }
+
+    /**
+     * SECURITY: Safe content renderer with fallback to plain text
+     * If sanitization fails for any reason, content is rendered as plain text
+     *
+     * @param {HTMLElement} element - Target element to render content into
+     * @param {string} content - HTML content to render
+     * @returns {boolean} True if content was rendered safely, false if fallback was used
+     * @private
+     */
+    #safeRenderContent(element, content) {
+        if (!element) {
+            console.error('[ModalManager] Security: Cannot render - element is null');
+            return false;
         }
-        return text;
+
+        try {
+            const sanitizedContent = this.#sanitizeHTML(content);
+            element.innerHTML = sanitizedContent;
+            return true;
+        } catch (error) {
+            console.error('[ModalManager] Security: Cannot render content safely', error);
+
+            // Fallback to plain text - completely safe
+            element.textContent = 'Content unavailable for security reasons. Please refresh the page.';
+
+            // Notify user via ToastManager if available
+            if (typeof window !== 'undefined' && window.ToastManager) {
+                window.ToastManager.show(
+                    'Error de seguridad al cargar contenido. Por favor, recarga la pagina.',
+                    'error'
+                );
+            }
+
+            return false;
+        }
     }
 
     /**
      * Shows the modal with the provided content
+     * SECURITY: Content is ALWAYS sanitized - no bypass option available
      *
-     * @param {string} content - HTML content to display
-     * @param {Object} [options={}] - Display options
-     * @param {boolean} [options.sanitize=true] - Whether to sanitize content
+     * @param {string} content - HTML content to display (will be sanitized)
      * @returns {void}
      * @fires ModalManager#modal:opened
      *
      * @example
      * modalManager.show('<h2>Title</h2><p>Content</p>');
-     * modalManager.show(trustedHtml, { sanitize: false });
      */
-    show(content, options = {}) {
-        const { sanitize = true } = options;
-
+    show(content) {
         if (!this.#modalBody || !this.#modalElement) {
             console.error('[ModalManager] Modal elements not initialized');
             return;
         }
 
-        const displayContent = sanitize ? this.#sanitize(content) : content;
-        this.#modalBody.innerHTML = displayContent;
-        this.#modalElement.classList.add('active');
+        // SECURITY: Always use safe render - no bypass allowed
+        const renderSuccess = this.#safeRenderContent(this.#modalBody, content);
 
-        // Activate focus trap for keyboard accessibility
-        if (this.#focusTrap) {
-            // Small delay to ensure modal is visible before activating trap
-            setTimeout(() => {
-                this.#focusTrap.activate();
-            }, 50);
+        if (renderSuccess) {
+            this.#modalElement.classList.add('active');
+
+            // Activate focus trap for keyboard accessibility
+            if (this.#focusTrap) {
+                // Small delay to ensure modal is visible before activating trap
+                setTimeout(() => {
+                    this.#focusTrap.activate();
+                }, 50);
+            }
+
+            this.#eventBus.emit(AppEvents.MODAL_OPENED, { content });
         }
-
-        this.#eventBus.emit(AppEvents.MODAL_OPENED, { content: displayContent });
     }
 
     /**
@@ -330,22 +386,22 @@ export class ModalManager {
 
     /**
      * Updates the modal body content without hiding/showing
+     * SECURITY: Content is ALWAYS sanitized - no bypass option available
      *
-     * @param {string} content - New HTML content
-     * @param {boolean} [sanitize=true] - Whether to sanitize content
+     * @param {string} content - New HTML content (will be sanitized)
      * @returns {void}
      *
      * @example
      * modalManager.updateContent('<h2>Step 2</h2><p>New content</p>');
      */
-    updateContent(content, sanitize = true) {
+    updateContent(content) {
         if (!this.#modalBody) return;
 
-        const displayContent = sanitize ? this.#sanitize(content) : content;
-        this.#modalBody.innerHTML = displayContent;
+        // SECURITY: Always use safe render - no bypass allowed
+        const renderSuccess = this.#safeRenderContent(this.#modalBody, content);
 
-        // Update focus trap when content changes
-        if (this.#focusTrap && this.#focusTrap.isActive()) {
+        // Update focus trap when content changes successfully
+        if (renderSuccess && this.#focusTrap && this.#focusTrap.isActive()) {
             this.#focusTrap.updateTrap();
         }
     }

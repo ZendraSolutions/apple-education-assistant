@@ -121,24 +121,45 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│  🚀 GUÍA DE DESPLIEGUE (DEPLOYMENT)                          │
+│  🚀 GUIA DE DESPLIEGUE (DEPLOYMENT)                          │
 │  ────────────────────────────────────────────────────────   │
 │  Archivo: DEPLOYMENT.md                                     │
-│  Duración: 45 minutos (referencia completa)                 │
+│  Duracion: 45 minutos (referencia completa)                 │
 │  Nivel: IT Administradores                                  │
 │                                                              │
 │  Contenido:                                                  │
 │  • Requisitos del sistema                                   │
-│  • Métodos de despliegue (Nginx, Docker, Cloud)             │
-│  • Configuración de servidor (Ubuntu, CentOS, Windows)      │
+│  • Metodos de despliegue (Nginx, Docker, Cloud)             │
+│  • Configuracion de servidor (Ubuntu, CentOS, Windows)      │
 │  • HTTPS y SSL (Let's Encrypt, certificados comerciales)    │
-│  • Configuración de dominio y DNS                           │
+│  • Configuracion de dominio y DNS                           │
 │  • Seguridad (CSP, headers, rate limiting)                  │
-│  • Optimización de rendimiento                              │
+│  • Optimizacion de rendimiento                              │
 │  • Monitoreo, logs, backups                                 │
-│  • Troubleshooting de producción                            │
+│  • Troubleshooting de produccion                            │
 │                                                              │
 │  [VER DEPLOYMENT] → DEPLOYMENT.md                           │
+└─────────────────────────────────────────────────────────────┘
+```
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  📦 GUIA DE GITHUB PAGES                                     │
+│  ────────────────────────────────────────────────────────   │
+│  Archivo: DEPLOYMENT_GITHUB_PAGES.md                        │
+│  Duracion: 15 minutos                                       │
+│  Nivel: Desarrolladores / IT                                │
+│                                                              │
+│  Contenido:                                                  │
+│  • Prerrequisitos (repositorio, permisos)                   │
+│  • Configuracion de GitHub Pages                            │
+│  • Workflow automatico (GitHub Actions)                     │
+│  • Deployment manual                                        │
+│  • Configuracion de dominio personalizado                   │
+│  • Troubleshooting comun                                    │
+│  • URLs de produccion                                       │
+│                                                              │
+│  [VER GITHUB PAGES] → DEPLOYMENT_GITHUB_PAGES.md            │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -186,7 +207,8 @@
 
 | Necesito... | Voy a... |
 |-------------|----------|
-| **Desplegar en producción** | [DEPLOYMENT.md](DEPLOYMENT.md) - Guía completa de despliegue 🚀 |
+| **Desplegar en produccion** | [DEPLOYMENT.md](DEPLOYMENT.md) - Guia completa de despliegue |
+| **Desplegar en GitHub Pages** | [DEPLOYMENT_GITHUB_PAGES.md](DEPLOYMENT_GITHUB_PAGES.md) - CI/CD automatico |
 | **Configurar Nginx/SSL/HTTPS** | [DEPLOYMENT.md](DEPLOYMENT.md) - Sección "HTTPS Configuration" |
 | **Entender la arquitectura** | [ARCHITECTURE.md](ARCHITECTURE.md) - Sección "System Architecture" + Diagramas Mermaid.js |
 | **Añadir una nueva funcionalidad** | [ARCHITECTURE.md](ARCHITECTURE.md) - Sección "Design Patterns" |
@@ -224,16 +246,17 @@
 │ QUICK_START.md ⚡      │ 280      │ 9.5 KB     │ Docentes    │
 │ FAQ.md                 │ 344      │ 12 KB      │ Docentes    │
 │ API_KEY_SETUP.md       │ 429      │ 14 KB      │ Docentes    │
-│ DEPLOYMENT.md 🚀       │ 850+     │ 28 KB      │ IT Admins   │
+│ DEPLOYMENT.md          │ 850+     │ 28 KB      │ IT Admins   │
+│ DEPLOYMENT_GITHUB...   │ 350+     │ 12 KB      │ IT/Devs     │
 │ ARCHITECTURE.md ✨     │ 1050+    │ 35 KB      │ Desarrollos │
 │ TESTING.md 🧪          │ 730+     │ 24 KB      │ Desarrollos │
 │ README.md              │ 320+     │ 10 KB      │ Todos       │
 │ INDEX.md               │ 260      │ 8.5 KB     │ Todos       │
 └────────────────────────┴──────────┴────────────┴─────────────┘
 
-Total líneas de documentación: 4800+
+Total lineas de documentacion: 5500+
 Total documentos de usuario: 4 (USER_GUIDE, QUICK_START, FAQ, API_KEY_SETUP)
-Total documentos técnicos: 5 (ARCHITECTURE, DEPLOYMENT, TESTING, API, CONTRIBUTING)
+Total documentos tecnicos: 6 (ARCHITECTURE, DEPLOYMENT, DEPLOYMENT_GITHUB_PAGES, TESTING, API, CONTRIBUTING)
 Tiempo total de lectura (usuario): ~35-45 minutos
 Puntuación de documentación: 100/100 ✅ (mejorado desde 88/100)
 
@@ -361,12 +384,14 @@ Cuando necesite modificar:
 
 ---
 
-**Navegación rápida:**
+**Navegacion rapida:**
 - [Volver al README](README.md)
-- [Inicio Rápido ⚡](QUICK_START.md)
+- [Inicio Rapido](QUICK_START.md)
 - [Manual del Usuario](USER_GUIDE.md)
 - [FAQ](FAQ.md)
 - [Configurar API Key](API_KEY_SETUP.md)
-- [Deployment 🚀](DEPLOYMENT.md)
-- [Arquitectura ✨](ARCHITECTURE.md)
-- [Testing 🧪](TESTING.md)
+- [Deployment](DEPLOYMENT.md)
+- [GitHub Pages](DEPLOYMENT_GITHUB_PAGES.md)
+- [Arquitectura](ARCHITECTURE.md)
+- [Testing](TESTING.md)
+- [API Reference](API.md)
